@@ -1,28 +1,31 @@
-use escpos::domain::constantes::*;
-use std::{io::Write, net::TcpStream};
+use escpos::domain::constants::*;
+use std::{error::Error, io::Write, net::TcpStream};
 
-fn main() {
-    println!("ESCPOS lib");
+fn main() -> Result<(), Box<dyn Error>> {
+    let mut stream = TcpStream::connect("192.168.1.248:9100")?;
 
-    let mut _instructions: Vec<&[u8]> = vec![];
-    let mut stream = TcpStream::connect("192.168.1.248:9100").unwrap();
+    let instructions: Vec<&[u8]> = vec![
+        // Initialisation
+        ESC_INIT,
+        // Bold
+        ESC_TEXT_EMPHASIS_ON,
+        ESC_TEXT_UNDERLINE_SIMPLE,
+        "Hello world - Bold".as_bytes(),
+        &[LF],
+        // Normal
+        ESC_TEXT_EMPHASIS_OFF,
+        ESC_TEXT_UNDERLINE_NONE,
+        "Hello world - Normal".as_bytes(),
+        &[LF],
+        // Cut
+        GS_PAPER_CUT_FULL,
+    ];
+    println!("Instructions={:?}", &instructions);
 
-    // Initialisation
-    stream.write(&[ESC, '@' as u8]).unwrap();
+    for instruction in instructions.into_iter() {
+        stream.write(instruction)?;
+    }
+    stream.flush()?;
 
-    // Bold
-    stream.write(&[ESC, 'E' as u8, 1]).unwrap();
-    stream.write("Hello world - Bold".as_bytes()).unwrap();
-    stream.write(&[LF]).unwrap();
-
-    // Normal
-    stream.write(&[ESC, 'E' as u8, 0]).unwrap();
-    stream.write("Hello world - Normal".as_bytes()).unwrap();
-    stream.write(&[LF]).unwrap();
-
-    // Cut
-    stream.write(&[GS, 'V' as u8, 'A' as u8, NIL]).unwrap();
-
-    // Print
-    stream.flush().unwrap();
+    Ok(())
 }
