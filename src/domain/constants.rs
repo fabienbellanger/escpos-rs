@@ -15,8 +15,14 @@ pub const GS_PAPER_CUT_PARTIAL: &[u8] = &[GS, 'V' as u8, 'A' as u8, 1];
 // Fonts
 pub const ESC_TEXT_EMPHASIS_OFF: &[u8] = &[ESC, 'E' as u8, 0];
 pub const ESC_TEXT_EMPHASIS_ON: &[u8] = &[ESC, 'E' as u8, 1];
+
 pub const ESC_TEXT_UNDERLINE_NONE: &[u8] = &[ESC, '-' as u8, 0];
 pub const ESC_TEXT_UNDERLINE_SIMPLE: &[u8] = &[ESC, '-' as u8, 1];
 pub const ESC_TEXT_UNDERLINE_DOUBLE: &[u8] = &[ESC, '-' as u8, 2];
+
 pub const ESC_TEXT_DOUBLESTRIKE_OFF: &[u8] = &[ESC, 'G' as u8, 0];
 pub const ESC_TEXT_DOUBLESTRIKE_ON: &[u8] = &[ESC, 'G' as u8, 1];
+
+pub const ESC_TEXT_FONT_A: &[u8] = &[ESC, 'M' as u8, 0];
+pub const ESC_TEXT_FONT_B: &[u8] = &[ESC, 'M' as u8, 1];
+pub const ESC_TEXT_FONT_C: &[u8] = &[ESC, 'M' as u8, 2];

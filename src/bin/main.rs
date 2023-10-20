@@ -1,7 +1,8 @@
-use escpos::domain::constants::*;
-use std::{error::Error, io::Write, net::TcpStream};
+use escpos::constants::*;
+use escpos::errors::Result;
+use std::{io::Write, net::TcpStream};
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<()> {
     let mut stream = TcpStream::connect("192.168.1.248:9100")?;
 
     let instructions: Vec<&[u8]> = vec![
