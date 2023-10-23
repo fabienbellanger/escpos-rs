@@ -35,3 +35,20 @@ impl fmt::Display for Font {
         }
     }
 }
+
+#[derive(Debug)]
+pub enum JustifyMode {
+    LEFT = 0,
+    CENTER = 1,
+    RIGHT = 2,
+}
+
+impl fmt::Display for JustifyMode {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            JustifyMode::LEFT => write!(f, "Text justify left"),
+            JustifyMode::CENTER => write!(f, "Text justify center"),
+            JustifyMode::RIGHT => write!(f, "Text justify right"),
+        }
+    }
+}
