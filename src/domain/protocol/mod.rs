@@ -2,32 +2,21 @@
 
 pub mod text;
 
-use crate::{
-    constants::{ESC_INIT, GS_PAPER_CUT_FULL, GS_PAPER_CUT_PARTIAL},
-    encoder::Encoder,
-    errors::Result,
-};
-
-// #[derive(Debug)]
-// pub struct Instruction {
-//     pub name: String,
-//     pub command: Vec<u8>,
-// }
-
-// impl Instruction {
-//     /// Create a new instruction
-//     pub fn new(name: &str, command: &[u8]) -> Self {
-//         Self {
-//             name: name.to_string(),
-//             command: command.to_vec(),
-//         }
-//     }
-// }
+use self::text::{Font, JustifyMode, UnderlineMode};
+use crate::{constants::*, encoder::Encoder, errors::Result};
 
 pub type Command = Vec<u8>;
 
 pub struct Protocol {
     encoder: Encoder,
+}
+
+impl Default for Protocol {
+    fn default() -> Self {
+        Self {
+            encoder: Encoder::default(),
+        }
+    }
 }
 
 impl Protocol {
@@ -47,6 +36,92 @@ impl Protocol {
             true => GS_PAPER_CUT_PARTIAL.to_vec(),
             false => GS_PAPER_CUT_FULL.to_vec(),
         }
+    }
+
+    /// Emphasis
+    pub fn bold(&self, enabled: bool) -> Command {
+        match enabled {
+            true => ESC_TEXT_EMPHASIS_ON.to_vec(),
+            false => ESC_TEXT_EMPHASIS_OFF.to_vec(),
+        }
+    }
+
+    /// Underline
+    pub fn underline(&self, mode: UnderlineMode) -> Command {
+        match mode {
+            UnderlineMode::None => ESC_TEXT_UNDERLINE_NONE.to_vec(),
+            UnderlineMode::Single => ESC_TEXT_UNDERLINE_SIMPLE.to_vec(),
+            UnderlineMode::Double => ESC_TEXT_UNDERLINE_DOUBLE.to_vec(),
+        }
+    }
+
+    /// Double strike
+    pub fn double_strike(&self, enabled: bool) -> Command {
+        match enabled {
+            true => ESC_TEXT_DOUBLESTRIKE_ON.to_vec(),
+            false => ESC_TEXT_DOUBLESTRIKE_OFF.to_vec(),
+        }
+    }
+
+    /// Fonts
+    pub fn font(&self, font: Font) -> Command {
+        match font {
+            Font::A => ESC_TEXT_FONT_A.to_vec(),
+            Font::B => ESC_TEXT_FONT_B.to_vec(),
+            Font::C => ESC_TEXT_FONT_C.to_vec(),
+        }
+    }
+
+    /// Flip
+    pub fn flip(&self, enabled: bool) -> Command {
+        match enabled {
+            true => ESC_TEXT_FLIP_ON.to_vec(),
+            false => ESC_TEXT_FLIP_OFF.to_vec(),
+        }
+    }
+
+    /// Justify
+    pub fn justify(&self, mode: JustifyMode) -> Command {
+        match mode {
+            JustifyMode::LEFT => ESC_TEXT_JUSTIFY_LEFT.to_vec(),
+            JustifyMode::CENTER => ESC_TEXT_JUSTIFY_CENTER.to_vec(),
+            JustifyMode::RIGHT => ESC_TEXT_JUSTIFY_RIGHT.to_vec(),
+        }
+    }
+
+    /// Reverse colours
+    pub fn reverse_colours(&self, enabled: bool) -> Command {
+        match enabled {
+            true => GS_TEXT_REVERSE_COLOURS_ON.to_vec(),
+            false => GS_TEXT_REVERSE_COLOURS_OFF.to_vec(),
+        }
+    }
+
+    /// Smoothing mode
+    pub fn smoothing_mode(&self, enabled: bool) -> Command {
+        match enabled {
+            true => GS_TEXT_SMOOTHING_MODE_ON.to_vec(),
+            false => GS_TEXT_SMOOTHING_MODE_OFF.to_vec(),
+        }
+    }
+
+    /// Feed lines
+    pub fn feed(&self, lines: u8) -> Command {
+        let mut cmd = ESC_PAPER_FEED.to_vec();
+        cmd.push(lines);
+        cmd
+    }
+
+    /// Default line spacing
+    pub fn default_line_spacing(&self) -> Command {
+        ESC_TEXT_DEFAULT_LINESPACING.to_vec()
+    }
+
+    /// Line spacing
+    pub fn line_spacing(&self, value: u8) -> Command {
+        let mut cmd = ESC_TEXT_LINESPACING.to_vec();
+        cmd.push(value);
+        cmd
     }
 
     /// Print text
@@ -70,6 +145,82 @@ mod tests {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.cut(false), vec![29, 86, 65, 0]);
         assert_eq!(protocol.cut(true), vec![29, 86, 65, 1]);
+    }
+
+    #[test]
+    fn test_bold() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.bold(false), vec![27, 69, 0]);
+        assert_eq!(protocol.bold(true), vec![27, 69, 1]);
+    }
+
+    #[test]
+    fn test_underline() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.underline(UnderlineMode::None), vec![27, 45, 0]);
+        assert_eq!(protocol.underline(UnderlineMode::Single), vec![27, 45, 1]);
+        assert_eq!(protocol.underline(UnderlineMode::Double), vec![27, 45, 2]);
+    }
+
+    #[test]
+    fn test_double_strike() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.double_strike(false), vec![27, 71, 0]);
+        assert_eq!(protocol.double_strike(true), vec![27, 71, 1]);
+    }
+
+    #[test]
+    fn test_font() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.font(Font::A), vec![27, 77, 0]);
+        assert_eq!(protocol.font(Font::B), vec![27, 77, 1]);
+        assert_eq!(protocol.font(Font::C), vec![27, 77, 2]);
+    }
+
+    #[test]
+    fn test_flip() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.flip(false), vec![27, 86, 0]);
+        assert_eq!(protocol.flip(true), vec![27, 86, 1]);
+    }
+
+    #[test]
+    fn test_justify() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.justify(JustifyMode::LEFT), vec![27, 97, 0]);
+        assert_eq!(protocol.justify(JustifyMode::CENTER), vec![27, 97, 1]);
+        assert_eq!(protocol.justify(JustifyMode::RIGHT), vec![27, 97, 2]);
+    }
+
+    #[test]
+    fn test_reverse_colours() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.reverse_colours(false), vec![29, 66, 0]);
+        assert_eq!(protocol.reverse_colours(true), vec![29, 66, 1]);
+    }
+
+    #[test]
+    fn test_smoothing_mode() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.smoothing_mode(false), vec![29, 98, 0]);
+        assert_eq!(protocol.smoothing_mode(true), vec![29, 98, 1]);
+    }
+
+    #[test]
+    fn test_feed() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.feed(0), vec![27, 100, 0]);
+        assert_eq!(protocol.feed(1), vec![27, 100, 1]);
+        assert_eq!(protocol.feed(255), vec![27, 100, 255]);
+    }
+
+    #[test]
+    fn test_line_spacing() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.line_spacing(0), vec![27, 51, 0]);
+        assert_eq!(protocol.line_spacing(1), vec![27, 51, 1]);
+        assert_eq!(protocol.line_spacing(255), vec![27, 51, 255]);
+        assert_eq!(protocol.default_line_spacing(), vec![27, 50]);
     }
 
     #[test]
