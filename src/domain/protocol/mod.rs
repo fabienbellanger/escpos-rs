@@ -3,7 +3,11 @@
 pub mod text;
 
 use self::text::{Font, JustifyMode, UnderlineMode};
-use crate::{constants::*, encoder::Encoder, errors::Result};
+use crate::{
+    constants::*,
+    encoder::Encoder,
+    errors::{PrinterError, Result},
+};
 
 pub type Command = Vec<u8>;
 
@@ -98,7 +102,7 @@ impl Protocol {
     }
 
     /// Smoothing mode
-    pub fn smoothing_mode(&self, enabled: bool) -> Command {
+    pub fn smoothing(&self, enabled: bool) -> Command {
         match enabled {
             true => GS_TEXT_SMOOTHING_MODE_ON.to_vec(),
             false => GS_TEXT_SMOOTHING_MODE_OFF.to_vec(),
@@ -112,9 +116,9 @@ impl Protocol {
         cmd
     }
 
-    /// Default line spacing
-    pub fn default_line_spacing(&self) -> Command {
-        ESC_TEXT_DEFAULT_LINESPACING.to_vec()
+    /// Reset line spacing
+    pub fn reset_line_spacing(&self) -> Command {
+        ESC_TEXT_RESET_LINESPACING.to_vec()
     }
 
     /// Line spacing
@@ -122,6 +126,28 @@ impl Protocol {
         let mut cmd = ESC_TEXT_LINESPACING.to_vec();
         cmd.push(value);
         cmd
+    }
+
+    /// Set text size
+    pub fn text_size(&self, width: u8, height: u8) -> Result<Command> {
+        if !(1..=8).contains(&width) {
+            return Err(PrinterError::Input(format!("invalid text_size width: {width}")));
+        }
+        if !(1..=8).contains(&height) {
+            return Err(PrinterError::Input(format!("invalid text_size height: {height}")));
+        }
+
+        let mut cmd = GS_TEXT_SIZE_SELECT.to_vec();
+        cmd.push(((width - 1) << 4) | (height - 1));
+        Ok(cmd)
+    }
+
+    /// Upside-down mode
+    pub fn upside_down(&self, enabled: bool) -> Command {
+        match enabled {
+            true => ESC_TEXT_UPSIDE_DOWN_ON.to_vec(),
+            false => ESC_TEXT_UPSIDE_DOWN_OFF.to_vec(),
+        }
     }
 
     /// Print text
@@ -200,10 +226,10 @@ mod tests {
     }
 
     #[test]
-    fn test_smoothing_mode() {
+    fn test_smoothing() {
         let protocol = Protocol::new(Encoder::default());
-        assert_eq!(protocol.smoothing_mode(false), vec![29, 98, 0]);
-        assert_eq!(protocol.smoothing_mode(true), vec![29, 98, 1]);
+        assert_eq!(protocol.smoothing(false), vec![29, 98, 0]);
+        assert_eq!(protocol.smoothing(true), vec![29, 98, 1]);
     }
 
     #[test]
@@ -220,7 +246,30 @@ mod tests {
         assert_eq!(protocol.line_spacing(0), vec![27, 51, 0]);
         assert_eq!(protocol.line_spacing(1), vec![27, 51, 1]);
         assert_eq!(protocol.line_spacing(255), vec![27, 51, 255]);
-        assert_eq!(protocol.default_line_spacing(), vec![27, 50]);
+        assert_eq!(protocol.reset_line_spacing(), vec![27, 50]);
+    }
+
+    #[test]
+    fn test_text_size() {
+        let protocol = Protocol::new(Encoder::default());
+        assert!(protocol.text_size(0, 0).is_err());
+        assert!(protocol.text_size(0, 2).is_err());
+        assert!(protocol.text_size(2, 0).is_err());
+        assert!(protocol.text_size(9, 2).is_err());
+        assert!(protocol.text_size(2, 9).is_err());
+        assert!(protocol.text_size(9, 9).is_err());
+
+        assert_eq!(protocol.text_size(1, 1).unwrap(), vec![29, 33, 0]);
+        assert_eq!(protocol.text_size(2, 1).unwrap(), vec![29, 33, 16]);
+        assert_eq!(protocol.text_size(2, 2).unwrap(), vec![29, 33, 17]);
+        assert_eq!(protocol.text_size(8, 8).unwrap(), vec![29, 33, 119]);
+    }
+
+    #[test]
+    fn test_upside_down() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.upside_down(false), vec![27, 123, 0]);
+        assert_eq!(protocol.upside_down(true), vec![27, 123, 1]);
     }
 
     #[test]

@@ -43,13 +43,16 @@ pub const GS_TEXT_REVERSE_COLOURS_ON: &[u8] = &[GS, 'B' as u8, 1];
 pub const GS_TEXT_SMOOTHING_MODE_OFF: &[u8] = &[GS, 'b' as u8, 0];
 pub const GS_TEXT_SMOOTHING_MODE_ON: &[u8] = &[GS, 'b' as u8, 1];
 
-pub const ESC_TEXT_DEFAULT_LINESPACING: &[u8] = &[ESC, '2' as u8];
+pub const ESC_TEXT_RESET_LINESPACING: &[u8] = &[ESC, '2' as u8];
 pub const ESC_TEXT_LINESPACING: &[u8] = &[ESC, '3' as u8];
+
+pub const GS_TEXT_SIZE_SELECT: &[u8] = &[GS, '!' as u8];
+
+pub const ESC_TEXT_UPSIDE_DOWN_OFF: &[u8] = &[ESC, '{' as u8, 0];
+pub const ESC_TEXT_UPSIDE_DOWN_ON: &[u8] = &[ESC, '{' as u8, 1];
 
 // Paper
 pub const ESC_PAPER_FEED: &[u8] = &[ESC, 'd' as u8];
 
 // pub const GS_TEXT_MARGIN_LEFT: &[u8] = &[GS, 'L' as u8];
 // pub const GS_TEXT_PRINTABLE_AREA: &[u8] = &[GS, 0x57];
-// pub const ESC_TEXT_RESET_LINESPACING: &[u8] = &[ESC, 0x02];
-// pub const GS_TEXT_SIZE_SELECT: &[u8] = &[GS, 0x21];
