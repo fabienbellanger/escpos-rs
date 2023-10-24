@@ -1,2 +1,2 @@
-pub mod constants;
+pub(super) mod constants;
 pub mod protocol;

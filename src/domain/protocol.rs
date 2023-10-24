@@ -1,14 +1,79 @@
 //! Protocol used to communicate with the printer
 
-pub mod text;
-
-use self::text::{Font, JustifyMode, UnderlineMode};
 use crate::{
     constants::*,
-    encoder::Encoder,
     errors::{PrinterError, Result},
+    io::encoder::Encoder,
 };
+use std::fmt;
 
+#[derive(Debug)]
+pub enum CashDrawer {
+    Pin2 = 0,
+    Pin5 = 1,
+}
+
+impl fmt::Display for CashDrawer {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            CashDrawer::Pin2 => write!(f, "cash drawer pin 2"),
+            CashDrawer::Pin5 => write!(f, "cash drawer pin 5"),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum UnderlineMode {
+    None = 0,
+    Single = 1,
+    Double = 2,
+}
+
+impl fmt::Display for UnderlineMode {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            UnderlineMode::None => write!(f, "none"),
+            UnderlineMode::Single => write!(f, "single"),
+            UnderlineMode::Double => write!(f, "double"),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum Font {
+    A,
+    B,
+    C,
+}
+
+impl fmt::Display for Font {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Font::A => write!(f, "font A"),
+            Font::B => write!(f, "font B"),
+            Font::C => write!(f, "font C"),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum JustifyMode {
+    LEFT = 0,
+    CENTER = 1,
+    RIGHT = 2,
+}
+
+impl fmt::Display for JustifyMode {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            JustifyMode::LEFT => write!(f, "Text justify left"),
+            JustifyMode::CENTER => write!(f, "Text justify center"),
+            JustifyMode::RIGHT => write!(f, "Text justify right"),
+        }
+    }
+}
+
+/// ESC command
 pub type Command = Vec<u8>;
 
 pub struct Protocol {
@@ -31,7 +96,12 @@ impl Protocol {
 
     /// Initialization
     pub fn init(&self) -> Command {
-        ESC_INIT.to_vec()
+        ESC_HARDWARE_INIT.to_vec()
+    }
+
+    /// Reset
+    pub fn reset(&self) -> Command {
+        ESC_HARDWARE_RESET.to_vec()
     }
 
     /// Paper cut
@@ -150,6 +220,14 @@ impl Protocol {
         }
     }
 
+    /// Cash drawer
+    pub fn cash_drawer(&self, pin: CashDrawer) -> Command {
+        match pin {
+            CashDrawer::Pin2 => ESC_CASH_DRAWER_2.to_vec(),
+            CashDrawer::Pin5 => ESC_CASH_DRAWER_5.to_vec(),
+        }
+    }
+
     /// Print text
     pub fn print(&self, text: &str) -> Result<Command> {
         self.encoder.encode(text)
@@ -164,6 +242,12 @@ mod tests {
     fn test_init() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.init(), vec![27, 64]);
+    }
+
+    #[test]
+    fn test_reset() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.reset(), vec![27, 63, 10, 0]);
     }
 
     #[test]
@@ -270,6 +354,13 @@ mod tests {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.upside_down(false), vec![27, 123, 0]);
         assert_eq!(protocol.upside_down(true), vec![27, 123, 1]);
+    }
+
+    #[test]
+    fn test_cash_drawer() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.cash_drawer(CashDrawer::Pin2), vec![27, 112, 0]);
+        assert_eq!(protocol.cash_drawer(CashDrawer::Pin5), vec![27, 112, 1]);
     }
 
     #[test]
