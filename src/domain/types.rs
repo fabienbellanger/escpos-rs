@@ -99,6 +99,7 @@ impl std::fmt::Debug for Instruction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // TODO: Manage DebugMode
         match self.debug_mode {
+            Some(DebugMode::Dec) => write!(f, "[{}] {:?}", &self.name, &self.command),
             _ => write!(f, "[{}] {:?}", &self.name, &self.command),
         }
     }
