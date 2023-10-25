@@ -1,6 +1,6 @@
 //! Custom errors
 
-use std::{borrow::Cow, fmt, io};
+use std::{borrow::Cow, cell::BorrowMutError, fmt, io};
 
 /// Custom Result
 pub type Result<T> = std::result::Result<T, PrinterError>;
@@ -32,5 +32,11 @@ impl From<io::Error> for PrinterError {
 impl From<Cow<'_, str>> for PrinterError {
     fn from(value: Cow<'_, str>) -> Self {
         PrinterError::Io(value.into_owned())
+    }
+}
+
+impl From<BorrowMutError> for PrinterError {
+    fn from(err: BorrowMutError) -> Self {
+        PrinterError::Io(err.to_string())
     }
 }

@@ -1,2 +1,2 @@
-pub(crate) mod driver;
+pub mod driver;
 pub(crate) mod encoder;

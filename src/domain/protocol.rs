@@ -1,80 +1,10 @@
 //! Protocol used to communicate with the printer
 
+use super::{constants::*, types::*};
 use crate::{
-    constants::*,
     errors::{PrinterError, Result},
     io::encoder::Encoder,
 };
-use std::fmt;
-
-#[derive(Debug)]
-pub enum CashDrawer {
-    Pin2 = 0,
-    Pin5 = 1,
-}
-
-impl fmt::Display for CashDrawer {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            CashDrawer::Pin2 => write!(f, "cash drawer pin 2"),
-            CashDrawer::Pin5 => write!(f, "cash drawer pin 5"),
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum UnderlineMode {
-    None = 0,
-    Single = 1,
-    Double = 2,
-}
-
-impl fmt::Display for UnderlineMode {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            UnderlineMode::None => write!(f, "none"),
-            UnderlineMode::Single => write!(f, "single"),
-            UnderlineMode::Double => write!(f, "double"),
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum Font {
-    A,
-    B,
-    C,
-}
-
-impl fmt::Display for Font {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Font::A => write!(f, "font A"),
-            Font::B => write!(f, "font B"),
-            Font::C => write!(f, "font C"),
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum JustifyMode {
-    LEFT = 0,
-    CENTER = 1,
-    RIGHT = 2,
-}
-
-impl fmt::Display for JustifyMode {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            JustifyMode::LEFT => write!(f, "Text justify left"),
-            JustifyMode::CENTER => write!(f, "Text justify center"),
-            JustifyMode::RIGHT => write!(f, "Text justify right"),
-        }
-    }
-}
-
-/// ESC command
-pub type Command = Vec<u8>;
 
 pub struct Protocol {
     encoder: Encoder,
@@ -95,17 +25,17 @@ impl Protocol {
     }
 
     /// Initialization
-    pub fn init(&self) -> Command {
+    pub(crate) fn init(&self) -> Command {
         ESC_HARDWARE_INIT.to_vec()
     }
 
     /// Reset
-    pub fn reset(&self) -> Command {
+    pub(crate) fn reset(&self) -> Command {
         ESC_HARDWARE_RESET.to_vec()
     }
 
     /// Paper cut
-    pub fn cut(&self, partial: bool) -> Command {
+    pub(crate) fn cut(&self, partial: bool) -> Command {
         match partial {
             true => GS_PAPER_CUT_PARTIAL.to_vec(),
             false => GS_PAPER_CUT_FULL.to_vec(),
@@ -113,7 +43,7 @@ impl Protocol {
     }
 
     /// Emphasis
-    pub fn bold(&self, enabled: bool) -> Command {
+    pub(crate) fn bold(&self, enabled: bool) -> Command {
         match enabled {
             true => ESC_TEXT_EMPHASIS_ON.to_vec(),
             false => ESC_TEXT_EMPHASIS_OFF.to_vec(),
@@ -121,7 +51,7 @@ impl Protocol {
     }
 
     /// Underline
-    pub fn underline(&self, mode: UnderlineMode) -> Command {
+    pub(crate) fn underline(&self, mode: UnderlineMode) -> Command {
         match mode {
             UnderlineMode::None => ESC_TEXT_UNDERLINE_NONE.to_vec(),
             UnderlineMode::Single => ESC_TEXT_UNDERLINE_SIMPLE.to_vec(),
@@ -130,7 +60,7 @@ impl Protocol {
     }
 
     /// Double strike
-    pub fn double_strike(&self, enabled: bool) -> Command {
+    pub(crate) fn double_strike(&self, enabled: bool) -> Command {
         match enabled {
             true => ESC_TEXT_DOUBLESTRIKE_ON.to_vec(),
             false => ESC_TEXT_DOUBLESTRIKE_OFF.to_vec(),
@@ -138,7 +68,7 @@ impl Protocol {
     }
 
     /// Fonts
-    pub fn font(&self, font: Font) -> Command {
+    pub(crate) fn font(&self, font: Font) -> Command {
         match font {
             Font::A => ESC_TEXT_FONT_A.to_vec(),
             Font::B => ESC_TEXT_FONT_B.to_vec(),
@@ -147,7 +77,7 @@ impl Protocol {
     }
 
     /// Flip
-    pub fn flip(&self, enabled: bool) -> Command {
+    pub(crate) fn flip(&self, enabled: bool) -> Command {
         match enabled {
             true => ESC_TEXT_FLIP_ON.to_vec(),
             false => ESC_TEXT_FLIP_OFF.to_vec(),
@@ -155,7 +85,7 @@ impl Protocol {
     }
 
     /// Justify
-    pub fn justify(&self, mode: JustifyMode) -> Command {
+    pub(crate) fn justify(&self, mode: JustifyMode) -> Command {
         match mode {
             JustifyMode::LEFT => ESC_TEXT_JUSTIFY_LEFT.to_vec(),
             JustifyMode::CENTER => ESC_TEXT_JUSTIFY_CENTER.to_vec(),
@@ -164,7 +94,7 @@ impl Protocol {
     }
 
     /// Reverse colours
-    pub fn reverse_colours(&self, enabled: bool) -> Command {
+    pub(crate) fn reverse_colours(&self, enabled: bool) -> Command {
         match enabled {
             true => GS_TEXT_REVERSE_COLOURS_ON.to_vec(),
             false => GS_TEXT_REVERSE_COLOURS_OFF.to_vec(),
@@ -172,7 +102,7 @@ impl Protocol {
     }
 
     /// Smoothing mode
-    pub fn smoothing(&self, enabled: bool) -> Command {
+    pub(crate) fn smoothing(&self, enabled: bool) -> Command {
         match enabled {
             true => GS_TEXT_SMOOTHING_MODE_ON.to_vec(),
             false => GS_TEXT_SMOOTHING_MODE_OFF.to_vec(),
@@ -180,26 +110,26 @@ impl Protocol {
     }
 
     /// Feed lines
-    pub fn feed(&self, lines: u8) -> Command {
+    pub(crate) fn feed(&self, lines: u8) -> Command {
         let mut cmd = ESC_PAPER_FEED.to_vec();
         cmd.push(lines);
         cmd
     }
 
     /// Reset line spacing
-    pub fn reset_line_spacing(&self) -> Command {
+    pub(crate) fn reset_line_spacing(&self) -> Command {
         ESC_TEXT_RESET_LINESPACING.to_vec()
     }
 
     /// Line spacing
-    pub fn line_spacing(&self, value: u8) -> Command {
+    pub(crate) fn line_spacing(&self, value: u8) -> Command {
         let mut cmd = ESC_TEXT_LINESPACING.to_vec();
         cmd.push(value);
         cmd
     }
 
     /// Set text size
-    pub fn text_size(&self, width: u8, height: u8) -> Result<Command> {
+    pub(crate) fn text_size(&self, width: u8, height: u8) -> Result<Command> {
         if !(1..=8).contains(&width) {
             return Err(PrinterError::Input(format!("invalid text_size width: {width}")));
         }
@@ -213,7 +143,7 @@ impl Protocol {
     }
 
     /// Upside-down mode
-    pub fn upside_down(&self, enabled: bool) -> Command {
+    pub(crate) fn upside_down(&self, enabled: bool) -> Command {
         match enabled {
             true => ESC_TEXT_UPSIDE_DOWN_ON.to_vec(),
             false => ESC_TEXT_UPSIDE_DOWN_OFF.to_vec(),
@@ -221,7 +151,7 @@ impl Protocol {
     }
 
     /// Cash drawer
-    pub fn cash_drawer(&self, pin: CashDrawer) -> Command {
+    pub(crate) fn cash_drawer(&self, pin: CashDrawer) -> Command {
         match pin {
             CashDrawer::Pin2 => ESC_CASH_DRAWER_2.to_vec(),
             CashDrawer::Pin5 => ESC_CASH_DRAWER_5.to_vec(),
@@ -229,7 +159,7 @@ impl Protocol {
     }
 
     /// Print text
-    pub fn print(&self, text: &str) -> Result<Command> {
+    pub(crate) fn text(&self, text: &str) -> Result<Command> {
         self.encoder.encode(text)
     }
 }
@@ -364,8 +294,8 @@ mod tests {
     }
 
     #[test]
-    fn test_print() {
+    fn test_text() {
         let protocol = Protocol::new(Encoder::default());
-        assert_eq!(protocol.print("My text").unwrap(), "My text".as_bytes());
+        assert_eq!(protocol.text("My text").unwrap(), "My text".as_bytes());
     }
 }

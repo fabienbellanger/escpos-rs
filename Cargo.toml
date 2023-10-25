@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 encoding = "0.2.33"
+env_logger = "0.10.0" # To delete
 log = "0.4.20"
