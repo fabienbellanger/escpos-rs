@@ -6,16 +6,9 @@ use crate::{
     io::encoder::Encoder,
 };
 
+#[derive(Default)]
 pub struct Protocol {
     encoder: Encoder,
-}
-
-impl Default for Protocol {
-    fn default() -> Self {
-        Self {
-            encoder: Encoder::default(),
-        }
-    }
 }
 
 impl Protocol {

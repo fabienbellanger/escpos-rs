@@ -5,20 +5,20 @@ use crate::{domain::*, driver::Driver, utils::protocol::Protocol};
 use log::debug;
 
 pub struct Printer<D: Driver> {
-    debug_mode: Option<DebugMode>,
     driver: D,
     protocol: Protocol,
     instructions: Vec<Instruction>,
+    debug_mode: Option<DebugMode>,
 }
 
 impl<D: Driver> Printer<D> {
     /// Create a new `Printer`
     pub fn new(driver: D, protocol: Protocol) -> Self {
         Self {
-            debug_mode: None,
             driver,
             protocol,
             instructions: vec![],
+            debug_mode: None,
         }
     }
 
@@ -33,9 +33,8 @@ impl<D: Driver> Printer<D> {
     fn command(mut self, label: &str, cmd: Command) -> Result<Self> {
         let instruction = Instruction::new(label, &cmd, self.debug_mode);
 
-        match self.debug_mode {
-            Some(DebugMode::Dec) => debug!("{:?}", instruction.clone()),
-            _ => (),
+        if self.debug_mode.is_some() {
+            debug!("{:?}", instruction.clone());
         }
 
         self.instructions.push(instruction);
@@ -46,9 +45,8 @@ impl<D: Driver> Printer<D> {
 
     /// Display logs of instructions if debug mode is enabled
     pub fn debug(self) -> Self {
-        match self.debug_mode {
-            Some(DebugMode::Dec) => debug!("[debug] instructions={:?}", self.instructions),
-            _ => (),
+        if self.debug_mode.is_some() {
+            debug!("[debug] instructions={:?}", self.instructions);
         }
 
         self
@@ -139,7 +137,7 @@ impl<D: Driver> Printer<D> {
     }
 
     /// Text size
-    pub fn text_size(self, width: u8, height: u8) -> Result<Self> {
+    pub fn size(self, width: u8, height: u8) -> Result<Self> {
         let cmd = self.protocol.text_size(width, height)?;
         self.command("text size", cmd)
     }
@@ -187,8 +185,13 @@ impl<D: Driver> Printer<D> {
     }
 
     /// Text
-    pub fn text(self, text: &str) -> Result<Self> {
+    pub fn write(self, text: &str) -> Result<Self> {
         let cmd = self.protocol.text(text)?;
         self.command("text", cmd)
+    }
+
+    /// Text + Line feed
+    pub fn writeln(self, text: &str) -> Result<Self> {
+        self.write(text)?.feed()
     }
 }

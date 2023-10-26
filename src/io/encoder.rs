@@ -1,28 +1,32 @@
 //! Encoder
 
 use crate::errors::Result;
-use encoding::{EncoderTrap, EncodingRef};
+use encoding_rs::{Encoding, UTF_8};
 
 pub struct Encoder {
-    codec: EncodingRef,
-    trap: EncoderTrap,
+    codec: &'static Encoding,
 }
 
 impl Default for Encoder {
     fn default() -> Self {
-        Encoder {
-            codec: encoding::all::UTF_8,
-            trap: EncoderTrap::Replace,
-        }
+        Encoder { codec: UTF_8 }
     }
 }
 
 impl Encoder {
-    pub fn new(codec: EncodingRef, trap: EncoderTrap) -> Self {
-        Self { codec, trap }
+    /// Create a new encoder
+    pub fn new(codec: &'static Encoding) -> Self {
+        Self { codec }
     }
 
+    /// Encode string into the right codec
     pub fn encode(&self, data: &str) -> Result<Vec<u8>> {
-        self.codec.encode(data, self.trap).map_err(Into::into)
+        match self.codec.can_encode_everything() {
+            true => Ok(self.codec.encode(data).0.into()),
+            false => Err(crate::errors::PrinterError::Input(format!(
+                "invalid {}",
+                self.codec.name()
+            ))),
+        }
     }
 }

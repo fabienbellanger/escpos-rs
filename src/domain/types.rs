@@ -72,7 +72,6 @@ impl fmt::Display for JustifyMode {
 pub enum DebugMode {
     Hex,
     Dec,
-    Char,
 }
 
 /// ESC command
@@ -97,10 +96,10 @@ impl Instruction {
 
 impl std::fmt::Debug for Instruction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        // TODO: Manage DebugMode
         match self.debug_mode {
-            Some(DebugMode::Dec) => write!(f, "[{}] {:?}", &self.name, &self.command),
-            _ => write!(f, "[{}] {:?}", &self.name, &self.command),
+            Some(DebugMode::Dec) => write!(f, "{} {:?}", &self.name, &self.command),
+            Some(DebugMode::Hex) => write!(f, "{} {:02X?}", &self.name, &self.command),
+            None => Ok(()),
         }
     }
 }
