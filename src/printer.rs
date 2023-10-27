@@ -28,7 +28,7 @@ impl<D: Driver> Printer<D> {
         self
     }
 
-    /// Add command to instrcutions, write data and display debug information
+    /// Add command to instructions, write data and display debug information
     // TODO: Add unit test
     fn command(mut self, label: &str, cmd: Command) -> Result<Self> {
         let instruction = Instruction::new(label, &cmd, self.debug_mode);
@@ -193,5 +193,35 @@ impl<D: Driver> Printer<D> {
     /// Text + Line feed
     pub fn writeln(self, text: &str) -> Result<Self> {
         self.write(text)?.feed()
+    }
+
+    /// Set horizontal and vertical motion units
+    pub fn motion_units(self, x: u8, y: u8) -> Result<Self> {
+        let cmd = self.protocol.motion_units(x, y);
+        self.command("set motion units", cmd)
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Print barcode
+    pub fn barcode(mut self, barcode: Barcode) -> Result<Self> {
+        // Font
+        let cmd = self.protocol.barcode_font(barcode.font);
+        self = self.command("set barcode font", cmd)?;
+
+        // Width
+        let cmd = self.protocol.barcode_width(barcode.width)?;
+        self = self.command("set barcode width", cmd)?;
+
+        // Height
+        let cmd = self.protocol.barcode_height(barcode.height)?;
+        self = self.command("set barcode height", cmd)?;
+
+        // Position
+        let cmd = self.protocol.barcode_position(barcode.position);
+        self = self.command("set barcode position", cmd)?;
+
+        // Print
+        let cmd = self.protocol.barcode_print(barcode.system, &barcode.data);
+        self.command("print barcode", cmd)
     }
 }

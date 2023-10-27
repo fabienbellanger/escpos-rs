@@ -5,15 +5,15 @@ use escpos::{driver::*, errors::Result};
 fn main() -> Result<()> {
     env_logger::init();
 
-    let driver = ConsoleDriver::open();
-    // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
+    // let driver = ConsoleDriver::open();
+    let driver = NetworkDriver::open("192.168.1.248", 9100)?;
     Printer::new(driver, Protocol::default())
         .debug_mode(Some(DebugMode::Hex))
         .init()?
         .smoothing(true)?
         .bold(true)?
         .underline(UnderlineMode::Single)?
-        .writeln("Hello world - Bold underline")?
+        .writeln("Bold underline")?
         .justify(JustifyMode::CENTER)?
         .reverse(true)?
         .bold(false)?

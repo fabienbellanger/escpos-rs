@@ -1,6 +1,6 @@
 //! Protocol used to communicate with the printer
 
-use super::{constants::*, types::*};
+use super::{barcodes::*, constants::*, types::*};
 use crate::{
     errors::{PrinterError, Result},
     io::encoder::Encoder,
@@ -155,6 +155,61 @@ impl Protocol {
     pub(crate) fn text(&self, text: &str) -> Result<Command> {
         self.encoder.encode(text)
     }
+
+    /// Set horizontal and vertical motion units
+    pub(crate) fn motion_units(&self, x: u8, y: u8) -> Command {
+        let mut cmd = GS_SET_MOTION_UNITS.to_vec();
+        cmd.push(x);
+        cmd.push(y);
+        cmd
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Set barcode font
+    pub(crate) fn barcode_font(&self, font: BarcodeFont) -> Command {
+        let mut cmd = GS_BARCODE_FONT.to_vec();
+        cmd.push(font as u8);
+        cmd
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Set barcode height
+    pub(crate) fn barcode_height(&self, height: u8) -> Result<Command> {
+        if height == 0 {
+            return Err(PrinterError::Input("barcode height cannot be equal to 0".to_owned()));
+        }
+        let mut cmd = GS_BARCODE_HEIGHT.to_vec();
+        cmd.push(height);
+        Ok(cmd)
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Set barcode width
+    pub(crate) fn barcode_width(&self, width: u8) -> Result<Command> {
+        if width == 0 {
+            return Err(PrinterError::Input("barcode width cannot be equal to 0".to_owned()));
+        }
+        let mut cmd = GS_BARCODE_WIDTH.to_vec();
+        cmd.push(width);
+        Ok(cmd)
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Set barcode position
+    pub(crate) fn barcode_position(&self, position: BarcodePosition) -> Command {
+        let mut cmd = GS_BARCODE_POSITION.to_vec();
+        cmd.push(position as u8);
+        cmd
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Print barcode
+    // TODO: Add test
+    pub(crate) fn barcode_print(&self, _barcode: BarcodeA, _data: &str) -> Command {
+        todo!();
+        // let mut cmd = GS_BARCODE_PRINT.to_vec();
+        // cmd
+    }
 }
 
 #[cfg(test)]
@@ -290,5 +345,49 @@ mod tests {
     fn test_text() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.text("My text").unwrap(), "My text".as_bytes());
+    }
+
+    #[test]
+    fn test_motion_units() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.motion_units(0, 255), vec![29, 80, 0, 255]);
+        assert_eq!(protocol.motion_units(4, 122), vec![29, 80, 4, 122]);
+    }
+
+    #[cfg(feature = "barcode")]
+    #[test]
+    fn test_barcode_font() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.barcode_font(BarcodeFont::A), vec![29, 102, 0]);
+        assert_eq!(protocol.barcode_font(BarcodeFont::B), vec![29, 102, 1]);
+        assert_eq!(protocol.barcode_font(BarcodeFont::C), vec![29, 102, 2]);
+        assert_eq!(protocol.barcode_font(BarcodeFont::D), vec![29, 102, 3]);
+        assert_eq!(protocol.barcode_font(BarcodeFont::E), vec![29, 102, 4]);
+    }
+
+    #[cfg(feature = "barcode")]
+    #[test]
+    fn test_barcode_height() {
+        let protocol = Protocol::new(Encoder::default());
+        assert!(protocol.barcode_height(0).is_err());
+        assert_eq!(protocol.barcode_height(5).unwrap(), vec![29, 104, 5]);
+    }
+
+    #[cfg(feature = "barcode")]
+    #[test]
+    fn test_barcode_width() {
+        let protocol = Protocol::new(Encoder::default());
+        assert!(protocol.barcode_width(0).is_err());
+        assert_eq!(protocol.barcode_width(5).unwrap(), vec![29, 119, 5]);
+    }
+
+    #[cfg(feature = "barcode")]
+    #[test]
+    fn test_barcode_position() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.barcode_position(BarcodePosition::None), vec![29, 72, 0]);
+        assert_eq!(protocol.barcode_position(BarcodePosition::Above), vec![29, 72, 1]);
+        assert_eq!(protocol.barcode_position(BarcodePosition::Below), vec![29, 72, 2]);
+        assert_eq!(protocol.barcode_position(BarcodePosition::Both), vec![29, 72, 3]);
     }
 }

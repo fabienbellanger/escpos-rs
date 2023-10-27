@@ -1,11 +1,13 @@
 //! Constants
 
 pub const _EOL: &str = "\n";
-pub const LF: u8 = 0x0A; // Print and line feed
-pub const _CR: u8 = 0x0D; // Print and carriage return
-pub const GS: u8 = 0x1D;
+pub const _NIL: u8 = 0x00; // Null
+pub const LF: u8 = 0x0A; // Line feed
+pub const _VT: u8 = 0x0B; // Vertical tab
+pub const _CR: u8 = 0x0D; // Carriage return
 pub const ESC: u8 = 0x1B;
-pub const _NIL: u8 = 0x00;
+pub const GS: u8 = 0x1D; // Group separator
+pub const _CAN: u8 = 0x18; // Cancel
 
 // Hardware
 pub const ESC_HARDWARE_INIT: &[u8] = &[ESC, b'@'];
@@ -16,9 +18,10 @@ pub const _ESC_HARDWARE_SELECT: &[u8] = &[ESC, b'=', 1]; // Unused
 pub const ESC_CASH_DRAWER_2: &[u8] = &[ESC, b'p', 0]; // Sends a pulse to pin 2
 pub const ESC_CASH_DRAWER_5: &[u8] = &[ESC, b'p', 1]; // Sends a pulse to pin 5
 
-// Paper cut
+// Paper
 pub const GS_PAPER_CUT_FULL: &[u8] = &[GS, b'V', b'A', 0];
 pub const GS_PAPER_CUT_PARTIAL: &[u8] = &[GS, b'V', b'A', 1];
+
 pub const ESC_PAPER_FEED: &[u8] = &[ESC, b'd'];
 
 // Text
@@ -59,3 +62,15 @@ pub const ESC_TEXT_UPSIDE_DOWN_ON: &[u8] = &[ESC, b'{', 1];
 
 // pub const GS_TEXT_MARGIN_LEFT: &[u8] = &[GS, b'L'];
 // pub const GS_TEXT_PRINTABLE_AREA: &[u8] = &[GS, 0x57];
+
+// Barcodes
+
+pub const GS_BARCODE_POSITION: &[u8] = &[GS, b'H'];
+pub const GS_BARCODE_FONT: &[u8] = &[GS, b'f'];
+pub const GS_BARCODE_HEIGHT: &[u8] = &[GS, b'h'];
+pub const GS_BARCODE_WIDTH: &[u8] = &[GS, b'w'];
+pub const GS_BARCODE_PRINT: &[u8] = &[GS, b'k'];
+
+// Others
+
+pub const GS_SET_MOTION_UNITS: &[u8] = &[GS, b'P'];

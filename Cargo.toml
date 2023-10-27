@@ -2,8 +2,20 @@
 name = "escpos"
 version = "0.1.0"
 edition = "2021"
+description = "ESCPOS printer driver for Rust"
+homepage = "https://github.com/fabienbellanger/escpos-rs"
+repository = "https://github.com/fabienbellanger/escpos-rs"
+authors = ["Fabien Bellanger <valentil@gmail.com>"]
+readme = "README.md"
+keywords = ["escpos", "printer", "driver", "thermal", "receipt", "usb"]
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+barcode = []
+qrcode = []
+image = []
 
 [dependencies]
 encoding_rs = "0.8.33"
