@@ -1,7 +1,7 @@
 //! Constants
 
 pub const _EOL: &str = "\n";
-pub const _NIL: u8 = 0x00; // Null
+pub const NUL: u8 = 0x00; // Null
 pub const LF: u8 = 0x0A; // Line feed
 pub const _VT: u8 = 0x0B; // Vertical tab
 pub const _CR: u8 = 0x0D; // Carriage return

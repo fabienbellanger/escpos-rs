@@ -184,11 +184,12 @@ impl Protocol {
     }
 
     #[cfg(feature = "barcode")]
-    /// Set barcode width
+    /// Set barcode width (1 - 5)
     pub(crate) fn barcode_width(&self, width: u8) -> Result<Command> {
         if width == 0 {
             return Err(PrinterError::Input("barcode width cannot be equal to 0".to_owned()));
         }
+        let width = if width > 5 { 5 } else { width };
         let mut cmd = GS_BARCODE_WIDTH.to_vec();
         cmd.push(width);
         Ok(cmd)
@@ -204,11 +205,12 @@ impl Protocol {
 
     #[cfg(feature = "barcode")]
     /// Print barcode
-    // TODO: Add test
-    pub(crate) fn barcode_print(&self, _barcode: BarcodeA, _data: &str) -> Command {
-        todo!();
-        // let mut cmd = GS_BARCODE_PRINT.to_vec();
-        // cmd
+    pub(crate) fn barcode_print(&self, system: BarcodeSystem, data: &str) -> Command {
+        let mut cmd = GS_BARCODE_PRINT.to_vec();
+        cmd.push(system as u8);
+        cmd.append(&mut data.as_bytes().to_vec());
+        cmd.push(NUL);
+        cmd
     }
 }
 
@@ -379,6 +381,8 @@ mod tests {
         let protocol = Protocol::new(Encoder::default());
         assert!(protocol.barcode_width(0).is_err());
         assert_eq!(protocol.barcode_width(5).unwrap(), vec![29, 119, 5]);
+        assert_eq!(protocol.barcode_width(1).unwrap(), vec![29, 119, 1]);
+        assert_eq!(protocol.barcode_width(18).unwrap(), vec![29, 119, 5]);
     }
 
     #[cfg(feature = "barcode")]
@@ -389,5 +393,39 @@ mod tests {
         assert_eq!(protocol.barcode_position(BarcodePosition::Above), vec![29, 72, 1]);
         assert_eq!(protocol.barcode_position(BarcodePosition::Below), vec![29, 72, 2]);
         assert_eq!(protocol.barcode_position(BarcodePosition::Both), vec![29, 72, 3]);
+    }
+
+    #[cfg(feature = "barcode")]
+    #[test]
+    fn test_barcode_print() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.barcode_print(BarcodeSystem::UPCA, "12587458745"),
+            vec![29, 107, 0, b'1', b'2', b'5', b'8', b'7', b'4', b'5', b'8', b'7', b'4', b'5', 0]
+        );
+        assert_eq!(
+            protocol.barcode_print(BarcodeSystem::UPCE, "02587458745"),
+            vec![29, 107, 1, b'0', b'2', b'5', b'8', b'7', b'4', b'5', b'8', b'7', b'4', b'5', 0]
+        );
+        assert_eq!(
+            protocol.barcode_print(BarcodeSystem::EAN13, "025874587456"),
+            vec![29, 107, 2, b'0', b'2', b'5', b'8', b'7', b'4', b'5', b'8', b'7', b'4', b'5', b'6', 0]
+        );
+        assert_eq!(
+            protocol.barcode_print(BarcodeSystem::EAN8, "0587456"),
+            vec![29, 107, 3, b'0', b'5', b'8', b'7', b'4', b'5', b'6', 0]
+        );
+        assert_eq!(
+            protocol.barcode_print(BarcodeSystem::CODE39, "05A$"),
+            vec![29, 107, 4, b'0', b'5', b'A', b'$', 0]
+        );
+        assert_eq!(
+            protocol.barcode_print(BarcodeSystem::ITF, "0585"),
+            vec![29, 107, 5, b'0', b'5', b'8', b'5', 0]
+        );
+        assert_eq!(
+            protocol.barcode_print(BarcodeSystem::CODABAR, "A05A$C"),
+            vec![29, 107, 6, b'A', b'0', b'5', b'A', b'$', b'C', 0]
+        );
     }
 }

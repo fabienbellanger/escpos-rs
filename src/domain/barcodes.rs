@@ -5,18 +5,18 @@
 use crate::errors::Result;
 use std::fmt;
 
-const CODE39_VALID_CHARS: [char; 43] = [
+const CODE39_VALID_CHARS: [char; 44] = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', '%', '*', '+', '-', '.', '/', 'A', 'B', 'C', 'D', 'E', 'F',
-    'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ',
 ];
 const CODABAR_VALID_CHARS: [char; 24] = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'a', 'b', 'c', 'd', '$', '+', '-', '.', '/',
     ':',
 ];
 
-/// Barcodes function A
+/// Barcode system (function A used)
 #[derive(Debug, Clone, Copy)]
-pub enum BarcodeA {
+pub enum BarcodeSystem {
     UPCA = 0,
     UPCE = 1,
     EAN13 = 2,
@@ -26,16 +26,16 @@ pub enum BarcodeA {
     CODABAR = 6,
 }
 
-impl fmt::Display for BarcodeA {
+impl fmt::Display for BarcodeSystem {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            BarcodeA::UPCA => write!(f, "UPC-A barcode"),
-            BarcodeA::UPCE => write!(f, "UPC-E barcode"),
-            BarcodeA::EAN8 => write!(f, "EAN8 barcode"),
-            BarcodeA::EAN13 => write!(f, "EAN13 barcode"),
-            BarcodeA::CODE39 => write!(f, "CODE39 barcode"),
-            BarcodeA::ITF => write!(f, "ITF barcode"),
-            BarcodeA::CODABAR => write!(f, "CODABAR barcode"),
+            BarcodeSystem::UPCA => write!(f, "UPC-A"),
+            BarcodeSystem::UPCE => write!(f, "UPC-E"),
+            BarcodeSystem::EAN8 => write!(f, "EAN8"),
+            BarcodeSystem::EAN13 => write!(f, "EAN13"),
+            BarcodeSystem::CODE39 => write!(f, "CODE39"),
+            BarcodeSystem::ITF => write!(f, "ITF"),
+            BarcodeSystem::CODABAR => write!(f, "CODABAR"),
         }
     }
 }
@@ -83,44 +83,66 @@ impl fmt::Display for BarcodePosition {
 }
 
 #[derive(Debug)]
-pub struct Barcode {
-    pub system: BarcodeA,
-    pub data: String,
-    pub width: u8,
+pub enum BarcodeWidth {
+    XS = 1,
+    S = 2,
+    M = 3,
+    L = 4,
+    XL = 5,
+}
+
+#[derive(Debug)]
+pub struct BarcodeOption {
+    pub width: BarcodeWidth,
     pub height: u8,
     pub font: BarcodeFont,
     pub position: BarcodePosition,
 }
 
+impl Default for BarcodeOption {
+    fn default() -> Self {
+        Self {
+            width: BarcodeWidth::M,
+            height: 100,
+            font: BarcodeFont::A,
+            position: BarcodePosition::Below,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct Barcode {
+    pub system: BarcodeSystem,
+    pub data: String,
+    pub option: BarcodeOption,
+}
+
 impl Barcode {
     /// Create a new `Barcode`
-    pub fn new(
-        system: BarcodeA,
-        data: &str,
-        width: u8,
-        height: u8,
-        font: BarcodeFont,
-        position: BarcodePosition,
-    ) -> Result<Self> {
-        Self::valide(system, data)?;
+    // TODO: Add test
+    pub fn new(system: BarcodeSystem, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
+        Self::validate(system, data)?;
+
+        let option = if let Some(option) = option {
+            option
+        } else {
+            BarcodeOption::default()
+        };
 
         Ok(Self {
             system,
             data: data.to_string(),
-            width,
-            height,
-            font,
-            position,
+            option,
         })
     }
 
     /// Validate data
-    fn valide(system: BarcodeA, data: &str) -> Result<()> {
+    fn validate(system: BarcodeSystem, data: &str) -> Result<()> {
         let data_len = data.len();
         let is_data_all_digits = data.chars().all(|c| c.is_ascii_digit());
 
         match system {
-            BarcodeA::UPCA => {
+            BarcodeSystem::UPCA => {
                 if is_data_all_digits && [11, 12].contains(&data_len) {
                     Ok(())
                 } else {
@@ -129,7 +151,7 @@ impl Barcode {
                     )))
                 }
             }
-            BarcodeA::UPCE => {
+            BarcodeSystem::UPCE => {
                 if is_data_all_digits && [6, 7, 8, 11, 12].contains(&data_len) && data_len == 6
                     || data.chars().nth(0) == Some('0')
                 {
@@ -140,14 +162,14 @@ impl Barcode {
                     )))
                 }
             }
-            BarcodeA::EAN8 => {
+            BarcodeSystem::EAN8 => {
                 if is_data_all_digits && [7, 8].contains(&data_len) {
                     Ok(())
                 } else {
                     Err(crate::errors::PrinterError::Input(format!("invalid EAN8 data: {data}")))
                 }
             }
-            BarcodeA::EAN13 => {
+            BarcodeSystem::EAN13 => {
                 if is_data_all_digits && [12, 13].contains(&data_len) {
                     Ok(())
                 } else {
@@ -156,14 +178,14 @@ impl Barcode {
                     )))
                 }
             }
-            BarcodeA::ITF => {
+            BarcodeSystem::ITF => {
                 if data_len >= 2 && is_data_all_digits {
                     Ok(())
                 } else {
                     Err(crate::errors::PrinterError::Input(format!("invalid ITF data: {data}")))
                 }
             }
-            BarcodeA::CODE39 => {
+            BarcodeSystem::CODE39 => {
                 if data_len >= 1 && data.chars().all(|c| CODE39_VALID_CHARS.contains(&c)) {
                     Ok(())
                 } else {
@@ -172,9 +194,9 @@ impl Barcode {
                     )))
                 }
             }
-            BarcodeA::CODABAR => {
+            BarcodeSystem::CODABAR => {
                 // (However, d1 = 65 – 68, dk = 65 – 68, d1 = 97 – 100, dk = 97 – 100)
-                if data_len >= 1 && data.chars().all(|c| CODABAR_VALID_CHARS.contains(&c)) {
+                if data_len >= 2 && data.chars().all(|c| CODABAR_VALID_CHARS.contains(&c)) {
                     Ok(())
                 } else {
                     Err(crate::errors::PrinterError::Input(format!(
@@ -191,85 +213,85 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_barcode_valide_upca() {
-        assert!(Barcode::valide(BarcodeA::UPCA, "12587965874").is_ok());
-        assert!(Barcode::valide(BarcodeA::UPCA, "125879658746").is_ok());
+    fn test_barcode_validate_upca() {
+        assert!(Barcode::validate(BarcodeSystem::UPCA, "12587965874").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::UPCA, "125879658746").is_ok());
 
-        assert!(Barcode::valide(BarcodeA::UPCA, "1258796587").is_err());
-        assert!(Barcode::valide(BarcodeA::UPCA, "1258796587000").is_err());
-        assert!(Barcode::valide(BarcodeA::UPCA, "1d8796587000").is_err());
+        assert!(Barcode::validate(BarcodeSystem::UPCA, "1258796587").is_err());
+        assert!(Barcode::validate(BarcodeSystem::UPCA, "1258796587000").is_err());
+        assert!(Barcode::validate(BarcodeSystem::UPCA, "1d8796587000").is_err());
     }
 
     #[test]
-    fn test_barcode_valide_upce() {
-        assert!(Barcode::valide(BarcodeA::UPCE, "02587965874").is_ok());
-        assert!(Barcode::valide(BarcodeA::UPCE, "025879658746").is_ok());
-        assert!(Barcode::valide(BarcodeA::UPCE, "02980547").is_ok());
-        assert!(Barcode::valide(BarcodeA::UPCE, "985487").is_ok());
-        assert!(Barcode::valide(BarcodeA::UPCE, "085487").is_ok());
+    fn test_barcode_validate_upce() {
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "02587965874").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "025879658746").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "02980547").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "985487").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "085487").is_ok());
 
-        assert!(Barcode::valide(BarcodeA::UPCE, "1f2-58").is_err());
-        assert!(Barcode::valide(BarcodeA::UPCE, "9805874").is_err());
-        assert!(Barcode::valide(BarcodeA::UPCE, "92587965874").is_err());
-        assert!(Barcode::valide(BarcodeA::UPCE, "925879658746").is_err());
-        assert!(Barcode::valide(BarcodeA::UPCE, "92980547").is_err());
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "1f2-58").is_err());
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "9805874").is_err());
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "92587965874").is_err());
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "925879658746").is_err());
+        assert!(Barcode::validate(BarcodeSystem::UPCE, "92980547").is_err());
     }
 
     #[test]
-    fn test_barcode_valide_ean8() {
-        assert!(Barcode::valide(BarcodeA::EAN8, "0325874").is_ok());
-        assert!(Barcode::valide(BarcodeA::EAN8, "98574587").is_ok());
+    fn test_barcode_validate_ean8() {
+        assert!(Barcode::validate(BarcodeSystem::EAN8, "0325874").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::EAN8, "98574587").is_ok());
 
-        assert!(Barcode::valide(BarcodeA::EAN8, "5g47u29").is_err());
-        assert!(Barcode::valide(BarcodeA::EAN8, "980587407").is_err());
+        assert!(Barcode::validate(BarcodeSystem::EAN8, "5g47u29").is_err());
+        assert!(Barcode::validate(BarcodeSystem::EAN8, "980587407").is_err());
     }
 
     #[test]
-    fn test_barcode_valide_ean13() {
-        assert!(Barcode::valide(BarcodeA::EAN13, "012403258746").is_ok());
-        assert!(Barcode::valide(BarcodeA::EAN13, "0124032587468").is_ok());
+    fn test_barcode_validate_ean13() {
+        assert!(Barcode::validate(BarcodeSystem::EAN13, "012403258746").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::EAN13, "0124032587468").is_ok());
 
-        assert!(Barcode::valide(BarcodeA::EAN13, "01240325874").is_err());
-        assert!(Barcode::valide(BarcodeA::EAN13, "98058740701009").is_err());
-        assert!(Barcode::valide(BarcodeA::EAN13, "9805874070s09").is_err());
+        assert!(Barcode::validate(BarcodeSystem::EAN13, "01240325874").is_err());
+        assert!(Barcode::validate(BarcodeSystem::EAN13, "98058740701009").is_err());
+        assert!(Barcode::validate(BarcodeSystem::EAN13, "9805874070s09").is_err());
     }
 
     #[test]
-    fn test_barcode_valide_itf() {
-        assert!(Barcode::valide(BarcodeA::ITF, "01").is_ok());
-        assert!(Barcode::valide(BarcodeA::ITF, "0124032587468").is_ok());
+    fn test_barcode_validate_itf() {
+        assert!(Barcode::validate(BarcodeSystem::ITF, "01").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::ITF, "0124032587468").is_ok());
 
-        assert!(Barcode::valide(BarcodeA::ITF, "").is_err());
-        assert!(Barcode::valide(BarcodeA::ITF, "3").is_err());
-        assert!(Barcode::valide(BarcodeA::ITF, "   ").is_err());
-        assert!(Barcode::valide(BarcodeA::ITF, "  3 ").is_err());
-        assert!(Barcode::valide(BarcodeA::ITF, "9805f8740701009").is_err());
-        assert!(Barcode::valide(BarcodeA::ITF, "98f874d0d70s09").is_err());
+        assert!(Barcode::validate(BarcodeSystem::ITF, "").is_err());
+        assert!(Barcode::validate(BarcodeSystem::ITF, "3").is_err());
+        assert!(Barcode::validate(BarcodeSystem::ITF, "   ").is_err());
+        assert!(Barcode::validate(BarcodeSystem::ITF, "  3 ").is_err());
+        assert!(Barcode::validate(BarcodeSystem::ITF, "9805f8740701009").is_err());
+        assert!(Barcode::validate(BarcodeSystem::ITF, "98f874d0d70s09").is_err());
     }
 
     #[test]
-    fn test_barcode_valide_code39() {
-        assert!(Barcode::valide(BarcodeA::CODE39, "3").is_ok());
-        assert!(Barcode::valide(BarcodeA::CODE39, "01").is_ok());
-        assert!(Barcode::valide(BarcodeA::CODE39, "0ADGHJ347%F*L-M.Q/C").is_ok());
+    fn test_barcode_validate_code39() {
+        assert!(Barcode::validate(BarcodeSystem::CODE39, "3").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::CODE39, "01").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::CODE39, "   ").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::CODE39, "  3 ").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::CODE39, "0ADGH J347%F*L-M.Q/C").is_ok());
 
-        assert!(Barcode::valide(BarcodeA::CODE39, "").is_err());
-        assert!(Barcode::valide(BarcodeA::CODE39, "   ").is_err());
-        assert!(Barcode::valide(BarcodeA::CODE39, "  3 ").is_err());
-        assert!(Barcode::valide(BarcodeA::CODE39, "9805f8740701009").is_err());
-        assert!(Barcode::valide(BarcodeA::CODE39, "98f874d0d70s09").is_err());
+        assert!(Barcode::validate(BarcodeSystem::CODE39, "").is_err());
+        assert!(Barcode::validate(BarcodeSystem::CODE39, "9805f8740701009").is_err());
+        assert!(Barcode::validate(BarcodeSystem::CODE39, "98f874d0d70s09").is_err());
     }
 
     #[test]
-    fn test_barcode_valide_codabar() {
-        assert!(Barcode::valide(BarcodeA::CODABAR, "3").is_ok());
-        assert!(Barcode::valide(BarcodeA::CODABAR, "01").is_ok());
-        assert!(Barcode::valide(BarcodeA::CODABAR, "4Adc/D.8/$0").is_ok());
+    fn test_barcode_validate_codabar() {
+        assert!(Barcode::validate(BarcodeSystem::CODABAR, "01").is_ok());
+        assert!(Barcode::validate(BarcodeSystem::CODABAR, "4Adc/D.8/$0").is_ok());
 
-        assert!(Barcode::valide(BarcodeA::CODABAR, "").is_err());
-        assert!(Barcode::valide(BarcodeA::CODABAR, "   ").is_err());
-        assert!(Barcode::valide(BarcodeA::CODABAR, "  3 ").is_err());
-        assert!(Barcode::valide(BarcodeA::CODABAR, "9805f8740701009").is_err());
-        assert!(Barcode::valide(BarcodeA::CODABAR, "98f874d0d70s09").is_err());
+        assert!(Barcode::validate(BarcodeSystem::CODABAR, "").is_err());
+        assert!(Barcode::validate(BarcodeSystem::CODABAR, "3").is_err());
+        assert!(Barcode::validate(BarcodeSystem::CODABAR, "   ").is_err());
+        assert!(Barcode::validate(BarcodeSystem::CODABAR, "  3 ").is_err());
+        assert!(Barcode::validate(BarcodeSystem::CODABAR, "9805f8740701009").is_err());
+        assert!(Barcode::validate(BarcodeSystem::CODABAR, "98f874d0d70s09").is_err());
     }
 }
