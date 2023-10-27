@@ -168,7 +168,7 @@ impl Protocol {
     /// Set barcode font
     pub(crate) fn barcode_font(&self, font: BarcodeFont) -> Command {
         let mut cmd = GS_BARCODE_FONT.to_vec();
-        cmd.push(font as u8);
+        cmd.push(font.into());
         cmd
     }
 
@@ -199,7 +199,7 @@ impl Protocol {
     /// Set barcode position
     pub(crate) fn barcode_position(&self, position: BarcodePosition) -> Command {
         let mut cmd = GS_BARCODE_POSITION.to_vec();
-        cmd.push(position as u8);
+        cmd.push(position.into());
         cmd
     }
 
@@ -207,7 +207,7 @@ impl Protocol {
     /// Print barcode
     pub(crate) fn barcode_print(&self, system: BarcodeSystem, data: &str) -> Command {
         let mut cmd = GS_BARCODE_PRINT.to_vec();
-        cmd.push(system as u8);
+        cmd.push(system.into());
         cmd.append(&mut data.as_bytes().to_vec());
         cmd.push(NUL);
         cmd

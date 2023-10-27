@@ -205,11 +205,11 @@ impl<D: Driver> Printer<D> {
     /// Print barcode
     fn barcode(mut self, barcode: Barcode) -> Result<Self> {
         // Width
-        let cmd = self.protocol.barcode_width(barcode.option.width as u8)?;
+        let cmd = self.protocol.barcode_width(barcode.option.width.into())?;
         self = self.command("set barcode width", cmd)?;
 
         // Height
-        let cmd = self.protocol.barcode_height(barcode.option.height)?;
+        let cmd = self.protocol.barcode_height(barcode.option.height.into())?;
         self = self.command("set barcode height", cmd)?;
 
         // Font
@@ -226,9 +226,14 @@ impl<D: Driver> Printer<D> {
     }
 
     #[cfg(feature = "barcode")]
-    /// Print EAN13 barcode
-    pub fn ean13(self, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
-        self.barcode(Barcode::new(BarcodeSystem::EAN13, data, option)?)
+    /// Print EAN13 barcode with default option
+    pub fn ean13(self, data: &str) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::EAN13, data, None)?)
+    }
+
+    /// Print EAN13 barcode with option
+    pub fn ean13_option(self, data: &str, option: BarcodeOption) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::EAN13, data, Some(option))?)
     }
 
     #[cfg(feature = "barcode")]

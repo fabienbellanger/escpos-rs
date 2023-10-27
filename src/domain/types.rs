@@ -4,8 +4,8 @@ use std::fmt;
 
 #[derive(Debug)]
 pub enum CashDrawer {
-    Pin2 = 0,
-    Pin5 = 1,
+    Pin2,
+    Pin5,
 }
 
 impl fmt::Display for CashDrawer {
@@ -19,9 +19,9 @@ impl fmt::Display for CashDrawer {
 
 #[derive(Debug)]
 pub enum UnderlineMode {
-    None = 0,
-    Single = 1,
-    Double = 2,
+    None,
+    Single,
+    Double,
 }
 
 impl fmt::Display for UnderlineMode {
@@ -53,9 +53,9 @@ impl fmt::Display for Font {
 
 #[derive(Debug)]
 pub enum JustifyMode {
-    LEFT = 0,
-    CENTER = 1,
-    RIGHT = 2,
+    LEFT,
+    CENTER,
+    RIGHT,
 }
 
 impl fmt::Display for JustifyMode {

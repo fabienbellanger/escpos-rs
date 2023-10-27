@@ -26,7 +26,10 @@ fn main() -> Result<()> {
         .writeln("Hello world - Normal")?
         .write("")?
         .justify(JustifyMode::CENTER)?
-        .ean13("1234567890265", None)?
+        .ean13_option(
+            "1234567890265",
+            BarcodeOption::new("M", "S", "A", BarcodePosition::Below),
+        )?
         .write("")?
         .feed()?
         //.debug()

@@ -17,13 +17,27 @@ const CODABAR_VALID_CHARS: [char; 24] = [
 /// Barcode system (function A used)
 #[derive(Debug, Clone, Copy)]
 pub enum BarcodeSystem {
-    UPCA = 0,
-    UPCE = 1,
-    EAN13 = 2,
-    EAN8 = 3,
-    CODE39 = 4,
-    ITF = 5,
-    CODABAR = 6,
+    UPCA,
+    UPCE,
+    EAN13,
+    EAN8,
+    CODE39,
+    ITF,
+    CODABAR,
+}
+
+impl From<BarcodeSystem> for u8 {
+    fn from(value: BarcodeSystem) -> Self {
+        match value {
+            BarcodeSystem::UPCA => 0,
+            BarcodeSystem::UPCE => 1,
+            BarcodeSystem::EAN13 => 2,
+            BarcodeSystem::EAN8 => 3,
+            BarcodeSystem::CODE39 => 4,
+            BarcodeSystem::ITF => 5,
+            BarcodeSystem::CODABAR => 6,
+        }
+    }
 }
 
 impl fmt::Display for BarcodeSystem {
@@ -43,11 +57,42 @@ impl fmt::Display for BarcodeSystem {
 /// Barcodes function A
 #[derive(Debug)]
 pub enum BarcodeFont {
-    A = 0,
-    B = 1,
-    C = 2,
-    D = 3,
-    E = 4,
+    A,
+    B,
+    C,
+    D,
+    E,
+}
+
+impl From<BarcodeFont> for u8 {
+    fn from(value: BarcodeFont) -> Self {
+        match value {
+            BarcodeFont::A => 0,
+            BarcodeFont::B => 1,
+            BarcodeFont::C => 2,
+            BarcodeFont::D => 3,
+            BarcodeFont::E => 4,
+        }
+    }
+}
+
+impl Default for BarcodeFont {
+    fn default() -> Self {
+        BarcodeFont::A
+    }
+}
+
+impl From<&str> for BarcodeFont {
+    fn from(value: &str) -> Self {
+        match value {
+            "A" => Self::A,
+            "B" => Self::B,
+            "C" => Self::C,
+            "D" => Self::D,
+            "E" => Self::E,
+            _ => Self::default(),
+        }
+    }
 }
 
 impl fmt::Display for BarcodeFont {
@@ -65,10 +110,21 @@ impl fmt::Display for BarcodeFont {
 /// Barcodes function A
 #[derive(Debug)]
 pub enum BarcodePosition {
-    None = 0,
-    Above = 1,
-    Below = 2,
-    Both = 3,
+    None,
+    Above,
+    Below,
+    Both,
+}
+
+impl From<BarcodePosition> for u8 {
+    fn from(value: BarcodePosition) -> Self {
+        match value {
+            BarcodePosition::None => 0,
+            BarcodePosition::Above => 1,
+            BarcodePosition::Below => 2,
+            BarcodePosition::Both => 3,
+        }
+    }
 }
 
 impl fmt::Display for BarcodePosition {
@@ -84,17 +140,88 @@ impl fmt::Display for BarcodePosition {
 
 #[derive(Debug)]
 pub enum BarcodeWidth {
-    XS = 1,
-    S = 2,
-    M = 3,
-    L = 4,
-    XL = 5,
+    XS,
+    S,
+    M,
+    L,
+    XL,
+}
+
+impl From<BarcodeWidth> for u8 {
+    fn from(value: BarcodeWidth) -> Self {
+        match value {
+            BarcodeWidth::XS => 1,
+            BarcodeWidth::S => 2,
+            BarcodeWidth::M => 3,
+            BarcodeWidth::L => 4,
+            BarcodeWidth::XL => 5,
+        }
+    }
+}
+
+impl Default for BarcodeWidth {
+    fn default() -> Self {
+        BarcodeWidth::M
+    }
+}
+
+impl From<&str> for BarcodeWidth {
+    fn from(value: &str) -> Self {
+        match value {
+            "XS" => Self::XS,
+            "S" => Self::S,
+            "M" => Self::M,
+            "L" => Self::L,
+            "XL" => Self::XL,
+            _ => Self::default(),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum BarcodeHeight {
+    XS,
+    S,
+    M,
+    L,
+    XL,
+}
+
+impl From<BarcodeHeight> for u8 {
+    fn from(value: BarcodeHeight) -> Self {
+        match value {
+            BarcodeHeight::XS => 51,
+            BarcodeHeight::S => 102,
+            BarcodeHeight::M => 153,
+            BarcodeHeight::L => 204,
+            BarcodeHeight::XL => 255,
+        }
+    }
+}
+
+impl Default for BarcodeHeight {
+    fn default() -> Self {
+        BarcodeHeight::S
+    }
+}
+
+impl From<&str> for BarcodeHeight {
+    fn from(value: &str) -> Self {
+        match value {
+            "XS" => Self::XS,
+            "S" => Self::S,
+            "M" => Self::M,
+            "L" => Self::L,
+            "XL" => Self::XL,
+            _ => Self::default(),
+        }
+    }
 }
 
 #[derive(Debug)]
 pub struct BarcodeOption {
     pub width: BarcodeWidth,
-    pub height: u8,
+    pub height: BarcodeHeight,
     pub font: BarcodeFont,
     pub position: BarcodePosition,
 }
@@ -102,10 +229,22 @@ pub struct BarcodeOption {
 impl Default for BarcodeOption {
     fn default() -> Self {
         Self {
-            width: BarcodeWidth::M,
-            height: 100,
+            width: BarcodeWidth::default(),
+            height: BarcodeHeight::default(),
             font: BarcodeFont::A,
             position: BarcodePosition::Below,
+        }
+    }
+}
+
+impl BarcodeOption {
+    /// Create new `BarcodeOption`
+    pub fn new(width: &str, height: &str, font: &str, position: BarcodePosition) -> Self {
+        Self {
+            width: width.into(),
+            height: height.into(),
+            font: font.into(),
+            position,
         }
     }
 }
