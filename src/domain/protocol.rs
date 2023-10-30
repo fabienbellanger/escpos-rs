@@ -1,6 +1,6 @@
 //! Protocol used to communicate with the printer
 
-use super::{barcodes::*, constants::*, qrcode::*, types::*};
+use super::{barcodes::*, constants::*, graphics::*, qrcode::*, types::*};
 use crate::{
     errors::{PrinterError, Result},
     io::encoder::Encoder,
@@ -253,6 +253,15 @@ impl Protocol {
     /// QR code print
     pub(crate) fn qrcode_print(&self) -> Command {
         GS_2D_QRCODE_PRINT_SYMBOL_DATA.to_vec()
+    }
+
+    #[cfg(feature = "graphics")]
+    /// Graphic density
+    pub(crate) fn graphic_density(&self, density: GraphicDensity) -> Command {
+        let mut cmd = GS_IMAGE_DENSITY.to_vec();
+        cmd.push(density.into());
+        cmd.push(density.into());
+        cmd
     }
 }
 
@@ -542,5 +551,19 @@ mod tests {
     fn test_qrcode_print() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.qrcode_print(), vec![29, 40, 107, 3, 0, 49, 81, 48]);
+    }
+
+    #[cfg(feature = "graphics")]
+    #[test]
+    fn test_graphic_density() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.graphic_density(GraphicDensity::Low),
+            vec![29, 40, 76, 4, 0, 48, 49, 50, 50]
+        );
+        assert_eq!(
+            protocol.graphic_density(GraphicDensity::Hight),
+            vec![29, 40, 76, 4, 0, 48, 49, 51, 51]
+        );
     }
 }
