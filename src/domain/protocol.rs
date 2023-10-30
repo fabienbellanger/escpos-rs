@@ -263,6 +263,12 @@ impl Protocol {
         cmd.push(density.into());
         cmd
     }
+
+    #[cfg(feature = "graphics")]
+    /// Print graphic
+    pub(crate) fn graphic_print(&self) -> Command {
+        GS_IMAGE_PRINT.to_vec()
+    }
 }
 
 #[cfg(test)]
@@ -565,5 +571,12 @@ mod tests {
             protocol.graphic_density(GraphicDensity::Hight),
             vec![29, 40, 76, 4, 0, 48, 49, 51, 51]
         );
+    }
+
+    #[cfg(feature = "graphics")]
+    #[test]
+    fn test_graphic_print() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.graphic_print(), vec![29, 40, 76, 2, 0, 48, 50]);
     }
 }
