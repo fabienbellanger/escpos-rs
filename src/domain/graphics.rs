@@ -1,0 +1,3 @@
+//! Graphics
+
+#![cfg(feature = "graphics")]
