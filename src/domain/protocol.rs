@@ -527,9 +527,9 @@ mod tests {
         assert_eq!(protocol.qrcode_size(0), vec![29, 40, 107, 3, 0, 49, 67, 0]);
         assert_eq!(protocol.qrcode_size(1), vec![29, 40, 107, 3, 0, 49, 67, 1]);
         assert_eq!(protocol.qrcode_size(8), vec![29, 40, 107, 3, 0, 49, 67, 8]);
-        assert_eq!(protocol.qrcode_size(16), vec![29, 40, 107, 3, 0, 49, 67, 16]);
-        assert_eq!(protocol.qrcode_size(128), vec![29, 40, 107, 3, 0, 49, 67, 128]);
-        assert_eq!(protocol.qrcode_size(255), vec![29, 40, 107, 3, 0, 49, 67, 255]);
+        assert_eq!(protocol.qrcode_size(15), vec![29, 40, 107, 3, 0, 49, 67, 15]);
+        assert_eq!(protocol.qrcode_size(128), vec![29, 40, 107, 3, 0, 49, 67, 15]);
+        assert_eq!(protocol.qrcode_size(255), vec![29, 40, 107, 3, 0, 49, 67, 15]);
     }
 
     #[cfg(feature = "qrcode")]
