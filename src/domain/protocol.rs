@@ -1,6 +1,6 @@
 //! Protocol used to communicate with the printer
 
-use super::{barcodes::*, constants::*, types::*};
+use super::{barcodes::*, constants::*, qrcode::*, types::*};
 use crate::{
     errors::{PrinterError, Result},
     io::encoder::Encoder,
@@ -211,6 +211,48 @@ impl Protocol {
         cmd.append(&mut data.as_bytes().to_vec());
         cmd.push(NUL);
         cmd
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// QR code model
+    pub(crate) fn qrcode_model(&self, model: QRCodeModel) -> Command {
+        let mut cmd = GS_2D_QRCODE_MODEL.to_vec();
+        cmd.push(model.into());
+        cmd.push(0);
+        cmd
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// QR code error correction level
+    pub(crate) fn qrcode_correction_level(&self, level: QRCodeCorrectionLevel) -> Command {
+        let mut cmd = GS_2D_QRCODE_CORRECTION_LEVEL.to_vec();
+        cmd.push(level.into());
+        cmd
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// QR code size (0 <= size <= 15, 0 <=> 4)
+    pub(crate) fn qrcode_size(&self, size: u8) -> Command {
+        let size = if size > 15 { 15 } else { size };
+        let mut cmd = GS_2D_QRCODE_SIZE.to_vec();
+        cmd.push(size);
+        cmd
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// QR code data
+    pub(crate) fn qrcode_data(&self, data: &str) -> Result<Command> {
+        let mut cmd = GS_2D.to_vec();
+        let (pl, ph) = QRCode::get_size_values(data)?;
+        cmd.append(&mut vec![pl, ph, 49, 80, 48]);
+        cmd.append(&mut data.as_bytes().to_vec());
+        Ok(cmd)
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// QR code print
+    pub(crate) fn qrcode_print(&self) -> Command {
+        GS_2D_QRCODE_PRINT_SYMBOL_DATA.to_vec()
     }
 }
 
@@ -427,5 +469,78 @@ mod tests {
             protocol.barcode_print(BarcodeSystem::CODABAR, "A05A$C"),
             vec![29, 107, 6, b'A', b'0', b'5', b'A', b'$', b'C', 0]
         );
+    }
+
+    #[cfg(feature = "qrcode")]
+    #[test]
+    fn test_qrcode_model() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.qrcode_model(QRCodeModel::Model1),
+            vec![29, 40, 107, 4, 0, 49, 65, 49, 0]
+        );
+        assert_eq!(
+            protocol.qrcode_model(QRCodeModel::Model2),
+            vec![29, 40, 107, 4, 0, 49, 65, 50, 0]
+        );
+        assert_eq!(
+            protocol.qrcode_model(QRCodeModel::Micro),
+            vec![29, 40, 107, 4, 0, 49, 65, 51, 0]
+        );
+    }
+
+    #[cfg(feature = "qrcode")]
+    #[test]
+    fn test_qrcode_correction_level() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.qrcode_correction_level(QRCodeCorrectionLevel::L),
+            vec![29, 40, 107, 3, 0, 49, 69, 48]
+        );
+        assert_eq!(
+            protocol.qrcode_correction_level(QRCodeCorrectionLevel::M),
+            vec![29, 40, 107, 3, 0, 49, 69, 49]
+        );
+        assert_eq!(
+            protocol.qrcode_correction_level(QRCodeCorrectionLevel::Q),
+            vec![29, 40, 107, 3, 0, 49, 69, 50]
+        );
+        assert_eq!(
+            protocol.qrcode_correction_level(QRCodeCorrectionLevel::H),
+            vec![29, 40, 107, 3, 0, 49, 69, 51]
+        );
+    }
+
+    #[cfg(feature = "qrcode")]
+    #[test]
+    fn test_qrcode_size() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.qrcode_size(0), vec![29, 40, 107, 3, 0, 49, 67, 0]);
+        assert_eq!(protocol.qrcode_size(1), vec![29, 40, 107, 3, 0, 49, 67, 1]);
+        assert_eq!(protocol.qrcode_size(8), vec![29, 40, 107, 3, 0, 49, 67, 8]);
+        assert_eq!(protocol.qrcode_size(16), vec![29, 40, 107, 3, 0, 49, 67, 16]);
+        assert_eq!(protocol.qrcode_size(128), vec![29, 40, 107, 3, 0, 49, 67, 128]);
+        assert_eq!(protocol.qrcode_size(255), vec![29, 40, 107, 3, 0, 49, 67, 255]);
+    }
+
+    #[cfg(feature = "qrcode")]
+    #[test]
+    fn test_qrcode_data() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.qrcode_data("test data qrcode").unwrap(),
+            vec![
+                29, 40, 107, 19, 0, 49, 80, 48, 116, 101, 115, 116, 32, 100, 97, 116, 97, 32, 113, 114, 99, 111, 100,
+                101
+            ]
+        );
+        assert_eq!(protocol.qrcode_data("").unwrap(), vec![29, 40, 107, 3, 0, 49, 80, 48]);
+    }
+
+    #[cfg(feature = "qrcode")]
+    #[test]
+    fn test_qrcode_print() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.qrcode_print(), vec![29, 40, 107, 3, 0, 49, 81, 48]);
     }
 }

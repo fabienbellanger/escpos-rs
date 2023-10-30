@@ -231,6 +231,7 @@ impl<D: Driver> Printer<D> {
         self.barcode(Barcode::new(BarcodeSystem::EAN13, data, None)?)
     }
 
+    #[cfg(feature = "barcode")]
     /// Print EAN13 barcode with option
     pub fn ean13_option(self, data: &str, option: BarcodeOption) -> Result<Self> {
         self.barcode(Barcode::new(BarcodeSystem::EAN13, data, Some(option))?)
@@ -270,5 +271,57 @@ impl<D: Driver> Printer<D> {
     /// Print ITF barcode
     pub fn itf(self, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
         self.barcode(Barcode::new(BarcodeSystem::ITF, data, option)?)
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// Print QR code with option
+    pub fn qrcode_option(mut self, data: &str, option: QRCodeOption) -> Result<Self> {
+        let qrcode = QRCode::new(data, Some(option))?;
+
+        // Model
+        let cmd = self.protocol.qrcode_model(qrcode.option.model);
+        self = self.command("set qrcode model", cmd)?;
+
+        // Size
+        let cmd = self.protocol.qrcode_size(qrcode.option.size);
+        self = self.command("set qrcode size", cmd)?;
+
+        // Error correction level
+        let cmd = self.protocol.qrcode_correction_level(qrcode.option.correction_level);
+        self = self.command("set qrcode error correction level", cmd)?;
+
+        // Data
+        let cmd = self.protocol.qrcode_data(data)?;
+        self = self.command("set qrcode data", cmd)?;
+
+        // Print
+        let cmd = self.protocol.qrcode_print();
+        self.command("print qrcode", cmd)
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// Print QR code with default option
+    pub fn qrcode(mut self, data: &str) -> Result<Self> {
+        let qrcode = QRCode::new(data, None)?;
+
+        // Model
+        let cmd = self.protocol.qrcode_model(qrcode.option.model);
+        self = self.command("set qrcode model", cmd)?;
+
+        // Size
+        let cmd = self.protocol.qrcode_size(qrcode.option.size);
+        self = self.command("set qrcode size", cmd)?;
+
+        // Error correction level
+        let cmd = self.protocol.qrcode_correction_level(qrcode.option.correction_level);
+        self = self.command("set qrcode error correction level", cmd)?;
+
+        // Data
+        let cmd = self.protocol.qrcode_data(data)?;
+        self = self.command("set qrcode data", cmd)?;
+
+        // Print
+        let cmd = self.protocol.qrcode_print();
+        self.command("print qrcode", cmd)
     }
 }

@@ -30,6 +30,14 @@ fn main() -> Result<()> {
             "1234567890265",
             BarcodeOption::new("M", "S", "A", BarcodePosition::Below),
         )?
+        .qrcode_option(
+            "https://www.google.com",
+            QRCodeOption {
+                model: QRCodeModel::Model1,
+                size: 6,
+                correction_level: QRCodeCorrectionLevel::M,
+            },
+        )?
         .write("")?
         .feed()?
         //.debug()

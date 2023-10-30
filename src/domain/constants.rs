@@ -64,12 +64,31 @@ pub const ESC_TEXT_UPSIDE_DOWN_ON: &[u8] = &[ESC, b'{', 1];
 // pub const GS_TEXT_PRINTABLE_AREA: &[u8] = &[GS, 0x57];
 
 // Barcodes
-
+#[cfg(feature = "barcode")]
 pub const GS_BARCODE_POSITION: &[u8] = &[GS, b'H'];
+#[cfg(feature = "barcode")]
 pub const GS_BARCODE_FONT: &[u8] = &[GS, b'f'];
+#[cfg(feature = "barcode")]
 pub const GS_BARCODE_HEIGHT: &[u8] = &[GS, b'h'];
+#[cfg(feature = "barcode")]
 pub const GS_BARCODE_WIDTH: &[u8] = &[GS, b'w'];
+#[cfg(feature = "barcode")]
 pub const GS_BARCODE_PRINT: &[u8] = &[GS, b'k'];
+
+// QR codes
+
+#[cfg(feature = "qrcode")]
+pub const GS_2D: &[u8] = &[GS, b'(', b'k'];
+#[cfg(feature = "qrcode")]
+pub const GS_2D_QRCODE_MODEL: &[u8] = &[GS, b'(', b'k', 4, 0, 49, 65];
+#[cfg(feature = "qrcode")]
+pub const GS_2D_QRCODE_SIZE: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 67];
+#[cfg(feature = "qrcode")]
+pub const GS_2D_QRCODE_CORRECTION_LEVEL: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 69];
+#[cfg(feature = "qrcode")]
+pub const GS_2D_QRCODE_PRINT_SYMBOL_DATA: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 81, 48];
+#[cfg(feature = "qrcode")]
+pub const _GS_2D_QRCODE_TRANSMIT_SYMBOL_DATA_SIZE: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 82, 48];
 
 // Others
 
