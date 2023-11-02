@@ -1,5 +1,7 @@
 //! Custom errors
 
+#[cfg(feature = "graphics")]
+use image::ImageError;
 use std::{borrow::Cow, cell::BorrowMutError, fmt, io, num::TryFromIntError};
 
 /// Custom Result
@@ -43,6 +45,13 @@ impl From<BorrowMutError> for PrinterError {
 
 impl From<TryFromIntError> for PrinterError {
     fn from(err: TryFromIntError) -> Self {
+        PrinterError::Io(err.to_string())
+    }
+}
+
+#[cfg(feature = "graphics")]
+impl From<ImageError> for PrinterError {
+    fn from(err: ImageError) -> Self {
         PrinterError::Io(err.to_string())
     }
 }

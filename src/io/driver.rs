@@ -89,7 +89,7 @@ pub struct FileDriver {
 
 impl FileDriver {
     pub fn open(path: &Path) -> Result<Self> {
-        let file = File::options().read(true).write(true).open(path)?;
+        let file = File::options().read(true).append(true).open(path)?;
         Ok(Self {
             path: path.to_string_lossy().to_string(),
             file: RefCell::new(file),

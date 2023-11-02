@@ -142,6 +142,12 @@ impl<D: Driver> Printer<D> {
         self.command("text size", cmd)
     }
 
+    /// Text size
+    pub fn reset_size(self) -> Result<Self> {
+        let cmd = self.protocol.text_size(1, 1)?;
+        self.command("text size", cmd)
+    }
+
     /// Smoothing mode
     pub fn smoothing(self, enabled: bool) -> Result<Self> {
         let cmd = self.protocol.smoothing(enabled);

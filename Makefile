@@ -67,6 +67,10 @@ build-no-audit: lint test
 
 ## doc: Open Rust documentation without dependencies
 doc:
+	$(CARGO) doc --open --no-deps
+
+## doc-public: Open Rust documentation without dependencies
+doc-public:
 	$(CARGO) doc --open --document-private-items --no-deps
 
 ## watch-doc: Watch Rust documentation without dependencies

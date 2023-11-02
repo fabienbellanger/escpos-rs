@@ -1,6 +1,12 @@
 //! Protocol used to communicate with the printer
 
-use super::{barcodes::*, constants::*, graphics::*, qrcode::*, types::*};
+#[cfg(feature = "barcode")]
+use super::barcodes::*;
+#[cfg(feature = "graphics")]
+use super::graphics::*;
+#[cfg(feature = "qrcode")]
+use super::qrcode::*;
+use super::{constants::*, types::*};
 use crate::{
     errors::{PrinterError, Result},
     io::encoder::Encoder,
