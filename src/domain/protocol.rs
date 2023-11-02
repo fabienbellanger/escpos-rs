@@ -275,6 +275,14 @@ impl Protocol {
     pub(crate) fn graphic_print(&self) -> Command {
         GS_IMAGE_PRINT.to_vec()
     }
+
+    #[cfg(feature = "graphics")]
+    /// Print graphic
+    pub(crate) fn graphic_data(&self) -> Result<Command> {
+        let mut cmd = GS_IMAGE_LOW_PREFIX.to_vec();
+
+        Ok(cmd)
+    }
 }
 
 #[cfg(test)]

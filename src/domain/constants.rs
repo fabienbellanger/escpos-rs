@@ -87,8 +87,11 @@ pub const GS_2D_QRCODE_PRINT_SYMBOL_DATA: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 81
 // Image
 #[cfg(feature = "graphics")]
 pub const GS_IMAGE_LOW_PREFIX: &[u8] = &[GS, b'(', b'L'];
+#[cfg(feature = "graphics")]
 pub const GS_IMAGE_HIGHT_PREFIX: &[u8] = &[GS, b'8', b'L'];
+#[cfg(feature = "graphics")]
 pub const GS_IMAGE_DENSITY: &[u8] = &[GS, b'(', b'L', 4, 0, 48, 49];
+#[cfg(feature = "graphics")]
 pub const GS_IMAGE_PRINT: &[u8] = &[GS, b'(', b'L', 2, 0, 48, 50];
 
 // Others

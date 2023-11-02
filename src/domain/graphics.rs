@@ -2,8 +2,8 @@
 
 #![cfg(feature = "graphics")]
 
-use crate::errors::Result;
-use image::DynamicImage;
+use crate::errors::{PrinterError, Result};
+use image::{DynamicImage, GenericImageView, Rgba};
 use std::fmt;
 
 /// Graphic density
@@ -173,13 +173,14 @@ impl GraphicOption {
 pub struct Graphic {
     /// Image path
     path: String,
+    /// Image option
     option: GraphicOption,
     image: DynamicImage,
 }
 
 impl Graphic {
     /// Create a new image
-    pub fn new(path: String, option: Option<GraphicOption>) -> Result<Self> {
+    pub fn new(path: &str, option: Option<GraphicOption>) -> Result<Self> {
         let img = image::open(&path)?;
 
         let option = if let Some(option) = option {
@@ -206,9 +207,112 @@ impl Graphic {
         };
 
         Ok(Self {
-            path,
+            path: path.to_string(),
             option,
             image: img,
         })
+    }
+
+    /// Get image width
+    pub fn width(&self) -> Result<u16> {
+        Ok(u16::try_from(self.image.width())?)
+    }
+
+    /// Get image height
+    pub fn height(&self) -> Result<u16> {
+        Ok(u16::try_from(self.image.height())?)
+    }
+
+    /// Get dimensions
+    pub fn dimensions(&self) -> Result<(u16, u16)> {
+        Ok((self.width()?, self.height()?))
+    }
+
+    /// Get image width in bytes
+    pub fn width_bytes(&self) -> Result<u16> {
+        Ok((f32::from(self.width()?) / 8.0).ceil() as u16)
+    }
+
+    /// Get image height in bytes
+    pub fn height_bytes(&self) -> Result<u16> {
+        Ok((f32::from(self.height()?) / 8.0).ceil() as u16)
+    }
+
+    /// Get path
+    pub fn path(&self) -> &str {
+        &self.path
+    }
+
+    /// Get image
+    pub fn image(&self) -> &DynamicImage {
+        &self.image
+    }
+
+    /// Get pixel
+    pub fn pixel(&self, x: u32, y: u32) -> Rgba<u8> {
+        self.image.get_pixel(x, y)
+    }
+
+    /// Get density
+    pub fn density(&self) -> u8 {
+        self.option.density.into()
+    }
+
+    /// Get tone
+    pub fn tone(&self) -> u8 {
+        self.option.tone.into()
+    }
+
+    /// Get color
+    pub fn color(&self) -> u8 {
+        self.option.color.into()
+    }
+
+    /// Get width size
+    pub fn width_size(&self) -> u8 {
+        self.option.width_size.into()
+    }
+
+    /// Get height size
+    pub fn height_size(&self) -> u8 {
+        self.option.height_size.into()
+    }
+
+    /// Get (pL, pH)
+    pub fn plph(&self) -> Result<(u8, u8)> {
+        let length = self.image.as_bytes().len() - 11;
+        let ph = length / 256;
+        let pl = length
+            .checked_add_signed(-256 * isize::try_from(ph)?)
+            .ok_or(PrinterError::Input("graphics invalid (pL, pH)".to_owned()))?;
+
+        Ok((u8::try_from(pl)?, u8::try_from(ph)?))
+    }
+
+    /// Get (xL, xH) or (yL, yH) number of dots
+    pub fn dots_per_direction(&self, length: usize) -> Result<(u8, u8)> {
+        let ph = length / 256;
+        let pl = length
+            .checked_add_signed(-256 * isize::try_from(ph)?)
+            .ok_or(PrinterError::Input("graphics invalid dots per direction".to_owned()))?;
+
+        Ok((u8::try_from(pl)?, u8::try_from(ph)?))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_graphic_width() {
+        let graphic = Graphic::new("./resources/rust-logo-small.png", None).unwrap();
+        assert_eq!(graphic.width().unwrap(), 200);
+    }
+
+    #[test]
+    fn test_graphic_height() {
+        let graphic = Graphic::new("./resources/rust-logo.png", None).unwrap();
+        assert_eq!(graphic.height().unwrap(), 1_000);
     }
 }
