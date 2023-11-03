@@ -228,7 +228,7 @@ impl<D: Driver> Printer<D> {
 
         // Print
         let cmd = self.protocol.barcode_print(barcode.system, &barcode.data);
-        self.command(&format!("print {} barcode", barcode.system.to_string()), cmd)
+        self.command(&format!("print {} barcode", barcode.system), cmd)
     }
 
     #[cfg(feature = "barcode")]
@@ -329,5 +329,33 @@ impl<D: Driver> Printer<D> {
         // Print
         let cmd = self.protocol.qrcode_print();
         self.command("print qrcode", cmd)
+    }
+
+    // #[cfg(feature = "graphics")]
+    // /// Print image
+    // fn _image(mut self, path: &str) -> Result<Self> {
+    //     let cmd = self.protocol.graphic_density(GraphicDensity::Low);
+    //     self = self.command("set graphic density", cmd)?;
+    //
+    //     let cmd = self.protocol.graphic_data(path)?;
+    //     self = self.command("set graphic data", cmd)?;
+    //
+    //     // Print
+    //     let cmd = self.protocol.graphic_print();
+    //     self.command("print graphic", cmd)
+    // }
+
+    #[cfg(feature = "graphics")]
+    /// Print image
+    pub fn bit_image_option(self, path: &str, option: BitImageOption) -> Result<Self> {
+        let cmd = self.protocol.bit_image(path, Some(option))?;
+        self.command("print bit image", cmd)
+    }
+
+    #[cfg(feature = "graphics")]
+    /// Print image
+    pub fn bit_image(self, path: &str) -> Result<Self> {
+        let cmd = self.protocol.bit_image(path, None)?;
+        self.command("print bit image", cmd)
     }
 }

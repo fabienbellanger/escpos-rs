@@ -85,6 +85,9 @@ pub const GS_2D_QRCODE_CORRECTION_LEVEL: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 69]
 pub const GS_2D_QRCODE_PRINT_SYMBOL_DATA: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 81, 48];
 
 // Image
+
+#[cfg(feature = "graphics")]
+pub const GS_IMAGE_BITMAP_PREFIX: &[u8] = &[GS, b'v', b'0'];
 #[cfg(feature = "graphics")]
 pub const GS_IMAGE_LOW_PREFIX: &[u8] = &[GS, b'(', b'L'];
 #[cfg(feature = "graphics")]

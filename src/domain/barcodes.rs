@@ -55,8 +55,9 @@ impl fmt::Display for BarcodeSystem {
 }
 
 /// Barcodes function A
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub enum BarcodeFont {
+    #[default]
     A,
     B,
     C,
@@ -73,12 +74,6 @@ impl From<BarcodeFont> for u8 {
             BarcodeFont::D => 3,
             BarcodeFont::E => 4,
         }
-    }
-}
-
-impl Default for BarcodeFont {
-    fn default() -> Self {
-        BarcodeFont::A
     }
 }
 
@@ -138,10 +133,11 @@ impl fmt::Display for BarcodePosition {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub enum BarcodeWidth {
     XS,
     S,
+    #[default]
     M,
     L,
     XL,
@@ -159,12 +155,6 @@ impl From<BarcodeWidth> for u8 {
     }
 }
 
-impl Default for BarcodeWidth {
-    fn default() -> Self {
-        BarcodeWidth::M
-    }
-}
-
 impl From<&str> for BarcodeWidth {
     fn from(value: &str) -> Self {
         match value {
@@ -178,9 +168,10 @@ impl From<&str> for BarcodeWidth {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub enum BarcodeHeight {
     XS,
+    #[default]
     S,
     M,
     L,
@@ -196,12 +187,6 @@ impl From<BarcodeHeight> for u8 {
             BarcodeHeight::L => 204,
             BarcodeHeight::XL => 255,
         }
-    }
-}
-
-impl Default for BarcodeHeight {
-    fn default() -> Self {
-        BarcodeHeight::S
     }
 }
 

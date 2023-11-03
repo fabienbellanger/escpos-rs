@@ -3,7 +3,7 @@
 #[cfg(feature = "barcode")]
 use super::barcodes::*;
 #[cfg(feature = "graphics")]
-use super::graphics::*;
+use super::bit_image::*;
 #[cfg(feature = "qrcode")]
 use super::qrcode::*;
 use super::{constants::*, types::*};
@@ -261,25 +261,79 @@ impl Protocol {
         GS_2D_QRCODE_PRINT_SYMBOL_DATA.to_vec()
     }
 
-    #[cfg(feature = "graphics")]
-    /// Graphic density
-    pub(crate) fn graphic_density(&self, density: GraphicDensity) -> Command {
-        let mut cmd = GS_IMAGE_DENSITY.to_vec();
-        cmd.push(density.into());
-        cmd.push(density.into());
-        cmd
-    }
+    // #[cfg(feature = "graphics")]
+    // /// Graphic density
+    // pub(crate) fn graphic_density(&self, density: GraphicDensity) -> Command {
+    //     let mut cmd = GS_IMAGE_DENSITY.to_vec();
+    //     cmd.push(density.into());
+    //     cmd.push(density.into());
+    //     cmd
+    // }
+
+    // #[cfg(feature = "graphics")]
+    // /// Print graphic
+    // pub(crate) fn graphic_print(&self) -> Command {
+    //     GS_IMAGE_PRINT.to_vec()
+    // }
+
+    // #[cfg(feature = "graphics")]
+    // /// Print graphic
+    // pub(crate) fn graphic_data(&self, path: &str) -> Result<Command> {
+    //     let mut cmd = GS_IMAGE_HIGHT_PREFIX.to_vec();
+    //
+    //     // pL, pH
+    //     let graphic = Graphic::new(path, None)?;
+    //     let (p1, p2, p3, p4) = graphic.data_size()?;
+    //     cmd.push(p1);
+    //     cmd.push(p2);
+    //     cmd.push(p3);
+    //     cmd.push(p4);
+    //     cmd.push(48);
+    //     cmd.push(112);
+    //
+    //     // Tone
+    //     cmd.push(graphic.tone());
+    //
+    //     // bx, by
+    //     cmd.push(1);
+    //     cmd.push(1);
+    //
+    //     // Color
+    //     cmd.push(graphic.color());
+    //
+    //     // Number of dots
+    //     let (xl, xh) = graphic.dots_per_direction(graphic.width() as usize)?;
+    //     let (yl, yh) = graphic.dots_per_direction(graphic.height() as usize)?;
+    //     cmd.push(xl);
+    //     cmd.push(xh);
+    //     cmd.push(yl);
+    //     cmd.push(yh);
+    //
+    //     dbg!(p1, p2, p3, p4, xl, xh, yl, yh);
+    //
+    //     // Image data
+    //     for i in graphic.data()? {
+    //         cmd.push(i);
+    //     }
+    //
+    //     Ok(cmd)
+    // }
 
     #[cfg(feature = "graphics")]
-    /// Print graphic
-    pub(crate) fn graphic_print(&self) -> Command {
-        GS_IMAGE_PRINT.to_vec()
-    }
+    /// Print bit image
+    pub(crate) fn bit_image(&self, path: &str, option: Option<BitImageOption>) -> Result<Command> {
+        let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
+        let bit_image = BitImage::new(path, option)?;
 
-    #[cfg(feature = "graphics")]
-    /// Print graphic
-    pub(crate) fn graphic_data(&self) -> Result<Command> {
-        let mut cmd = GS_IMAGE_LOW_PREFIX.to_vec();
+        // Size
+        cmd.push(bit_image.size().into());
+
+        // Width and height
+        cmd.append(&mut bit_image.with_bytes_u8()?);
+        cmd.append(&mut bit_image.height_u8()?);
+
+        // Data
+        cmd.append(&mut bit_image.raster_data()?);
 
         Ok(cmd)
     }
@@ -573,24 +627,47 @@ mod tests {
         assert_eq!(protocol.qrcode_print(), vec![29, 40, 107, 3, 0, 49, 81, 48]);
     }
 
-    #[cfg(feature = "graphics")]
-    #[test]
-    fn test_graphic_density() {
-        let protocol = Protocol::new(Encoder::default());
-        assert_eq!(
-            protocol.graphic_density(GraphicDensity::Low),
-            vec![29, 40, 76, 4, 0, 48, 49, 50, 50]
-        );
-        assert_eq!(
-            protocol.graphic_density(GraphicDensity::Hight),
-            vec![29, 40, 76, 4, 0, 48, 49, 51, 51]
-        );
-    }
+    // #[cfg(feature = "graphics")]
+    // #[test]
+    // fn test_graphic_density() {
+    //     let protocol = Protocol::new(Encoder::default());
+    //     assert_eq!(
+    //         protocol.graphic_density(GraphicDensity::Low),
+    //         vec![29, 40, 76, 4, 0, 48, 49, 50, 50]
+    //     );
+    //     assert_eq!(
+    //         protocol.graphic_density(GraphicDensity::Hight),
+    //         vec![29, 40, 76, 4, 0, 48, 49, 51, 51]
+    //     );
+    // }
+
+    // #[cfg(feature = "graphics")]
+    // #[test]
+    // fn test_graphic_print() {
+    //     let protocol = Protocol::new(Encoder::default());
+    //     assert_eq!(protocol.graphic_print(), vec![29, 40, 76, 2, 0, 48, 50]);
+    // }
+
+    // #[cfg(feature = "graphics")]
+    // #[test]
+    // fn test_graphic_data() {
+    //     let protocol = Protocol::new(Encoder::default());
+    //     assert_eq!(
+    //         protocol.graphic_data("./resources/rust-logo-small.png").unwrap(),
+    //         vec![29, 40, 76, 48, 1, 1, 49, 200, 0, 200, 0]
+    //     );
+    // }
 
     #[cfg(feature = "graphics")]
     #[test]
-    fn test_graphic_print() {
+    fn test_bit_image() {
         let protocol = Protocol::new(Encoder::default());
-        assert_eq!(protocol.graphic_print(), vec![29, 40, 76, 2, 0, 48, 50]);
+        assert_eq!(
+            protocol.bit_image("./resources/small.jpg", None).unwrap(),
+            vec![
+                29, 118, 48, 0, 2, 0, 16, 0, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 255, 255, 255,
+                255, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128
+            ]
+        );
     }
 }

@@ -30,6 +30,7 @@ fn main() -> Result<()> {
             "1234567890265",
             BarcodeOption::new("M", "S", "A", BarcodePosition::Below),
         )?
+        .feed()?
         .qrcode_option(
             "https://www.google.com",
             QRCodeOption {
@@ -38,9 +39,12 @@ fn main() -> Result<()> {
                 correction_level: QRCodeCorrectionLevel::M,
             },
         )?
-        .write("")?
         .feed()?
-        //.debug()
+        .bit_image_option(
+            "./resources/rust-logo-small.png",
+            BitImageOption::new(Some(128), None, BitImageSize::Normal)?,
+        )?
+        .feed()?
         .print_cut()?;
 
     Ok(())

@@ -181,7 +181,7 @@ pub struct Graphic {
 impl Graphic {
     /// Create a new image
     pub fn new(path: &str, option: Option<GraphicOption>) -> Result<Self> {
-        let img = image::open(&path)?;
+        let img = image::open(path)?;
 
         let option = if let Some(option) = option {
             option
@@ -214,28 +214,23 @@ impl Graphic {
     }
 
     /// Get image width
-    pub fn width(&self) -> Result<u16> {
-        Ok(u16::try_from(self.image.width())?)
+    pub fn width(&self) -> u32 {
+        self.image.width()
     }
 
     /// Get image height
-    pub fn height(&self) -> Result<u16> {
-        Ok(u16::try_from(self.image.height())?)
+    pub fn height(&self) -> u32 {
+        self.image.height()
     }
 
     /// Get dimensions
-    pub fn dimensions(&self) -> Result<(u16, u16)> {
-        Ok((self.width()?, self.height()?))
+    pub fn dimensions(&self) -> (u32, u32) {
+        (self.width(), self.height())
     }
 
     /// Get image width in bytes
-    pub fn width_bytes(&self) -> Result<u16> {
-        Ok((f32::from(self.width()?) / 8.0).ceil() as u16)
-    }
-
-    /// Get image height in bytes
-    pub fn height_bytes(&self) -> Result<u16> {
-        Ok((f32::from(self.height()?) / 8.0).ceil() as u16)
+    pub fn width_bytes(&self) -> u32 {
+        (self.width() + 7) / 8
     }
 
     /// Get path
@@ -251,6 +246,13 @@ impl Graphic {
     /// Get pixel
     pub fn pixel(&self, x: u32, y: u32) -> Rgba<u8> {
         self.image.get_pixel(x, y)
+    }
+
+    /// Is pixel transparent or white?
+    pub fn is_blank_pixel(&self, x: u32, y: u32) -> bool {
+        let pixel = self.pixel(x, y);
+        // Full transparent or white
+        pixel[3] == 0 || (pixel[0] & pixel[1] & pixel[2]) == 0xFF
     }
 
     /// Get density
@@ -278,15 +280,34 @@ impl Graphic {
         self.option.height_size.into()
     }
 
-    /// Get (pL, pH)
-    pub fn plph(&self) -> Result<(u8, u8)> {
+    /// Get (p1, p2, p3, p4)
+    pub fn data_size(&self) -> Result<(u8, u8, u8, u8)> {
         let length = self.image.as_bytes().len() - 11;
-        let ph = length / 256;
-        let pl = length
-            .checked_add_signed(-256 * isize::try_from(ph)?)
+        let p4 = length / 16_777_216;
+        let p3 = length
+            .checked_add_signed(-16_777_216 * isize::try_from(p4)?)
+            .ok_or(PrinterError::Input("graphics invalid (pL, pH)".to_owned()))?
+            / 65_536;
+        let p2 = length
+            .checked_add_signed(-16_777_216 * isize::try_from(p4)?)
+            .ok_or(PrinterError::Input("graphics invalid (pL, pH)".to_owned()))?
+            .checked_add_signed(-65_536 * isize::try_from(p3)?)
+            .ok_or(PrinterError::Input("graphics invalid (pL, pH)".to_owned()))?
+            / 256;
+        let p1 = length
+            .checked_add_signed(-256 * isize::try_from(p2)?)
+            .ok_or(PrinterError::Input("graphics invalid (pL, pH)".to_owned()))?
+            .checked_add_signed(-65_536 * isize::try_from(p3)?)
+            .ok_or(PrinterError::Input("graphics invalid (pL, pH)".to_owned()))?
+            .checked_add_signed(-16_777_216 * isize::try_from(p4)?)
             .ok_or(PrinterError::Input("graphics invalid (pL, pH)".to_owned()))?;
 
-        Ok((u8::try_from(pl)?, u8::try_from(ph)?))
+        Ok((
+            u8::try_from(p1)?,
+            u8::try_from(p2)?,
+            u8::try_from(p3)?,
+            u8::try_from(p4)?,
+        ))
     }
 
     /// Get (xL, xH) or (yL, yH) number of dots
@@ -298,6 +319,26 @@ impl Graphic {
 
         Ok((u8::try_from(pl)?, u8::try_from(ph)?))
     }
+
+    /// Data in raster mode
+    pub fn data(&self) -> Result<Vec<u8>> {
+        let width = self.width_bytes();
+        let height = self.height();
+
+        let mut data = vec![0; (width * height) as usize];
+        for y in 0..height {
+            for x in 0..width {
+                for b in 0..8 {
+                    let i = x * 8 + b;
+                    if i < self.width() && !self.is_blank_pixel(i, y) {
+                        data[(y * width + x) as usize] += 0x80 >> (b & 0x7);
+                    }
+                }
+            }
+        }
+
+        Ok(data)
+    }
 }
 
 #[cfg(test)]
@@ -307,12 +348,12 @@ mod tests {
     #[test]
     fn test_graphic_width() {
         let graphic = Graphic::new("./resources/rust-logo-small.png", None).unwrap();
-        assert_eq!(graphic.width().unwrap(), 200);
+        assert_eq!(graphic.width(), 200);
     }
 
     #[test]
     fn test_graphic_height() {
         let graphic = Graphic::new("./resources/rust-logo.png", None).unwrap();
-        assert_eq!(graphic.height().unwrap(), 1_000);
+        assert_eq!(graphic.height(), 1_000);
     }
 }
