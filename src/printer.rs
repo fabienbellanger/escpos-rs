@@ -347,14 +347,20 @@ impl<D: Driver> Printer<D> {
 
     #[cfg(feature = "graphics")]
     /// Print image
-    pub fn bit_image_option(self, path: &str, option: BitImageOption) -> Result<Self> {
+    pub fn bit_image_option(mut self, path: &str, option: BitImageOption) -> Result<Self> {
+        let cmd = self.protocol.cancel();
+        self = self.command("cancel data", cmd)?;
+
         let cmd = self.protocol.bit_image(path, Some(option))?;
         self.command("print bit image", cmd)
     }
 
     #[cfg(feature = "graphics")]
     /// Print image
-    pub fn bit_image(self, path: &str) -> Result<Self> {
+    pub fn bit_image(mut self, path: &str) -> Result<Self> {
+        let cmd = self.protocol.cancel();
+        self = self.command("cancel data", cmd)?;
+
         let cmd = self.protocol.bit_image(path, None)?;
         self.command("print bit image", cmd)
     }

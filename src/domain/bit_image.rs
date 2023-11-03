@@ -218,6 +218,11 @@ impl BitImage {
         Ok(vec![u8::try_from(yl)?, u8::try_from(yh)?])
     }
 
+    /// Is the pixel black?
+    fn is_pixel_black(&self, x: u16, y: u16) -> bool {
+        self.pixel(u32::from(x), u32::from(y)).0[0] <= 128
+    }
+
     /// Get image raster data
     pub fn raster_data(&self) -> Result<Vec<u8>> {
         let width = self.width()?;
@@ -226,7 +231,7 @@ impl BitImage {
 
         for y in 0..height {
             for x in (0..width).step_by(8) {
-                let mut byte = 0u8;
+                let mut byte = 0;
 
                 // Processing 8 bits per byte
                 for bit in 0..8 {
@@ -237,10 +242,8 @@ impl BitImage {
                         break;
                     }
 
-                    let is_black = self.pixel(u32::from(x_offset), u32::from(y)).0[0] <= 128;
-
                     // Shift byte to the left, adding the pixel value at the end
-                    byte = (byte << 1) | u8::from(is_black);
+                    byte = (byte << 1) | u8::from(self.is_pixel_black(x_offset, y));
                 }
 
                 data.push(byte);

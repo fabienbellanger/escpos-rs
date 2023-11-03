@@ -41,7 +41,7 @@ fn main() -> Result<()> {
         )?
         .feed()?
         .bit_image_option(
-            "./resources/rust-logo-small.png",
+            "./resources/images/rust-logo-small.png",
             BitImageOption::new(Some(128), None, BitImageSize::Normal)?,
         )?
         .feed()?

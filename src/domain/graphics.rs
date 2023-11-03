@@ -347,13 +347,13 @@ mod tests {
 
     #[test]
     fn test_graphic_width() {
-        let graphic = Graphic::new("./resources/rust-logo-small.png", None).unwrap();
+        let graphic = Graphic::new("./resources/images/rust-logo-small.png", None).unwrap();
         assert_eq!(graphic.width(), 200);
     }
 
     #[test]
     fn test_graphic_height() {
-        let graphic = Graphic::new("./resources/rust-logo.png", None).unwrap();
+        let graphic = Graphic::new("./resources/images/rust-logo.png", None).unwrap();
         assert_eq!(graphic.height(), 1_000);
     }
 }

@@ -33,6 +33,11 @@ impl Protocol {
         ESC_HARDWARE_RESET.to_vec()
     }
 
+    /// Cancel
+    pub(crate) fn cancel(&self) -> Command {
+        vec![CAN]
+    }
+
     /// Paper cut
     pub(crate) fn cut(&self, partial: bool) -> Command {
         match partial {
@@ -356,6 +361,12 @@ mod tests {
     }
 
     #[test]
+    fn test_cancel() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.cancel(), vec![24]);
+    }
+
+    #[test]
     fn test_cut() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.cut(false), vec![29, 86, 65, 0]);
@@ -653,7 +664,7 @@ mod tests {
     // fn test_graphic_data() {
     //     let protocol = Protocol::new(Encoder::default());
     //     assert_eq!(
-    //         protocol.graphic_data("./resources/rust-logo-small.png").unwrap(),
+    //         protocol.graphic_data("./resources/images/rust-logo-small.png").unwrap(),
     //         vec![29, 40, 76, 48, 1, 1, 49, 200, 0, 200, 0]
     //     );
     // }
@@ -663,7 +674,7 @@ mod tests {
     fn test_bit_image() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(
-            protocol.bit_image("./resources/small.jpg", None).unwrap(),
+            protocol.bit_image("./resources/images/small.jpg", None).unwrap(),
             vec![
                 29, 118, 48, 0, 2, 0, 16, 0, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 255, 255, 255,
                 255, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128

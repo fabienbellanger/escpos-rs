@@ -7,7 +7,7 @@ pub const _VT: u8 = 0x0B; // Vertical tab
 pub const _CR: u8 = 0x0D; // Carriage return
 pub const ESC: u8 = 0x1B;
 pub const GS: u8 = 0x1D; // Group separator
-pub const _CAN: u8 = 0x18; // Cancel
+pub const CAN: u8 = 0x18; // Cancel
 
 // Hardware
 pub const ESC_HARDWARE_INIT: &[u8] = &[ESC, b'@'];
