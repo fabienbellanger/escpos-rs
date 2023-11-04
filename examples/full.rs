@@ -3,10 +3,10 @@ use escpos::utils::{protocol::Protocol, *};
 use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
-    env_logger::init();
+    // env_logger::init();
 
-    // let driver = ConsoleDriver::open();
-    let driver = NetworkDriver::open("192.168.1.248", 9100)?;
+    // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
+    let driver = ConsoleDriver::open();
     Printer::new(driver, Protocol::default())
         .debug_mode(Some(DebugMode::Dec))
         .init()?
