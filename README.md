@@ -1,4 +1,4 @@
-# Rust ESCPOS implementation
+# ESC/POS Rust implementation
 
 [![Build status](https://github.com/fabienbellanger/escpos-rs/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/fabienbellanger/escpos-rs/actions/workflows/CI.yml)
 
