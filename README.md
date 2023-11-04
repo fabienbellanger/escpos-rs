@@ -1,6 +1,10 @@
 # ESC/POS Rust implementation
 
 [![Build status](https://github.com/fabienbellanger/escpos-rs/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/fabienbellanger/escpos-rs/actions/workflows/CI.yml)
+[![Crates.io](https://img.shields.io/crates/v/escpos)](https://crates.io/crates/escpos)
+[![Documentation](https://docs.rs/escpos/badge.svg)](https://docs.rs/escpos)
+
+https://docs.rs/escpos/latest/escpos/
 
 Experimental project
 
