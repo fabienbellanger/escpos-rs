@@ -4,9 +4,10 @@
 [![Crates.io](https://img.shields.io/crates/v/escpos)](https://crates.io/crates/escpos)
 [![Documentation](https://docs.rs/escpos/badge.svg)](https://docs.rs/escpos)
 
-This project implements a subset of Epson's ESC/POS protocol for thermal receipt printers. It allows you to generate and print receipts with basic formatting, cutting, barcodes, QR codes and image on a compatible printer.
+This crate implements a subset of Epson's ESC/POS protocol for thermal receipt printers.
+It allows you to generate and print documents with basic text formatting, cutting, barcodes, QR codes and raster images on a compatible printer.
 
-It is strongly inspired by [recibo](https://github.com/jamhall/recibo/tree/main) _(Rust)_, [escposify](https://github.com/local-group/rust-escposify) _(Rust)_ and [escpos](https://github.com/hennedo/escpos) _(Go)_.
+This projects is strongly inspired by [recibo](https://github.com/jamhall/recibo/tree/main) _(Rust)_, [escposify](https://github.com/local-group/rust-escposify) _(Rust)_ and [escpos](https://github.com/hennedo/escpos) _(Go)_.
 
 ## Installation
 
@@ -17,14 +18,7 @@ For standard functionalities (e.g. printing text), no additional dependencies ar
 escpos = "0.1.0"
 ```
 
-If you would like to raster images, you will need to enable the image feature:
-
-```toml
-[dependencies]
-escpos = { version = "0.1.0", features = ["graphics"] }
-```
-
-If you need all features, you can use the `full` feature:
+If you need all [features](#Features_list), you can use the `full` feature:
 
 ```toml
 [dependencies]
@@ -35,22 +29,23 @@ Or you can use `cargo add` command:
 
 ```bash
 cargo add escpos
-cargo add escpos -F barcode qrcode
+cargo add escpos -F barcode qrcode graphics
 cargo add escpos -F full
 ```
 
-## Features
+## Features list
 
-| Name     | Description                               |
-| -------- | ----------------------------------------- |
-| barcode  | Print barcodes like EAN8, EAN13 or CODE39 |
-| qrcode   | Print QR codes                            |
-| graphics | Print images                              |
-| full     | Enable all features                       |
+| Name       | Description                                                       |
+| ---------- | ----------------------------------------------------------------- |
+| `barcode`  | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CDABAR) |
+| `qrcode`   | Print QR codes                                                    |
+| `graphics` | Print raster images                                               |
+| `full`     | Enable all features                                               |
 
 ## Examples
 
-The examples folder contains various examples of how to use `escpos`. The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.
+The examples folder contains various examples of how to use `escpos`.
+The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.
 
 To launch an example, use the following command:
 
