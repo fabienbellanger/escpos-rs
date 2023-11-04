@@ -51,7 +51,7 @@ audit-fix:
 
 ## test: Launch unit tests in a single thread
 test:
-	$(CARGO) test --all-features -- --test-threads=1 --nocapture
+	$(CARGO) test --all-features -- --nocapture
 
 ## clean: Remove target directory
 clean:
