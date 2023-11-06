@@ -1,6 +1,8 @@
 //! Barcodes
 
 #![cfg(feature = "barcode")]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+#![cfg_attr(docsrs, doc(cfg(feature = "barcode")))]
 
 use crate::errors::Result;
 use std::fmt;
