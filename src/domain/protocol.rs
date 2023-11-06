@@ -226,6 +226,26 @@ impl Protocol {
         cmd
     }
 
+    #[cfg(feature = "barcode")]
+    /// Configure and print barcode
+    pub(crate) fn _barcode(
+        &self,
+        data: &str,
+        system: BarcodeSystem,
+        width: u8,
+        height: u8,
+        font: BarcodeFont,
+        position: BarcodePosition,
+    ) -> Result<Vec<Command>> {
+        Ok(vec![
+            self.barcode_width(width)?,
+            self.barcode_height(height)?,
+            self.barcode_font(font),
+            self.barcode_position(position),
+            self.barcode_print(system, data),
+        ])
+    }
+
     #[cfg(feature = "qrcode")]
     /// QR code model
     pub(crate) fn qrcode_model(&self, model: QRCodeModel) -> Command {
@@ -266,6 +286,24 @@ impl Protocol {
     /// QR code print
     pub(crate) fn qrcode_print(&self) -> Command {
         GS_2D_QRCODE_PRINT_SYMBOL_DATA.to_vec()
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// QR code print
+    pub(crate) fn _qrcode(
+        &self,
+        data: &str,
+        model: QRCodeModel,
+        level: QRCodeCorrectionLevel,
+        size: u8,
+    ) -> Result<Vec<Command>> {
+        Ok(vec![
+            self.qrcode_model(model),
+            self.qrcode_size(size),
+            self.qrcode_correction_level(level),
+            self.qrcode_data(data)?,
+            self.qrcode_print(),
+        ])
     }
 
     // #[cfg(feature = "graphics")]
@@ -567,6 +605,33 @@ mod tests {
         );
     }
 
+    #[cfg(feature = "barcode")]
+    #[test]
+    fn test_barcode() {
+        let protocol = Protocol::new(Encoder::default());
+        let expected: Vec<Command> = vec![
+            [29, 119, 4].to_vec(),
+            [29, 104, 4].to_vec(),
+            [29, 102, 0].to_vec(),
+            [29, 72, 0].to_vec(),
+            [29, 107, 2, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 0].to_vec(),
+        ];
+
+        assert_eq!(
+            protocol
+                ._barcode(
+                    "123456789012",
+                    BarcodeSystem::EAN13,
+                    4,
+                    4,
+                    BarcodeFont::A,
+                    BarcodePosition::None
+                )
+                .unwrap(),
+            expected
+        );
+    }
+
     #[cfg(feature = "qrcode")]
     #[test]
     fn test_qrcode_model() {
@@ -638,6 +703,25 @@ mod tests {
     fn test_qrcode_print() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.qrcode_print(), vec![29, 40, 107, 3, 0, 49, 81, 48]);
+    }
+
+    #[cfg(feature = "qrcode")]
+    #[test]
+    fn test_qrcode() {
+        let protocol = Protocol::new(Encoder::default());
+        let expected: Vec<Command> = vec![
+            [29, 40, 107, 4, 0, 49, 65, 49, 0].to_vec(),
+            [29, 40, 107, 3, 0, 49, 67, 4].to_vec(),
+            [29, 40, 107, 3, 0, 49, 69, 48].to_vec(),
+            [29, 40, 107, 7, 0, 49, 80, 48, 116, 101, 115, 116].to_vec(),
+            [29, 40, 107, 3, 0, 49, 81, 48].to_vec(),
+        ];
+        assert_eq!(
+            protocol
+                ._qrcode("test", QRCodeModel::Model1, QRCodeCorrectionLevel::L, 4)
+                .unwrap(),
+            expected
+        );
     }
 
     // #[cfg(feature = "graphics")]
