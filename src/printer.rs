@@ -142,7 +142,7 @@ impl<D: Driver> Printer<D> {
         self.command("text size", cmd)
     }
 
-    /// Text size
+    /// Reset text size
     pub fn reset_size(self) -> Result<Self> {
         let cmd = self.protocol.text_size(1, 1)?;
         self.command("text size", cmd)
@@ -244,45 +244,81 @@ impl<D: Driver> Printer<D> {
     }
 
     #[cfg(feature = "barcode")]
-    /// Print EAN8 barcode
-    pub fn ean8(self, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
-        self.barcode(Barcode::new(BarcodeSystem::EAN8, data, option)?)
+    /// Print EAN8 barcode with default option
+    pub fn ean8(self, data: &str) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::EAN8, data, None)?)
     }
 
     #[cfg(feature = "barcode")]
-    /// Print UPC-A barcode
-    pub fn upca(self, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
-        self.barcode(Barcode::new(BarcodeSystem::UPCA, data, option)?)
+    /// Print EAN8 barcode with option
+    pub fn ean8_option(self, data: &str, option: BarcodeOption) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::EAN8, data, Some(option))?)
     }
 
     #[cfg(feature = "barcode")]
-    /// Print UPC-E barcode
-    pub fn upce(self, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
-        self.barcode(Barcode::new(BarcodeSystem::UPCE, data, option)?)
+    /// Print UPC-A barcode with default option
+    pub fn upca(self, data: &str) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::UPCA, data, None)?)
     }
 
     #[cfg(feature = "barcode")]
-    /// Print CODE39 barcode
-    pub fn code39(self, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
-        self.barcode(Barcode::new(BarcodeSystem::CODE39, data, option)?)
+    /// Print UPC-A barcode with option
+    pub fn upca_option(self, data: &str, option: BarcodeOption) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::UPCA, data, Some(option))?)
     }
 
     #[cfg(feature = "barcode")]
-    /// Print CODABAR barcode
-    pub fn codabar(self, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
-        self.barcode(Barcode::new(BarcodeSystem::CODABAR, data, option)?)
+    /// Print UPC-E barcode with default option
+    pub fn upce(self, data: &str) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::UPCE, data, None)?)
     }
 
     #[cfg(feature = "barcode")]
-    /// Print ITF barcode
-    pub fn itf(self, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
-        self.barcode(Barcode::new(BarcodeSystem::ITF, data, option)?)
+    /// Print UPC-E barcode with option
+    pub fn upce_option(self, data: &str, option: BarcodeOption) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::UPCE, data, Some(option))?)
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Print CODE 39 barcode with default option
+    pub fn code39(self, data: &str) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::CODE39, data, None)?)
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Print CODE 39 barcode with option
+    pub fn code39_option(self, data: &str, option: BarcodeOption) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::CODE39, data, Some(option))?)
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Print CODABAR barcode with default option
+    pub fn codabar(self, data: &str) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::CODABAR, data, None)?)
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Print CODABAR barcode with option
+    pub fn codabar_option(self, data: &str, option: BarcodeOption) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::CODABAR, data, Some(option))?)
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Print ITF barcode with default option
+    pub fn itf(self, data: &str) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::ITF, data, None)?)
+    }
+
+    #[cfg(feature = "barcode")]
+    /// Print ITF barcode with option
+    pub fn itf_option(self, data: &str, option: BarcodeOption) -> Result<Self> {
+        self.barcode(Barcode::new(BarcodeSystem::ITF, data, Some(option))?)
     }
 
     #[cfg(feature = "qrcode")]
-    /// Print QR code with option
-    pub fn qrcode_option(mut self, data: &str, option: QRCodeOption) -> Result<Self> {
-        let qrcode = QRCode::new(data, Some(option))?;
+    /// Print QR code with default option
+    pub fn qrcode(mut self, data: &str) -> Result<Self> {
+        let qrcode = QRCode::new(data, None)?;
 
         // Model
         let cmd = self.protocol.qrcode_model(qrcode.option.model);
@@ -306,9 +342,9 @@ impl<D: Driver> Printer<D> {
     }
 
     #[cfg(feature = "qrcode")]
-    /// Print QR code with default option
-    pub fn qrcode(mut self, data: &str) -> Result<Self> {
-        let qrcode = QRCode::new(data, None)?;
+    /// Print QR code with option
+    pub fn qrcode_option(mut self, data: &str, option: QRCodeOption) -> Result<Self> {
+        let qrcode = QRCode::new(data, Some(option))?;
 
         // Model
         let cmd = self.protocol.qrcode_model(qrcode.option.model);

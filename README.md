@@ -5,9 +5,15 @@
 [![Documentation](https://docs.rs/escpos/badge.svg)](https://docs.rs/escpos)
 
 This crate implements a subset of Epson's ESC/POS protocol for thermal receipt printers.
-It allows you to generate and print documents with basic text formatting, cutting, barcodes, QR codes and raster images on a compatible printer.
+It allows you to generate and print documents with basic text formatting, cutting, barcodes, QR codes and raster images
+on a compatible printer.
 
-This projects is strongly inspired by [recibo](https://github.com/jamhall/recibo/tree/main) _(Rust)_, [escposify](https://github.com/local-group/rust-escposify) _(Rust)_ and [escpos](https://github.com/hennedo/escpos) _(Go)_.
+![Ticket](resources/documentation/ticket.jpg)  
+*Printed on Aures ODP 333*
+
+This project is strongly inspired by [recibo](https://github.com/jamhall/recibo/tree/main) _(
+Rust)_, [escposify](https://github.com/local-group/rust-escposify) _(Rust)_
+and [escpos](https://github.com/hennedo/escpos) _(Go)_.
 
 ## Installation
 
@@ -18,7 +24,7 @@ For standard functionalities (e.g. printing text), no additional dependencies ar
 escpos = "0.1.0"
 ```
 
-If you need all [features](#Features_list), you can use the `full` feature:
+If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
@@ -35,12 +41,12 @@ cargo add escpos -F full
 
 ## Features list
 
-| Name       | Description                                                       |
-| ---------- | ----------------------------------------------------------------- |
-| `barcode`  | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CDABAR) |
-| `qrcode`   | Print QR codes                                                    |
-| `graphics` | Print raster images                                               |
-| `full`     | Enable all features                                               |
+| Name       | Description                                                        |
+|------------|--------------------------------------------------------------------|
+| `barcode`  | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |
+| `qrcode`   | Print QR codes                                                     |
+| `graphics` | Print raster images                                                |
+| `full`     | Enable all features                                                |
 
 ## Examples
 
@@ -87,7 +93,7 @@ fn main() -> Result<()> {
 }
 ```
 
-### EAN13 (with `barcode` feature)
+### EAN13 (with `barcode` feature enabled)
 
 ```rust
 use escpos::printer::Printer;
@@ -112,7 +118,7 @@ fn main() -> Result<()> {
 }
 ```
 
-### QR Code (with `qrcode` feature)
+### QR Code (with `qrcode` feature enabled)
 
 ```rust
 use escpos::printer::Printer;
@@ -141,7 +147,7 @@ fn main() -> Result<()> {
 }
 ```
 
-### Bit image (with `graphics` feature)
+### Bit image (with `graphics` feature enabled)
 
 ```rust
 use escpos::printer::Printer;
@@ -166,11 +172,63 @@ fn main() -> Result<()> {
 }
 ```
 
-## Implemented commands
+## Commands list
 
-| Command | Descrption |
-| ------- | ---------- |
-| TODO    | TODO       |
+| Status | Command                | Description                                       | Feature    |
+|:------:|------------------------|---------------------------------------------------|------------|
+|   ✅    | `init()`               | Initialize printer (`ESC @`)                      |            |
+|   ✅    | `print()`              | Print document                                    |            |
+|   ✅    | `reset()`              | Hardware reset (`ESC ? LF 0`)                     |            |
+|   ✅    | `cut()`                | Paper cut (`GS V A 0`)                            |            |
+|   ✅    | `partial_cut()`        | Partial paper cut (`GS V A 1`)                    |            |
+|   ✅    | `print_cut()`          | Print and paper cut                               |            |
+|   ✅    | `bold()`               | Text bold (`ESC E`)                               |            |
+|   ✅    | `underline()`          | Text underline (`ESC -`)                          |            |
+|   ✅    | `double_strike()`      | Text double strike (`ESC G`)                      |            |
+|   ✅    | `font()`               | Text font (`ESC M`)                               |            |
+|   ✅    | `flip()`               | Text flip (`ESC V`)                               |            |
+|   ✅    | `justify()`            | Text justify (`ESC a`)                            |            |
+|   ✅    | `reserve()`            | Text reserve color (`GS B`)                       |            |
+|   ✅    | `size()`               | Text size (`GS !`)                                |            |
+|   ✅    | `reset_size()`         | Reset text size (`GS !`)                          |            |
+|   ✅    | `smoothing()`          | Smoothing mode (`GS b`)                           |            |
+|   ✅    | `feed()`               | Line feed (`ESC d`)                               |            |
+|   ✅    | `feeds()`              | Multiple lines feed (`ESC d`)                     |            |
+|   ✅    | `line_spacing()`       | Line spacing (`ESC 3`)                            |            |
+|   ✅    | `reset_line_spacing()` | Reset line spacing (`ESC 2`)                      |            |
+|   ✅    | `upside_down()`        | Upside-down mode (`ESC {`)                        |            |
+|   ✅    | `cash_drawer()`        | Generate pulse (`ESC p`)                          |            |
+|   ✅    | `write()`              | Write text                                        |            |
+|   ✅    | `writeln()`            | Write text and line feed                          |            |
+|   ✅    | `motion_units()`       | Set horizontal and vertical motion units (`GS P`) |            |
+|   ✅    | `ean13()`              | Print EAN13 with default option                   | `barcode`  |
+|   ✅    | `ean13_option()`       | Print EAN13 with custom option                    | `barcode`  |
+|   ✅    | `ean8()`               | Print EAN8 with default option                    | `barcode`  |
+|   ✅    | `ean8_option()`        | Print EAN8 with custom option                     | `barcode`  |
+|   ✅    | `upca()`               | Print UPC-A with default option                   | `barcode`  |
+|   ✅    | `upca_option()`        | Print UPC-A with custom option                    | `barcode`  |
+|   ✅    | `upce()`               | Print UPC-E with default option                   | `barcode`  |
+|   ✅    | `upce_option()`        | Print UPC-E with custom option                    | `barcode`  |
+|   ✅    | `code39()`             | Print CODE 39 with default option                 | `barcode`  |
+|   ✅    | `code39_option()`      | Print CODE 39 with custom option                  | `barcode`  |
+|   ✅    | `codabar()`            | Print CODABAR with default option                 | `barcode`  |
+|   ✅    | `codabar_option()`     | Print CODABAR with custom option                  | `barcode`  |
+|   ✅    | `itf()`                | Print ITF with default option                     | `barcode`  |
+|   ✅    | `itf_option()`         | Print ITF with custom option                      | `barcode`  |
+|   ✅    | `qrcode()`             | Print QR code with default option                 | `qrcode`   |
+|   ✅    | `qrcode_option()`      | Print QR code with custom option                  | `qrcode`   |
+|   ✅    | `bit_image()`          | Print raster bit image with default option        | `graphics` |
+|   ✅    | `bit_image_option()`   | Print raster bit image with custom option         | `graphics` |
+|   🚧   | `graphic()`            | Print raster graphic with default option          | `graphics` |
+|   🚧   | `graphic_option()`     | Print raster graphic with custom option           | `graphics` |
+|   ❌    | `?`                    | Print PDF147                                      | `?`        |
+|   ❌    | `?`                    | Print GS1                                         | `?`        |
+|   ❌    | `?`                    | Print DataMatrix                                  | `?`        |
+|   ❌    | `?`                    | Print MaxiCode                                    | `?`        |
+
+- ✅: Ok
+- 🚧: In progress
+- ❌: Todo
 
 ## External resources
 
@@ -178,7 +236,7 @@ fn main() -> Result<()> {
 
 ## Todo
 
-- [ ] Complete `README.md`
+- [x] Complete `README.md`
 - [ ] Complete documentation
 - [ ] Add examples
 - [ ] Add other graphic commands (Ex.: `GS 8 L`)
