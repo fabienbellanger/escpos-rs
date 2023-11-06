@@ -56,7 +56,8 @@ The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and
 To launch an example, use the following command:
 
 ```bash
-cargo run --example full --features "full"
+RUST_LOG=debug cargo run --example full --features "full"
+RUST_LOG=debug cargo run --example debug
 ```
 
 ### Simple text formatting
@@ -239,5 +240,7 @@ fn main() -> Result<()> {
 - [x] Complete `README.md`
 - [ ] Complete documentation
 - [ ] Add tests
-- [ ] Add more examples
-- [ ] Add other graphic commands (Ex.: `GS 8 L`)
+- [ ] Add more examples (improve `receipt.rs`)
+- [ ] Add more commands:
+  - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)
+  - [ ] Others 2D codes (GS1, PDF157, etc.)

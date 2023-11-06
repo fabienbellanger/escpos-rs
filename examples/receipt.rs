@@ -3,7 +3,7 @@ use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
-    // env_logger::init();
+    env_logger::init();
 
     let items = vec![
         Item::new("Macbook Pro", 2500.00, false),

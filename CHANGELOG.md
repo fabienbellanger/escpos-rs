@@ -20,13 +20,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update dependencies
+## `0.2.1` (2023-11-06) [CURRENT]
 
 ### Added
 
-- Add `CHANGELOG.md` file
+- Add new example
 
-## `0.2.0` (2023-11-06) [CURRENT]
+### Changed
+
+- Change description in `Cargo.toml`
+- Add features information on [docs.rs](https://docs.rs/escpos)
+
+## `0.2.0` (2023-11-06)
 
 ### Added
 
@@ -40,4 +45,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add "option" to all barcodes
 - `barcode` and `qrcode` features are now enabled by default
 - [Breaking] Remove unused `PrinterError::Network item`
-- [Breaking] Change `Printer` functions signature from `fn(self) -> Result<Self>` to `fn(&mut self) -> Result<&mut Self>`
+- [Breaking] Change `Printer` functions signature from `fn(self) -> Result<Self>`
+  to `fn(&mut self) -> Result<&mut Self>`

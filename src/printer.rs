@@ -17,8 +17,9 @@ use log::debug;
 ///
 /// fn main() -> Result<()> {
 ///     let driver = ConsoleDriver::open(false);
-///     Printer::new(driver, Protocol::default())
-///         .init()?
+///     let mut printer = Printer::new(driver, Protocol::default());
+///     printer.init()?
+///         .debug_mode(Some(DebugMode::Dec))
 ///         .writeln("My example")?
 ///         .print_cut()?;
 ///
@@ -26,14 +27,14 @@ use log::debug;
 /// }
 /// ```
 #[derive(Clone)]
-pub struct Printer<D: Driver + Clone> {
+pub struct Printer<D: Driver> {
     driver: D,
     protocol: Protocol,
     instructions: Vec<Instruction>,
     debug_mode: Option<DebugMode>,
 }
 
-impl<D: Driver + Clone> Printer<D> {
+impl<D: Driver> Printer<D> {
     /// Create a new `Printer`
     ///
     /// ```rust
@@ -63,6 +64,33 @@ impl<D: Driver + Clone> Printer<D> {
         self
     }
 
+    /// Display logs of instructions if debug mode is enabled
+    pub fn debug(&mut self) -> Result<&mut Self> {
+        if self.debug_mode.is_some() {
+            debug!("instructions = {:#?}", self.instructions);
+        }
+
+        Ok(self)
+    }
+
+    /// Print the data
+    ///
+    /// All the instructions are sent at the same time to avoid printing partial data
+    /// if an error occurred before the `print` command.
+    pub fn print(&mut self) -> Result<&mut Self> {
+        for instruction in self.instructions.iter() {
+            self.driver.write(&instruction.command)?
+        }
+        self.driver.flush()?;
+        self.instructions = vec![];
+
+        if self.debug_mode.is_some() {
+            debug!("[print]");
+        }
+
+        Ok(self)
+    }
+
     /// Add command to instructions, write data and display debug information
     fn command(&mut self, label: &str, cmd: Command) -> Result<&mut Self> {
         let instruction = Instruction::new(label, &cmd, self.debug_mode);
@@ -72,28 +100,6 @@ impl<D: Driver + Clone> Printer<D> {
         }
 
         self.instructions.push(instruction);
-        self.driver.write(&cmd)?;
-
-        Ok(self)
-    }
-
-    /// Display logs of instructions if debug mode is enabled
-    pub fn debug(&mut self) -> Result<&mut Self> {
-        if self.debug_mode.is_some() {
-            debug!("{:?}", self.instructions);
-        }
-
-        Ok(self)
-    }
-
-    /// Print
-    pub fn print(&mut self) -> Result<&mut Self> {
-        self.driver.flush()?;
-        self.instructions = vec![];
-
-        if self.debug_mode.is_some() {
-            debug!("[print]");
-        }
 
         Ok(self)
     }
@@ -243,6 +249,7 @@ impl<D: Driver + Clone> Printer<D> {
 
     #[cfg(feature = "barcode")]
     /// Print barcode
+    // TODO: Move the logic into the protocol and test it
     fn barcode(&mut self, barcode: Barcode) -> Result<&mut Self> {
         // Width
         let cmd = self.protocol.barcode_width(barcode.option.width.into())?;
@@ -351,6 +358,7 @@ impl<D: Driver + Clone> Printer<D> {
 
     #[cfg(feature = "qrcode")]
     /// Print QR code with default option
+    // TODO: Move the logic into the protocol and test it
     pub fn qrcode(&mut self, data: &str) -> Result<&mut Self> {
         let qrcode = QRCode::new(data, None)?;
 
@@ -377,6 +385,7 @@ impl<D: Driver + Clone> Printer<D> {
 
     #[cfg(feature = "qrcode")]
     /// Print QR code with option
+    // TODO: Move the logic into the protocol and test it
     pub fn qrcode_option(&mut self, data: &str, option: QRCodeOption) -> Result<&mut Self> {
         let qrcode = QRCode::new(data, Some(option))?;
 
