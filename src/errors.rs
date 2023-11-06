@@ -1,10 +1,10 @@
-//! Custom errors
+//! Custom error
 
 #[cfg(feature = "graphics")]
 use image::ImageError;
 use std::{borrow::Cow, cell::BorrowMutError, fmt, io, num::TryFromIntError};
 
-/// Custom Result
+/// Custom Result for `PrinterError`
 pub type Result<T> = std::result::Result<T, PrinterError>;
 
 /// Printer error
@@ -12,14 +12,12 @@ pub type Result<T> = std::result::Result<T, PrinterError>;
 pub enum PrinterError {
     Io(String),
     Input(String),
-    Network(String),
 }
 
 impl fmt::Display for PrinterError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             PrinterError::Io(ref err) => write!(f, "IO error: {err}"),
-            PrinterError::Network(ref err) => write!(f, "Network error: {err}"),
             PrinterError::Input(ref err) => write!(f, "Input error: {err}"),
         }
     }

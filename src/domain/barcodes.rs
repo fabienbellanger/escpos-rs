@@ -54,8 +54,8 @@ impl fmt::Display for BarcodeSystem {
     }
 }
 
-/// Barcodes function A
-#[derive(Debug, Default)]
+/// Barcode fonts
+#[derive(Debug, Default, Clone)]
 pub enum BarcodeFont {
     #[default]
     A,
@@ -102,8 +102,8 @@ impl fmt::Display for BarcodeFont {
     }
 }
 
-/// Barcodes function A
-#[derive(Debug)]
+/// Barcode position
+#[derive(Debug, Clone)]
 pub enum BarcodePosition {
     None,
     Above,
@@ -133,7 +133,8 @@ impl fmt::Display for BarcodePosition {
     }
 }
 
-#[derive(Debug, Default)]
+/// Barcode width
+#[derive(Debug, Default, Clone)]
 pub enum BarcodeWidth {
     XS,
     S,
@@ -168,7 +169,8 @@ impl From<&str> for BarcodeWidth {
     }
 }
 
-#[derive(Debug, Default)]
+/// Barcode height
+#[derive(Debug, Default, Clone)]
 pub enum BarcodeHeight {
     XS,
     #[default]
@@ -203,7 +205,8 @@ impl From<&str> for BarcodeHeight {
     }
 }
 
-#[derive(Debug)]
+/// Barcode option
+#[derive(Debug, Clone)]
 pub struct BarcodeOption {
     pub width: BarcodeWidth,
     pub height: BarcodeHeight,
@@ -234,7 +237,8 @@ impl BarcodeOption {
     }
 }
 
-#[derive(Debug)]
+/// Barcode
+#[derive(Debug, Clone)]
 pub struct Barcode {
     pub system: BarcodeSystem,
     pub data: String,
@@ -243,7 +247,6 @@ pub struct Barcode {
 
 impl Barcode {
     /// Create a new `Barcode`
-    // TODO: Add test
     pub fn new(system: BarcodeSystem, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
         Self::validate(system, data)?;
 
@@ -335,6 +338,17 @@ impl Barcode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_barcode_new() {
+        assert!(Barcode::new(BarcodeSystem::UPCA, "12587965874", None).is_ok());
+        assert!(Barcode::new(
+            BarcodeSystem::UPCA,
+            "12587965874",
+            Some(BarcodeOption::new("L", "M", "A", BarcodePosition::None))
+        )
+        .is_ok());
+    }
 
     #[test]
     fn test_barcode_validate_upca() {

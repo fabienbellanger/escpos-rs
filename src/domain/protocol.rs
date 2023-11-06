@@ -12,7 +12,8 @@ use crate::{
     io::encoder::Encoder,
 };
 
-#[derive(Default)]
+/// Protocol used to communicate with the printer
+#[derive(Default, Clone)]
 pub struct Protocol {
     encoder: Encoder,
 }
@@ -33,6 +34,7 @@ impl Protocol {
         ESC_HARDWARE_RESET.to_vec()
     }
 
+    #[allow(dead_code)]
     /// Cancel
     pub(crate) fn cancel(&self) -> Command {
         vec![CAN]

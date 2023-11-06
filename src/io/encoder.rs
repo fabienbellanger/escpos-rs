@@ -1,8 +1,10 @@
-//! Encoder
+//! Encoder used to encode text
 
 use crate::errors::Result;
 use encoding_rs::{Encoding, UTF_8};
 
+/// Encoder
+#[derive(Clone)]
 pub struct Encoder {
     codec: &'static Encoding,
 }
@@ -20,7 +22,7 @@ impl Encoder {
     }
 
     /// Encode string into the right codec
-    pub fn encode(&self, data: &str) -> Result<Vec<u8>> {
+    pub(crate) fn encode(&self, data: &str) -> Result<Vec<u8>> {
         match self.codec.can_encode_everything() {
             true => Ok(self.codec.encode(data).0.into()),
             false => Err(crate::errors::PrinterError::Input(format!(

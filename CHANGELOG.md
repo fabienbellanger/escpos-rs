@@ -25,3 +25,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add `CHANGELOG.md` file
+
+## `0.2.0` (2023-11-06) [CURRENT]
+
+### Added
+
+- Add `CHANGELOG.md` file
+- Add GitHub action
+- Add examples (in `examples` directory)
+
+### Changed
+
+- Improve documentation and `README.md`
+- Add "option" to all barcodes
+- `barcode` and `qrcode` features are now enabled by default
+- [Breaking] Remove unused `PrinterError::Network item`
+- [Breaking] Change `Printer` functions signature from `fn(self) -> Result<Self>` to `fn(&mut self) -> Result<&mut Self>`

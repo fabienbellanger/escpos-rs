@@ -8,6 +8,7 @@
 	build \
 	build-no-audit \
 	doc \
+	doc-public \
 	watch-doc \
 	doc-deps
 
@@ -75,7 +76,7 @@ doc-public:
 
 ## watch-doc: Watch Rust documentation without dependencies
 watch-doc: doc
-	$(CARGO) watch -x 'doc --document-private-items --no-deps'
+	$(CARGO) watch -x 'doc --no-deps'
 
 ## doc: Open Rust documentation with dependencies
 doc-deps:

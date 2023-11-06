@@ -1,13 +1,14 @@
 use escpos::printer::Printer;
-use escpos::utils::{protocol::Protocol, *};
+use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
     // env_logger::init();
 
     // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
-    let driver = ConsoleDriver::open();
-    Printer::new(driver, Protocol::default())
+    let driver = ConsoleDriver::open(true);
+    let mut printer = Printer::new(driver, Protocol::default());
+    printer
         .debug_mode(Some(DebugMode::Dec))
         .init()?
         .smoothing(true)?

@@ -1,6 +1,7 @@
-//! Drivers
+//! Drivers used to send data to the printer (Network or USB)
 
 use crate::errors::Result;
+use std::rc::Rc;
 use std::{
     cell::RefCell,
     fs::File,
@@ -23,11 +24,15 @@ pub trait Driver {
 // ================ Console driver ================
 
 /// Console driver for debug
-pub struct ConsoleDriver {}
+#[derive(Default, Clone)]
+pub struct ConsoleDriver {
+    show_output: bool,
+}
 
 impl ConsoleDriver {
-    pub fn open() -> Self {
-        Self {}
+    /// Open the Console driver
+    pub fn open(show_output: bool) -> Self {
+        Self { show_output }
     }
 }
 
@@ -37,7 +42,10 @@ impl Driver for ConsoleDriver {
     }
 
     fn write(&self, data: &[u8]) -> Result<()> {
-        Ok(io::stdout().write_all(data)?)
+        if self.show_output {
+            io::stdout().write_all(data)?
+        }
+        Ok(())
     }
 
     fn flush(&self) -> Result<()> {
@@ -48,10 +56,11 @@ impl Driver for ConsoleDriver {
 // ================ Network driver ================
 
 /// Driver for network printer
+#[derive(Clone)]
 pub struct NetworkDriver {
     host: String,
     port: u16,
-    stream: RefCell<TcpStream>,
+    stream: Rc<RefCell<TcpStream>>,
 }
 
 impl NetworkDriver {
@@ -59,7 +68,7 @@ impl NetworkDriver {
         Ok(Self {
             host: host.to_string(),
             port,
-            stream: RefCell::new(TcpStream::connect((host, port))?),
+            stream: Rc::new(RefCell::new(TcpStream::connect((host, port))?)),
         })
     }
 }
@@ -81,10 +90,11 @@ impl Driver for NetworkDriver {
 
 // ================ File driver ================
 
-/// Driver for USB printer
+/// Driver for USB printer using file
+#[derive(Clone)]
 pub struct FileDriver {
     path: String,
-    file: RefCell<File>,
+    file: Rc<RefCell<File>>,
 }
 
 impl FileDriver {
@@ -92,7 +102,7 @@ impl FileDriver {
         let file = File::options().read(true).append(true).open(path)?;
         Ok(Self {
             path: path.to_string_lossy().to_string(),
-            file: RefCell::new(file),
+            file: Rc::new(RefCell::new(file)),
         })
     }
 }

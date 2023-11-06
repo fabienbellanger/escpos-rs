@@ -66,6 +66,7 @@ impl fmt::Display for QRCodeCorrectionLevel {
     }
 }
 
+/// QR code option
 #[derive(Debug)]
 pub struct QRCodeOption {
     pub model: QRCodeModel,
@@ -83,6 +84,18 @@ impl Default for QRCodeOption {
     }
 }
 
+impl QRCodeOption {
+    /// Create a new `QRCodeOption`
+    pub fn new(model: QRCodeModel, size: u8, correction_level: QRCodeCorrectionLevel) -> Self {
+        Self {
+            model,
+            size,
+            correction_level,
+        }
+    }
+}
+
+/// QR code
 #[derive(Debug)]
 pub struct QRCode {
     pub data: String,
@@ -91,7 +104,6 @@ pub struct QRCode {
 
 impl QRCode {
     /// Create a new `QRCode`
-    // TODO: Add test
     pub fn new(data: &str, option: Option<QRCodeOption>) -> Result<Self> {
         Self::check_data(data)?;
 
@@ -137,6 +149,17 @@ impl QRCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_qrcode_new() {
+        let data = "azerty123456789QTG,{";
+        assert!(QRCode::new(data, None).is_ok());
+        assert!(QRCode::new(
+            data,
+            Some(QRCodeOption::new(QRCodeModel::Model1, 4, QRCodeCorrectionLevel::L))
+        )
+        .is_ok());
+    }
 
     #[test]
     fn test_qrcode_check_data() {

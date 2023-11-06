@@ -1,5 +1,5 @@
 use escpos::printer::Printer;
-use escpos::utils::{protocol::Protocol, *};
+use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
@@ -19,10 +19,11 @@ fn main() -> Result<()> {
     let tax = Item::new("Tax", subtotal.price * 0.20, false);
     let total = Item::new("Total", subtotal.price + tax.price, false);
 
-    let driver = ConsoleDriver::open();
+    // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
+    let driver = ConsoleDriver::open(true);
     let mut printer = Printer::new(driver, Protocol::default());
 
-    printer = printer
+    printer
         .init()?
         .justify(JustifyMode::CENTER)?
         .bold(true)?
@@ -35,17 +36,17 @@ fn main() -> Result<()> {
 
     for item in items {
         let item: String = item.into();
-        printer = printer.write(&item)?;
+        printer.write(&item)?;
     }
 
-    printer = printer.bold(true)?;
+    printer.bold(true)?;
 
     let subtotal: String = subtotal.into();
     let tax: String = tax.into();
     let total: String = total.into();
-    printer = printer.write(&subtotal)?;
-    printer = printer.write(&tax)?;
-    printer = printer.write(&total)?;
+    printer.write(&subtotal)?;
+    printer.write(&tax)?;
+    printer.write(&total)?;
     printer.print_cut()?;
     Ok(())
 }

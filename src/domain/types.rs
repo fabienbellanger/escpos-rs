@@ -2,6 +2,7 @@
 
 use std::fmt;
 
+/// Cash drawer pin
 #[derive(Debug)]
 pub enum CashDrawer {
     Pin2,
@@ -17,6 +18,7 @@ impl fmt::Display for CashDrawer {
     }
 }
 
+/// Underline mode
 #[derive(Debug)]
 pub enum UnderlineMode {
     None,
@@ -34,6 +36,7 @@ impl fmt::Display for UnderlineMode {
     }
 }
 
+/// Text font
 #[derive(Debug)]
 pub enum Font {
     A,
@@ -51,6 +54,7 @@ impl fmt::Display for Font {
     }
 }
 
+/// Justify mode
 #[derive(Debug)]
 pub enum JustifyMode {
     LEFT,
@@ -68,7 +72,8 @@ impl fmt::Display for JustifyMode {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+/// Debug mode (decimal or hexadecimal)
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DebugMode {
     Hex,
     Dec,
@@ -77,7 +82,8 @@ pub enum DebugMode {
 /// ESC command
 pub(crate) type Command = Vec<u8>;
 
-#[derive(Clone)]
+/// Instruction
+#[derive(Clone, PartialEq)]
 pub(crate) struct Instruction {
     pub(crate) name: String,
     pub(crate) command: Command,
@@ -94,7 +100,7 @@ impl Instruction {
     }
 }
 
-impl std::fmt::Debug for Instruction {
+impl fmt::Debug for Instruction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.debug_mode {
             Some(DebugMode::Dec) => write!(f, "{} {:?}", &self.name, &self.command),

@@ -2,7 +2,7 @@ mod barcodes;
 mod bit_image;
 mod constants;
 mod graphics;
-pub mod protocol;
+mod protocol;
 mod qrcode;
 mod types;
 
@@ -13,6 +13,7 @@ pub use bit_image::*;
 pub use constants::*;
 #[cfg(feature = "graphics")]
 pub use graphics::*;
+pub use protocol::*;
 #[cfg(feature = "qrcode")]
 pub use qrcode::*;
 pub use types::*;

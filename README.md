@@ -41,16 +41,16 @@ cargo add escpos -F full
 
 ## Features list
 
-| Name       | Description                                                        |
-|------------|--------------------------------------------------------------------|
-| `barcode`  | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |
-| `qrcode`   | Print QR codes                                                     |
-| `graphics` | Print raster images                                                |
-| `full`     | Enable all features                                                |
+| Name       | Description                                                        | Default |
+|------------|--------------------------------------------------------------------|:-------:|
+| `barcode`  | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
+| `qrcode`   | Print QR codes                                                     |    ✅    |
+| `graphics` | Print raster images                                                |    ❌    |
+| `full`     | Enable all features                                                |    ❌    |
 
 ## Examples
 
-The examples folder contains various examples of how to use `escpos`.
+The `examples` folder contains various examples of how to use `escpos`.
 The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.
 
 To launch an example, use the following command:
@@ -63,7 +63,7 @@ cargo run --example full --features "full"
 
 ```rust
 use escpos::printer::Printer;
-use escpos::utils::{protocol::Protocol, *};
+use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
@@ -97,13 +97,13 @@ fn main() -> Result<()> {
 
 ```rust
 use escpos::printer::Printer;
-use escpos::utils::{protocol::Protocol, *};
+use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
     env_logger::init();
 
-    let driver = ConsoleDriver::open();
+    let driver = ConsoleDriver::open(true);
     Printer::new(driver, Protocol::default())
         .debug_mode(Some(DebugMode::Hex))
         .init()?
@@ -122,13 +122,13 @@ fn main() -> Result<()> {
 
 ```rust
 use escpos::printer::Printer;
-use escpos::utils::{protocol::Protocol, *};
+use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
     env_logger::init();
 
-    let driver = ConsoleDriver::open();
+    let driver = ConsoleDriver::open(true);
     Printer::new(driver, Protocol::default())
         .debug_mode(Some(DebugMode::Hex))
         .init()?
@@ -151,15 +151,15 @@ fn main() -> Result<()> {
 
 ```rust
 use escpos::printer::Printer;
-use escpos::utils::{protocol::Protocol, *};
+use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
     env_logger::init();
 
-    let driver = ConsoleDriver::open();
-    Printer::new(driver, Protocol::default())
-        .debug_mode(Some(DebugMode::Hex))
+    let driver = ConsoleDriver::open(true);
+    let mut printer = Printer::new(driver, Protocol::default());
+    printer.debug_mode(Some(DebugMode::Hex))
         .init()?
         .bit_image_option(
             "./resources/images/rust-logo-small.png",
@@ -226,9 +226,9 @@ fn main() -> Result<()> {
 |   ❌    | `?`                    | Print DataMatrix                                  | `?`        |
 |   ❌    | `?`                    | Print MaxiCode                                    | `?`        |
 
-- ✅: Ok
-- 🚧: In progress
-- ❌: Todo
+- ✅ Done
+- 🚧 In progress
+- ❌ To sdo
 
 ## External resources
 
@@ -238,5 +238,6 @@ fn main() -> Result<()> {
 
 - [x] Complete `README.md`
 - [ ] Complete documentation
-- [ ] Add examples
+- [ ] Add tests
+- [ ] Add more examples
 - [ ] Add other graphic commands (Ex.: `GS 8 L`)
