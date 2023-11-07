@@ -171,3 +171,74 @@ impl From<PageCode> for u8 {
         }
     }
 }
+
+/// Character page code
+#[derive(Debug, Default)]
+pub enum CharacterSet {
+    #[default]
+    USA,
+    France,
+    Germany,
+    UK,
+    Denmark1,
+    Sweden,
+    Italy,
+    Spain1,
+    Japan,
+    Norway,
+    Denmark2,
+    Spain2,
+    LatinAmerica,
+    Korea,
+    SloveniaCroatia,
+    China,
+    Vietnam,
+    Arabia,
+    IndiaDevanagari,
+    IndiaBengali,
+    IndiaTamil,
+    IndiaTelugu,
+    IndiaAssamese,
+    IndiaOriya,
+    IndiaKannada,
+    IndiaMalayalam,
+    IndiaGujarati,
+    IndiaPunjabi,
+    IndiaMarathi,
+}
+
+impl From<CharacterSet> for u8 {
+    fn from(value: CharacterSet) -> Self {
+        match value {
+            CharacterSet::USA => 0,
+            CharacterSet::France => 1,
+            CharacterSet::Germany => 2,
+            CharacterSet::UK => 3,
+            CharacterSet::Denmark1 => 4,
+            CharacterSet::Sweden => 5,
+            CharacterSet::Italy => 6,
+            CharacterSet::Spain1 => 7,
+            CharacterSet::Japan => 8,
+            CharacterSet::Norway => 9,
+            CharacterSet::Denmark2 => 10,
+            CharacterSet::Spain2 => 11,
+            CharacterSet::LatinAmerica => 12,
+            CharacterSet::Korea => 13,
+            CharacterSet::SloveniaCroatia => 14,
+            CharacterSet::China => 15,
+            CharacterSet::Vietnam => 16,
+            CharacterSet::Arabia => 17,
+            CharacterSet::IndiaDevanagari => 66,
+            CharacterSet::IndiaBengali => 67,
+            CharacterSet::IndiaTamil => 68,
+            CharacterSet::IndiaTelugu => 69,
+            CharacterSet::IndiaAssamese => 70,
+            CharacterSet::IndiaOriya => 71,
+            CharacterSet::IndiaKannada => 72,
+            CharacterSet::IndiaMalayalam => 73,
+            CharacterSet::IndiaGujarati => 74,
+            CharacterSet::IndiaPunjabi => 75,
+            CharacterSet::IndiaMarathi => 82,
+        }
+    }
+}

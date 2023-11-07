@@ -183,7 +183,8 @@ fn main() -> Result<()> {
 |   ✅    | `cut()`                | Paper cut (`GS V A 0`)                            |            |
 |   ✅    | `partial_cut()`        | Partial paper cut (`GS V A 1`)                    |            |
 |   ✅    | `print_cut()`          | Print and paper cut                               |            |
-|   ✅    | `page_code()`          | Select character code table  (`ESC t`)            |            |
+|   ✅    | `page_code()`          | Select character code table (`ESC t`)             |            |
+|   ✅    | `character_set()`      | Select an international character set (`ESC R`)   |            |
 |   ✅    | `bold()`               | Text bold (`ESC E`)                               |            |
 |   ✅    | `underline()`          | Text underline (`ESC -`)                          |            |
 |   ✅    | `double_strike()`      | Text double strike (`ESC G`)                      |            |
@@ -239,8 +240,8 @@ fn main() -> Result<()> {
 ## Todo
 
 - [x] Complete `README.md`
-- [ ] Complete documentation
-- [ ] Add tests
+- [x] Complete documentation
+- [x] Add tests
 - [ ] Add more examples (improve `receipt.rs`)
 - [ ] Add more commands:
     - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)

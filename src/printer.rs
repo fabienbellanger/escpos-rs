@@ -137,7 +137,13 @@ impl<D: Driver> Printer<D> {
     /// Character page code
     pub fn page_code(&mut self, code: PageCode) -> Result<&mut Self> {
         let cmd = self.protocol.page_code(code);
-        self.command("character code", &[cmd])
+        self.command("character page code", &[cmd])
+    }
+
+    /// International character set
+    pub fn character_set(&mut self, code: CharacterSet) -> Result<&mut Self> {
+        let cmd = self.protocol.character_set(code);
+        self.command("international character set", &[cmd])
     }
 
     /// Text bold

@@ -50,7 +50,14 @@ impl Protocol {
 
     /// Character page code
     pub(crate) fn page_code(&self, code: PageCode) -> Command {
-        let mut cmd = ESC_CHARACTER_CODE.to_vec();
+        let mut cmd = ESC_CHARACTER_PAGE_CODE.to_vec();
+        cmd.push(code.into());
+        cmd
+    }
+
+    /// International character set
+    pub(crate) fn character_set(&self, code: CharacterSet) -> Command {
+        let mut cmd = ESC_CHARACTER_SET.to_vec();
         cmd.push(code.into());
         cmd
     }
@@ -425,6 +432,14 @@ mod tests {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.page_code(PageCode::default()), vec![27, 116, 0]);
         assert_eq!(protocol.page_code(PageCode::PC858), vec![27, 116, 19]);
+    }
+
+    #[test]
+    fn test_character_set() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.character_set(CharacterSet::default()), vec![27, 82, 0]);
+        assert_eq!(protocol.character_set(CharacterSet::France), vec![27, 82, 1]);
+        assert_eq!(protocol.character_set(CharacterSet::IndiaMarathi), vec![27, 82, 82]);
     }
 
     #[test]
