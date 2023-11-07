@@ -3,7 +3,7 @@
 #[cfg(feature = "graphics")]
 use super::bit_image::*;
 use super::codes::*;
-use super::{character::*, constants::*, types::*};
+use super::{character::*, common::get_parameters_number_2, constants::*, types::*};
 use crate::{
     errors::{PrinterError, Result},
     io::encoder::Encoder,
@@ -392,6 +392,51 @@ impl Protocol {
         cmd.append(&mut bit_image.raster_data()?);
 
         Ok(cmd)
+    }
+
+    #[cfg(feature = "gs1_databar")]
+    /// GS1 DataBar width
+    // TODO: Add tests with different widths
+    pub(crate) fn gs1_databar_width(&self, size: u8) -> Command {
+        let mut cmd = GS_GS1_DATABAR_WIDTH.to_vec();
+        cmd.push(size);
+        cmd
+    }
+
+    #[cfg(feature = "gs1_databar")]
+    /// GS1 DataBar expanded max width
+    // TODO: Add tests
+    pub(crate) fn gs1_databar_expanded_width(&self, _max: u8) -> Command {
+        unimplemented!()
+    }
+
+    #[cfg(feature = "gs1_databar")]
+    /// GS1 DataBar data
+    // TODO: Add tests
+    pub(crate) fn gs1_databar_data(&self, data: &str, code_type: GS1DataBarType) -> Result<Command> {
+        let mut cmd = GS_2D.to_vec();
+        let (pl, ph) = get_parameters_number_2(data)?;
+        cmd.push(pl);
+        cmd.push(ph);
+        cmd.append(&mut vec![51, 80, 48]);
+        cmd.push(code_type.into());
+        cmd.append(&mut data.as_bytes().to_vec());
+
+        Ok(cmd)
+    }
+
+    #[cfg(feature = "gs1_databar")]
+    /// GS1 DataBar print
+    // TODO: Add tests
+    pub(crate) fn gs1_databar_print(&self, data: &str, code_type: GS1DataBarType) -> Command {
+        GS_GS1_DATABAR_PRINT.to_vec()
+    }
+
+    #[cfg(feature = "gs1_databar")]
+    /// GS1 DataBar
+    // TODO: Add tests
+    pub(crate) fn gs1_databar(&self, data: &str, option: Option<GS1DataBarOption>) -> Command {
+        unimplemented!()
     }
 }
 

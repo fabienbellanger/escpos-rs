@@ -4,7 +4,7 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(docsrs, doc(cfg(feature = "barcodes")))]
 
-use crate::errors::Result;
+use crate::errors::{PrinterError, Result};
 use std::fmt;
 
 const CODE39_VALID_CHARS: [char; 44] = [
@@ -275,9 +275,7 @@ impl Barcode {
                 if is_data_all_digits && [11, 12].contains(&data_len) {
                     Ok(())
                 } else {
-                    Err(crate::errors::PrinterError::Input(format!(
-                        "invalid UPC-A data: {data}"
-                    )))
+                    Err(PrinterError::Input(format!("invalid UPC-A data: {data}")))
                 }
             }
             BarcodeSystem::UPCE => {
@@ -286,41 +284,35 @@ impl Barcode {
                 {
                     Ok(())
                 } else {
-                    Err(crate::errors::PrinterError::Input(format!(
-                        "invalid UPC-E data: {data}"
-                    )))
+                    Err(PrinterError::Input(format!("invalid UPC-E data: {data}")))
                 }
             }
             BarcodeSystem::EAN8 => {
                 if is_data_all_digits && [7, 8].contains(&data_len) {
                     Ok(())
                 } else {
-                    Err(crate::errors::PrinterError::Input(format!("invalid EAN8 data: {data}")))
+                    Err(PrinterError::Input(format!("invalid EAN8 data: {data}")))
                 }
             }
             BarcodeSystem::EAN13 => {
                 if is_data_all_digits && [12, 13].contains(&data_len) {
                     Ok(())
                 } else {
-                    Err(crate::errors::PrinterError::Input(format!(
-                        "invalid EAN13 data: {data}"
-                    )))
+                    Err(PrinterError::Input(format!("invalid EAN13 data: {data}")))
                 }
             }
             BarcodeSystem::ITF => {
                 if data_len >= 2 && is_data_all_digits {
                     Ok(())
                 } else {
-                    Err(crate::errors::PrinterError::Input(format!("invalid ITF data: {data}")))
+                    Err(PrinterError::Input(format!("invalid ITF data: {data}")))
                 }
             }
             BarcodeSystem::CODE39 => {
                 if data_len >= 1 && data.chars().all(|c| CODE39_VALID_CHARS.contains(&c)) {
                     Ok(())
                 } else {
-                    Err(crate::errors::PrinterError::Input(format!(
-                        "invalid CODE39 data: {data}"
-                    )))
+                    Err(PrinterError::Input(format!("invalid CODE39 data: {data}")))
                 }
             }
             BarcodeSystem::CODABAR => {
@@ -328,9 +320,7 @@ impl Barcode {
                 if data_len >= 2 && data.chars().all(|c| CODABAR_VALID_CHARS.contains(&c)) {
                     Ok(())
                 } else {
-                    Err(crate::errors::PrinterError::Input(format!(
-                        "invalid CODABAR data: {data}"
-                    )))
+                    Err(PrinterError::Input(format!("invalid CODABAR data: {data}")))
                 }
             }
         }

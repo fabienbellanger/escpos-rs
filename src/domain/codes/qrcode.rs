@@ -132,6 +132,7 @@ impl QRCode {
     }
 
     /// Get size (pL, pH) information
+    // TODO: Rename and factor to get_parameters_number_2(data: &str) -> Result<(u8, u8)>
     pub fn get_size_values(data: &str) -> Result<(u8, u8)> {
         Self::check_data(data)?;
 

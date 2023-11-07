@@ -1,6 +1,7 @@
 mod bit_image;
 mod character;
 mod codes;
+pub(crate) mod common;
 mod constants;
 mod graphics;
 mod protocol;
