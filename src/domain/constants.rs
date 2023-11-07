@@ -35,8 +35,8 @@ pub const ESC_TEXT_UNDERLINE_NONE: &[u8] = &[ESC, b'-', 0];
 pub const ESC_TEXT_UNDERLINE_SIMPLE: &[u8] = &[ESC, b'-', 1];
 pub const ESC_TEXT_UNDERLINE_DOUBLE: &[u8] = &[ESC, b'-', 2];
 
-pub const ESC_TEXT_DOUBLESTRIKE_OFF: &[u8] = &[ESC, b'G', 0];
-pub const ESC_TEXT_DOUBLESTRIKE_ON: &[u8] = &[ESC, b'G', 1];
+pub const ESC_TEXT_DOUBLE_STRIKE_OFF: &[u8] = &[ESC, b'G', 0];
+pub const ESC_TEXT_DOUBLE_STRIKE_ON: &[u8] = &[ESC, b'G', 1];
 
 pub const ESC_TEXT_FONT_A: &[u8] = &[ESC, b'M', 0];
 pub const ESC_TEXT_FONT_B: &[u8] = &[ESC, b'M', 1];
@@ -55,8 +55,8 @@ pub const GS_TEXT_REVERSE_COLOURS_ON: &[u8] = &[GS, b'B', 1];
 pub const GS_TEXT_SMOOTHING_MODE_OFF: &[u8] = &[GS, b'b', 0];
 pub const GS_TEXT_SMOOTHING_MODE_ON: &[u8] = &[GS, b'b', 1];
 
-pub const ESC_TEXT_RESET_LINESPACING: &[u8] = &[ESC, b'2'];
-pub const ESC_TEXT_LINESPACING: &[u8] = &[ESC, b'3'];
+pub const ESC_TEXT_RESET_LINE_SPACING: &[u8] = &[ESC, b'2'];
+pub const ESC_TEXT_LINE_SPACING: &[u8] = &[ESC, b'3'];
 
 pub const GS_TEXT_SIZE_SELECT: &[u8] = &[GS, b'!'];
 
@@ -64,15 +64,15 @@ pub const ESC_TEXT_UPSIDE_DOWN_OFF: &[u8] = &[ESC, b'{', 0];
 pub const ESC_TEXT_UPSIDE_DOWN_ON: &[u8] = &[ESC, b'{', 1];
 
 // Barcodes
-#[cfg(feature = "barcode")]
+#[cfg(feature = "barcodes")]
 pub const GS_BARCODE_POSITION: &[u8] = &[GS, b'H'];
-#[cfg(feature = "barcode")]
+#[cfg(feature = "barcodes")]
 pub const GS_BARCODE_FONT: &[u8] = &[GS, b'f'];
-#[cfg(feature = "barcode")]
+#[cfg(feature = "barcodes")]
 pub const GS_BARCODE_HEIGHT: &[u8] = &[GS, b'h'];
-#[cfg(feature = "barcode")]
+#[cfg(feature = "barcodes")]
 pub const GS_BARCODE_WIDTH: &[u8] = &[GS, b'w'];
-#[cfg(feature = "barcode")]
+#[cfg(feature = "barcodes")]
 pub const GS_BARCODE_PRINT: &[u8] = &[GS, b'k'];
 
 // QR codes
@@ -86,6 +86,14 @@ pub const GS_2D_QRCODE_SIZE: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 67];
 pub const GS_2D_QRCODE_CORRECTION_LEVEL: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 69];
 #[cfg(feature = "qrcode")]
 pub const GS_2D_QRCODE_PRINT_SYMBOL_DATA: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 81, 48];
+
+// GS1 DataBar
+#[cfg(feature = "gs1_databar")]
+pub const GS_GS1_DATABAR_WIDTH: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 67];
+#[cfg(feature = "gs1_databar")]
+pub const GS_GS1_DATABAR_WIDTH_EXTENDED: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 71];
+#[cfg(feature = "gs1_databar")]
+pub const GS_GS1_DATABAR_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 81, 48];
 
 // Image
 

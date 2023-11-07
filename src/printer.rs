@@ -259,7 +259,7 @@ impl<D: Driver> Printer<D> {
         self.command("set motion units", &[cmd])
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print barcode
     fn barcode(&mut self, barcode: Barcode) -> Result<&mut Self> {
         let commands = self.protocol.barcode(
@@ -273,85 +273,85 @@ impl<D: Driver> Printer<D> {
         self.command(&format!("print {} barcode", barcode.system), commands.as_slice())
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print EAN13 barcode with default option
     pub fn ean13(&mut self, data: &str) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::EAN13, data, None)?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print EAN13 barcode with option
     pub fn ean13_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::EAN13, data, Some(option))?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print EAN8 barcode with default option
     pub fn ean8(&mut self, data: &str) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::EAN8, data, None)?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print EAN8 barcode with option
     pub fn ean8_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::EAN8, data, Some(option))?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print UPC-A barcode with default option
     pub fn upca(&mut self, data: &str) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::UPCA, data, None)?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print UPC-A barcode with option
     pub fn upca_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::UPCA, data, Some(option))?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print UPC-E barcode with default option
     pub fn upce(&mut self, data: &str) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::UPCE, data, None)?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print UPC-E barcode with option
     pub fn upce_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::UPCE, data, Some(option))?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print CODE 39 barcode with default option
     pub fn code39(&mut self, data: &str) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::CODE39, data, None)?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print CODE 39 barcode with option
     pub fn code39_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::CODE39, data, Some(option))?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print CODABAR barcode with default option
     pub fn codabar(&mut self, data: &str) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::CODABAR, data, None)?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print CODABAR barcode with option
     pub fn codabar_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::CODABAR, data, Some(option))?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print ITF barcode with default option
     pub fn itf(&mut self, data: &str) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::ITF, data, None)?)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print ITF barcode with option
     pub fn itf_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
         self.barcode(Barcode::new(BarcodeSystem::ITF, data, Some(option))?)

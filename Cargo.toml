@@ -1,6 +1,7 @@
 [package]
 authors = ["Fabien Bellanger <valentil@gmail.com>"]
 description = "ESC/POS printer driver"
+documentation = "https://docs.rs/escpos"
 edition = "2021"
 homepage = "https://github.com/fabienbellanger/escpos-rs"
 keywords = ["escpos", "printer", "driver", "pos", "usb"]
@@ -13,11 +14,13 @@ version = "0.2.1"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = ["barcode", "qrcode"]
-barcode = []
-full = ["barcode", "qrcode", "graphics"]
-graphics = ["dep:image"]
+default = ["barcodes", "2d_codes"]
+full = ["barcodes", "qrcode", "graphics"]
+barcodes = []
+2d_codes = ["qrcode", "gs1_databar"]
 qrcode = []
+gs1_databar = []
+graphics = ["dep:image"]
 
 [dependencies]
 encoding_rs = "0.8.33"

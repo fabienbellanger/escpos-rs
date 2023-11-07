@@ -1,11 +1,8 @@
 //! Protocol used to communicate with the printer
 
-#[cfg(feature = "barcode")]
-use super::barcodes::*;
 #[cfg(feature = "graphics")]
 use super::bit_image::*;
-#[cfg(feature = "qrcode")]
-use super::qrcode::*;
+use super::codes::*;
 use super::{character::*, constants::*, types::*};
 use crate::{
     errors::{PrinterError, Result},
@@ -82,8 +79,8 @@ impl Protocol {
     /// Double strike
     pub(crate) fn double_strike(&self, enabled: bool) -> Command {
         match enabled {
-            true => ESC_TEXT_DOUBLESTRIKE_ON.to_vec(),
-            false => ESC_TEXT_DOUBLESTRIKE_OFF.to_vec(),
+            true => ESC_TEXT_DOUBLE_STRIKE_ON.to_vec(),
+            false => ESC_TEXT_DOUBLE_STRIKE_OFF.to_vec(),
         }
     }
 
@@ -138,12 +135,12 @@ impl Protocol {
 
     /// Reset line spacing
     pub(crate) fn reset_line_spacing(&self) -> Command {
-        ESC_TEXT_RESET_LINESPACING.to_vec()
+        ESC_TEXT_RESET_LINE_SPACING.to_vec()
     }
 
     /// Line spacing
     pub(crate) fn line_spacing(&self, value: u8) -> Command {
-        let mut cmd = ESC_TEXT_LINESPACING.to_vec();
+        let mut cmd = ESC_TEXT_LINE_SPACING.to_vec();
         cmd.push(value);
         cmd
     }
@@ -191,7 +188,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Set barcode font
     pub(crate) fn barcode_font(&self, font: BarcodeFont) -> Command {
         let mut cmd = GS_BARCODE_FONT.to_vec();
@@ -199,7 +196,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Set barcode height
     pub(crate) fn barcode_height(&self, height: u8) -> Result<Command> {
         if height == 0 {
@@ -210,7 +207,7 @@ impl Protocol {
         Ok(cmd)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Set barcode width (1 - 5)
     pub(crate) fn barcode_width(&self, width: u8) -> Result<Command> {
         if width == 0 {
@@ -222,7 +219,7 @@ impl Protocol {
         Ok(cmd)
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Set barcode position
     pub(crate) fn barcode_position(&self, position: BarcodePosition) -> Command {
         let mut cmd = GS_BARCODE_POSITION.to_vec();
@@ -230,7 +227,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Print barcode
     pub(crate) fn barcode_print(&self, system: BarcodeSystem, data: &str) -> Command {
         let mut cmd = GS_BARCODE_PRINT.to_vec();
@@ -240,7 +237,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     /// Configure and print barcode
     pub(crate) fn barcode(
         &self,
@@ -437,7 +434,7 @@ mod tests {
     #[test]
     fn test_character_set() {
         let protocol = Protocol::new(Encoder::default());
-        assert_eq!(protocol.character_set(CharacterSet::default()), vec![27, 82, 0]);
+        assert_eq!(protocol.character_set(CharacterSet::USA), vec![27, 82, 0]);
         assert_eq!(protocol.character_set(CharacterSet::France), vec![27, 82, 1]);
         assert_eq!(protocol.character_set(CharacterSet::IndiaMarathi), vec![27, 82, 82]);
     }
@@ -561,7 +558,7 @@ mod tests {
         assert_eq!(protocol.motion_units(4, 122), vec![29, 80, 4, 122]);
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     #[test]
     fn test_barcode_font() {
         let protocol = Protocol::new(Encoder::default());
@@ -572,7 +569,7 @@ mod tests {
         assert_eq!(protocol.barcode_font(BarcodeFont::E), vec![29, 102, 4]);
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     #[test]
     fn test_barcode_height() {
         let protocol = Protocol::new(Encoder::default());
@@ -580,7 +577,7 @@ mod tests {
         assert_eq!(protocol.barcode_height(5).unwrap(), vec![29, 104, 5]);
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     #[test]
     fn test_barcode_width() {
         let protocol = Protocol::new(Encoder::default());
@@ -590,7 +587,7 @@ mod tests {
         assert_eq!(protocol.barcode_width(18).unwrap(), vec![29, 119, 5]);
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     #[test]
     fn test_barcode_position() {
         let protocol = Protocol::new(Encoder::default());
@@ -600,7 +597,7 @@ mod tests {
         assert_eq!(protocol.barcode_position(BarcodePosition::Both), vec![29, 72, 3]);
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     #[test]
     fn test_barcode_print() {
         let protocol = Protocol::new(Encoder::default());
@@ -634,7 +631,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "barcode")]
+    #[cfg(feature = "barcodes")]
     #[test]
     fn test_barcode() {
         let protocol = Protocol::new(Encoder::default());

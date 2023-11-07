@@ -173,9 +173,8 @@ impl From<PageCode> for u8 {
 }
 
 /// Character page code
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub enum CharacterSet {
-    #[default]
     USA,
     France,
     Germany,

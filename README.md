@@ -43,8 +43,10 @@ cargo add escpos -F full
 
 | Name       | Description                                                        | Default |
 |------------|--------------------------------------------------------------------|:-------:|
-| `barcode`  | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
+| `barcodes` | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
 | `qrcode`   | Print QR codes                                                     |    ✅    |
+| `gs1`      | Print GS1 codes                                                    |    ✅    |
+| `2d_codes` | Print 2D codes                                                     |    ✅    |
 | `graphics` | Print raster images                                                |    ❌    |
 | `full`     | Enable all features                                                |    ❌    |
 
@@ -224,8 +226,8 @@ fn main() -> Result<()> {
 |   ✅    | `bit_image_option()`   | Print raster bit image with custom option         | `graphics` |
 |   🚧   | `graphic()`            | Print raster graphic with default option          | `graphics` |
 |   🚧   | `graphic_option()`     | Print raster graphic with custom option           | `graphics` |
+|   🚧   | `?`                    | Print GS1                                         | `?`        |
 |   ❌    | `?`                    | Print PDF147                                      | `?`        |
-|   ❌    | `?`                    | Print GS1                                         | `?`        |
 |   ❌    | `?`                    | Print DataMatrix                                  | `?`        |
 |   ❌    | `?`                    | Print MaxiCode                                    | `?`        |
 
@@ -245,4 +247,8 @@ fn main() -> Result<()> {
 - [ ] Add more examples (improve `receipt.rs`)
 - [ ] Add more commands:
     - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)
-    - [ ] Others 2D codes (GS1, PDF157, etc.)
+    - [ ] Others 2D codes:
+        - [ ] GS1
+        - [ ] PDF157
+        - [ ] DataMatrix
+        - [ ] MaxiCode
