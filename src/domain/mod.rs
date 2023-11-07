@@ -1,5 +1,6 @@
 mod barcodes;
 mod bit_image;
+mod character;
 mod constants;
 mod graphics;
 mod protocol;
@@ -10,6 +11,7 @@ mod types;
 pub use barcodes::*;
 #[cfg(feature = "graphics")]
 pub use bit_image::*;
+pub use character::*;
 pub use constants::*;
 #[cfg(feature = "graphics")]
 pub use graphics::*;

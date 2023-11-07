@@ -1,6 +1,6 @@
 [package]
 authors = ["Fabien Bellanger <valentil@gmail.com>"]
-description = "ESC/POS printer driver for Rust"
+description = "ESC/POS printer driver"
 edition = "2021"
 homepage = "https://github.com/fabienbellanger/escpos-rs"
 keywords = ["escpos", "printer", "driver", "thermal", "usb"]

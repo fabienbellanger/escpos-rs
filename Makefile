@@ -4,6 +4,7 @@
 	lint-audit \
 	audit-fix \
 	test \
+	check \
 	clean \
 	build \
 	build-no-audit \
@@ -53,6 +54,9 @@ audit-fix:
 ## test: Launch unit tests in a single thread
 test:
 	$(CARGO) test --all-features -- --nocapture
+
+## check: Clippy, audit and test
+check: lint-audit test
 
 ## clean: Remove target directory
 clean:

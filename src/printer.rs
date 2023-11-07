@@ -79,7 +79,7 @@ impl<D: Driver> Printer<D> {
     /// if an error occurred before the `print` command.
     pub fn print(&mut self) -> Result<&mut Self> {
         for instruction in self.instructions.iter() {
-            self.driver.write(&instruction.command)?
+            self.driver.write(&instruction.flatten_commands())?
         }
         self.driver.flush()?;
         self.instructions = vec![];
@@ -92,10 +92,10 @@ impl<D: Driver> Printer<D> {
     }
 
     /// Add command to instructions, write data and display debug information
-    fn command(&mut self, label: &str, cmd: Command) -> Result<&mut Self> {
-        let instruction = Instruction::new(label, &cmd, self.debug_mode);
+    fn command(&mut self, label: &str, cmd: &[Command]) -> Result<&mut Self> {
+        let instruction = Instruction::new(label, cmd, self.debug_mode);
 
-        if self.debug_mode.is_some() {
+        if !label.is_empty() && self.debug_mode.is_some() {
             debug!("{:?}", instruction.clone());
         }
 
@@ -107,133 +107,139 @@ impl<D: Driver> Printer<D> {
     /// Hardware initialization
     pub fn init(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.init();
-        self.command("initialization", cmd)
+        self.command("initialization", &[cmd])
     }
 
     /// Hardware reset
     pub fn reset(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.reset();
-        self.command("reset", cmd)
+        self.command("reset", &[cmd])
     }
 
     /// Paper full cut
     pub fn cut(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.cut(false);
-        self.command("full paper cut", cmd)
+        self.command("full paper cut", &[cmd])
     }
 
     /// Paper partial cut
     pub fn partial_cut(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.cut(true);
-        self.command("partial paper cut", cmd)
+        self.command("partial paper cut", &[cmd])
     }
 
     /// Print and paper full cut
     pub fn print_cut(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.cut(false);
-        self.command("full paper cut", cmd)?.print()
+        self.command("full paper cut", &[cmd])?.print()
+    }
+
+    /// Character page code
+    pub fn page_code(&mut self, code: PageCode) -> Result<&mut Self> {
+        let cmd = self.protocol.page_code(code);
+        self.command("character code", &[cmd])
     }
 
     /// Text bold
     pub fn bold(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.bold(enabled);
-        self.command("text bold", cmd)
+        self.command("text bold", &[cmd])
     }
 
     /// Text underline
     pub fn underline(&mut self, mode: UnderlineMode) -> Result<&mut Self> {
         let cmd = self.protocol.underline(mode);
-        self.command("text underline", cmd)
+        self.command("text underline", &[cmd])
     }
 
     /// Text double strike
     pub fn double_strike(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.double_strike(enabled);
-        self.command("text double strike", cmd)
+        self.command("text double strike", &[cmd])
     }
 
     /// Text font
     pub fn font(&mut self, font: Font) -> Result<&mut Self> {
         let cmd = self.protocol.font(font);
-        self.command("text font", cmd)
+        self.command("text font", &[cmd])
     }
 
     /// Text flip
     pub fn flip(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.flip(enabled);
-        self.command("text flip", cmd)
+        self.command("text flip", &[cmd])
     }
 
     /// Text justify
     pub fn justify(&mut self, mode: JustifyMode) -> Result<&mut Self> {
         let cmd = self.protocol.justify(mode);
-        self.command("text justify", cmd)
+        self.command("text justify", &[cmd])
     }
 
     /// Text reverse colour
     pub fn reverse(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.reverse_colours(enabled);
-        self.command("text reverse colour", cmd)
+        self.command("text reverse colour", &[cmd])
     }
 
     /// Text size
     pub fn size(&mut self, width: u8, height: u8) -> Result<&mut Self> {
         let cmd = self.protocol.text_size(width, height)?;
-        self.command("text size", cmd)
+        self.command("text size", &[cmd])
     }
 
     /// Reset text size
     pub fn reset_size(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.text_size(1, 1)?;
-        self.command("text size", cmd)
+        self.command("text size", &[cmd])
     }
 
     /// Smoothing mode
     pub fn smoothing(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.smoothing(enabled);
-        self.command("smoothing mode", cmd)
+        self.command("smoothing mode", &[cmd])
     }
 
     /// Line feed
     pub fn feed(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.feed(1);
-        self.command("line feed", cmd)
+        self.command("line feed", &[cmd])
     }
 
     /// Custom line feed
     pub fn feeds(&mut self, lines: u8) -> Result<&mut Self> {
         let cmd = self.protocol.feed(lines);
-        self.command("line feeds", cmd)
+        self.command("line feeds", &[cmd])
     }
 
     /// Line spacing
     pub fn line_spacing(&mut self, value: u8) -> Result<&mut Self> {
         let cmd = self.protocol.line_spacing(value);
-        self.command("line spacing", cmd)
+        self.command("line spacing", &[cmd])
     }
 
     /// Reset line spacing
     pub fn reset_line_spacing(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.reset_line_spacing();
-        self.command("reset line spacing", cmd)
+        self.command("reset line spacing", &[cmd])
     }
 
     /// Upside-down mode
     pub fn upside_down(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.upside_down(enabled);
-        self.command("upside-down mode", cmd)
+        self.command("upside-down mode", &[cmd])
     }
 
     /// Cash drawer
     pub fn cash_drawer(&mut self, pin: CashDrawer) -> Result<&mut Self> {
         let cmd = self.protocol.cash_drawer(pin);
-        self.command("cash drawer", cmd)
+        self.command("cash drawer", &[cmd])
     }
 
     /// Text
     pub fn write(&mut self, text: &str) -> Result<&mut Self> {
         let cmd = self.protocol.text(text)?;
-        self.command("text", cmd)
+        self.command("text", &[cmd])
     }
 
     /// Text + Line feed
@@ -244,32 +250,21 @@ impl<D: Driver> Printer<D> {
     /// Set horizontal and vertical motion units
     pub fn motion_units(&mut self, x: u8, y: u8) -> Result<&mut Self> {
         let cmd = self.protocol.motion_units(x, y);
-        self.command("set motion units", cmd)
+        self.command("set motion units", &[cmd])
     }
 
     #[cfg(feature = "barcode")]
     /// Print barcode
-    // TODO: Move the logic into the protocol and test it
     fn barcode(&mut self, barcode: Barcode) -> Result<&mut Self> {
-        // Width
-        let cmd = self.protocol.barcode_width(barcode.option.width.into())?;
-        self.command("set barcode width", cmd)?;
-
-        // Height
-        let cmd = self.protocol.barcode_height(barcode.option.height.into())?;
-        self.command("set barcode height", cmd)?;
-
-        // Font
-        let cmd = self.protocol.barcode_font(barcode.option.font);
-        self.command("set barcode font", cmd)?;
-
-        // Position
-        let cmd = self.protocol.barcode_position(barcode.option.position);
-        self.command("set barcode position", cmd)?;
-
-        // Print
-        let cmd = self.protocol.barcode_print(barcode.system, &barcode.data);
-        self.command(&format!("print {} barcode", barcode.system), cmd)
+        let commands = self.protocol.barcode(
+            &barcode.data,
+            barcode.system,
+            barcode.option.width.into(),
+            barcode.option.height.into(),
+            barcode.option.font,
+            barcode.option.position,
+        )?;
+        self.command(&format!("print {} barcode", barcode.system), commands.as_slice())
     }
 
     #[cfg(feature = "barcode")]
@@ -358,56 +353,28 @@ impl<D: Driver> Printer<D> {
 
     #[cfg(feature = "qrcode")]
     /// Print QR code with default option
-    // TODO: Move the logic into the protocol and test it
     pub fn qrcode(&mut self, data: &str) -> Result<&mut Self> {
-        let qrcode = QRCode::new(data, None)?;
-
-        // Model
-        let cmd = self.protocol.qrcode_model(qrcode.option.model);
-        self.command("set qrcode model", cmd)?;
-
-        // Size
-        let cmd = self.protocol.qrcode_size(qrcode.option.size);
-        self.command("set qrcode size", cmd)?;
-
-        // Error correction level
-        let cmd = self.protocol.qrcode_correction_level(qrcode.option.correction_level);
-        self.command("set qrcode error correction level", cmd)?;
-
-        // Data
-        let cmd = self.protocol.qrcode_data(data)?;
-        self.command("set qrcode data", cmd)?;
-
-        // Print
-        let cmd = self.protocol.qrcode_print();
-        self.command("print qrcode", cmd)
+        self.qrcode_builder(data, None)
     }
 
     #[cfg(feature = "qrcode")]
     /// Print QR code with option
-    // TODO: Move the logic into the protocol and test it
     pub fn qrcode_option(&mut self, data: &str, option: QRCodeOption) -> Result<&mut Self> {
-        let qrcode = QRCode::new(data, Some(option))?;
+        self.qrcode_builder(data, Some(option))
+    }
 
-        // Model
-        let cmd = self.protocol.qrcode_model(qrcode.option.model);
-        self.command("set qrcode model", cmd)?;
+    #[cfg(feature = "qrcode")]
+    /// Construct QR code
+    fn qrcode_builder(&mut self, data: &str, option: Option<QRCodeOption>) -> Result<&mut Self> {
+        let qrcode = QRCode::new(data, option)?;
 
-        // Size
-        let cmd = self.protocol.qrcode_size(qrcode.option.size);
-        self.command("set qrcode size", cmd)?;
-
-        // Error correction level
-        let cmd = self.protocol.qrcode_correction_level(qrcode.option.correction_level);
-        self.command("set qrcode error correction level", cmd)?;
-
-        // Data
-        let cmd = self.protocol.qrcode_data(data)?;
-        self.command("set qrcode data", cmd)?;
-
-        // Print
-        let cmd = self.protocol.qrcode_print();
-        self.command("print qrcode", cmd)
+        let commands = self.protocol.qrcode(
+            &qrcode.data,
+            qrcode.option.model,
+            qrcode.option.correction_level,
+            qrcode.option.size,
+        )?;
+        self.command("print qrcode", commands.as_slice())
     }
 
     // #[cfg(feature = "graphics")]
@@ -428,20 +395,20 @@ impl<D: Driver> Printer<D> {
     /// Print image
     pub fn bit_image_option(&mut self, path: &str, option: BitImageOption) -> Result<&mut Self> {
         let cmd = self.protocol.cancel();
-        self.command("cancel data", cmd)?;
+        self.command("cancel data", &[cmd])?;
 
         let cmd = self.protocol.bit_image(path, Some(option))?;
-        self.command("print bit image", cmd)
+        self.command("print bit image", &[cmd])
     }
 
     #[cfg(feature = "graphics")]
     /// Print image
     pub fn bit_image(&mut self, path: &str) -> Result<&mut Self> {
         let cmd = self.protocol.cancel();
-        self.command("cancel data", cmd)?;
+        self.command("cancel data", &[cmd])?;
 
         let cmd = self.protocol.bit_image(path, None)?;
-        self.command("print bit image", cmd)
+        self.command("print bit image", &[cmd])
     }
 }
 
@@ -457,11 +424,11 @@ mod tests {
         let mut printer = Printer::new(driver, Protocol::default());
         printer.debug_mode(debug_mode).init().unwrap();
         let cmd = printer.protocol.cut(false);
-        let printer = printer.command("test paper cut", cmd).unwrap();
+        let printer = printer.command("test paper cut", &[cmd]).unwrap();
 
         let expected = vec![
-            Instruction::new("initialization", vec![27, 64].as_slice(), debug_mode),
-            Instruction::new("test paper cut", vec![29, 86, 65, 0].as_slice(), debug_mode),
+            Instruction::new("initialization", &[vec![27, 64]], debug_mode),
+            Instruction::new("test paper cut", &[vec![29, 86, 65, 0]], debug_mode),
         ];
 
         assert_eq!(printer.instructions, expected);

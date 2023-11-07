@@ -18,42 +18,6 @@ impl fmt::Display for CashDrawer {
     }
 }
 
-/// Underline mode
-#[derive(Debug)]
-pub enum UnderlineMode {
-    None,
-    Single,
-    Double,
-}
-
-impl fmt::Display for UnderlineMode {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            UnderlineMode::None => write!(f, "none"),
-            UnderlineMode::Single => write!(f, "single"),
-            UnderlineMode::Double => write!(f, "double"),
-        }
-    }
-}
-
-/// Text font
-#[derive(Debug)]
-pub enum Font {
-    A,
-    B,
-    C,
-}
-
-impl fmt::Display for Font {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Font::A => write!(f, "font A"),
-            Font::B => write!(f, "font B"),
-            Font::C => write!(f, "font C"),
-        }
-    }
-}
-
 /// Justify mode
 #[derive(Debug)]
 pub enum JustifyMode {
@@ -86,26 +50,44 @@ pub(crate) type Command = Vec<u8>;
 #[derive(Clone, PartialEq)]
 pub(crate) struct Instruction {
     pub(crate) name: String,
-    pub(crate) command: Command,
+    pub(crate) commands: Vec<Command>,
     pub(crate) debug_mode: Option<DebugMode>,
 }
 
 impl Instruction {
-    pub(crate) fn new(name: &str, cmd: &[u8], debug_mode: Option<DebugMode>) -> Self {
+    /// Create a new instruction
+    pub(crate) fn new(name: &str, commands: &[Command], debug_mode: Option<DebugMode>) -> Self {
         Instruction {
             name: name.to_string(),
-            command: cmd.to_vec(),
+            commands: commands.to_vec(),
             debug_mode,
         }
+    }
+
+    /// Get list of commands in the same Vec (flat)
+    pub(crate) fn flatten_commands(&self) -> Vec<u8> {
+        self.commands.iter().flatten().cloned().collect()
     }
 }
 
 impl fmt::Debug for Instruction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.debug_mode {
-            Some(DebugMode::Dec) => write!(f, "{} {:?}", &self.name, &self.command),
-            Some(DebugMode::Hex) => write!(f, "{} {:02X?}", &self.name, &self.command),
+            Some(DebugMode::Dec) => write!(f, "{} {:?}", &self.name, &self.commands),
+            Some(DebugMode::Hex) => write!(f, "{} {:02X?}", &self.name, &self.commands),
             None => Ok(()),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_instruction_flatten_commands() {
+        let instruction = Instruction::new("test", &[vec![29, 119, 4], vec![29, 104, 4]], None);
+
+        assert_eq!(instruction.flatten_commands(), vec![29, 119, 4, 29, 104, 4]);
     }
 }

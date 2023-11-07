@@ -183,6 +183,7 @@ fn main() -> Result<()> {
 |   ✅    | `cut()`                | Paper cut (`GS V A 0`)                            |            |
 |   ✅    | `partial_cut()`        | Partial paper cut (`GS V A 1`)                    |            |
 |   ✅    | `print_cut()`          | Print and paper cut                               |            |
+|   ✅    | `page_code()`          | Select character code table  (`ESC t`)            |            |
 |   ✅    | `bold()`               | Text bold (`ESC E`)                               |            |
 |   ✅    | `underline()`          | Text underline (`ESC -`)                          |            |
 |   ✅    | `double_strike()`      | Text double strike (`ESC G`)                      |            |
@@ -242,5 +243,5 @@ fn main() -> Result<()> {
 - [ ] Add tests
 - [ ] Add more examples (improve `receipt.rs`)
 - [ ] Add more commands:
-  - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)
-  - [ ] Others 2D codes (GS1, PDF157, etc.)
+    - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)
+    - [ ] Others 2D codes (GS1, PDF157, etc.)

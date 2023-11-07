@@ -6,7 +6,7 @@ use super::barcodes::*;
 use super::bit_image::*;
 #[cfg(feature = "qrcode")]
 use super::qrcode::*;
-use super::{constants::*, types::*};
+use super::{character::*, constants::*, types::*};
 use crate::{
     errors::{PrinterError, Result},
     io::encoder::Encoder,
@@ -46,6 +46,13 @@ impl Protocol {
             true => GS_PAPER_CUT_PARTIAL.to_vec(),
             false => GS_PAPER_CUT_FULL.to_vec(),
         }
+    }
+
+    /// Character page code
+    pub(crate) fn page_code(&self, code: PageCode) -> Command {
+        let mut cmd = ESC_CHARACTER_CODE.to_vec();
+        cmd.push(code.into());
+        cmd
     }
 
     /// Emphasis
@@ -228,7 +235,7 @@ impl Protocol {
 
     #[cfg(feature = "barcode")]
     /// Configure and print barcode
-    pub(crate) fn _barcode(
+    pub(crate) fn barcode(
         &self,
         data: &str,
         system: BarcodeSystem,
@@ -290,7 +297,7 @@ impl Protocol {
 
     #[cfg(feature = "qrcode")]
     /// QR code print
-    pub(crate) fn _qrcode(
+    pub(crate) fn qrcode(
         &self,
         data: &str,
         model: QRCodeModel,
@@ -326,7 +333,7 @@ impl Protocol {
     // pub(crate) fn graphic_data(&self, path: &str) -> Result<Command> {
     //     let mut cmd = GS_IMAGE_HIGHT_PREFIX.to_vec();
     //
-    //     // pL, pH
+    //     // pL, pH => Parameters
     //     let graphic = Graphic::new(path, None)?;
     //     let (p1, p2, p3, p4) = graphic.data_size()?;
     //     cmd.push(p1);
@@ -411,6 +418,13 @@ mod tests {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.cut(false), vec![29, 86, 65, 0]);
         assert_eq!(protocol.cut(true), vec![29, 86, 65, 1]);
+    }
+
+    #[test]
+    fn test_page_code() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.page_code(PageCode::default()), vec![27, 116, 0]);
+        assert_eq!(protocol.page_code(PageCode::PC858), vec![27, 116, 19]);
     }
 
     #[test]
@@ -619,7 +633,7 @@ mod tests {
 
         assert_eq!(
             protocol
-                ._barcode(
+                .barcode(
                     "123456789012",
                     BarcodeSystem::EAN13,
                     4,
@@ -718,7 +732,7 @@ mod tests {
         ];
         assert_eq!(
             protocol
-                ._qrcode("test", QRCodeModel::Model1, QRCodeCorrectionLevel::L, 4)
+                .qrcode("test", QRCodeModel::Model1, QRCodeCorrectionLevel::L, 4)
                 .unwrap(),
             expected
         );
