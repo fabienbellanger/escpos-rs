@@ -3,14 +3,9 @@
 use crate::errors::{PrinterError, Result};
 
 /// Get parameters pL and pH
-///
-/// # Example
-/// ```rust
-/// todo!()
-/// ```
-pub fn get_parameters_number_2(data: &str) -> Result<(u8, u8)> {
+pub(crate) fn get_parameters_number_2(data: &str, padding: u8) -> Result<(u8, u8)> {
     let bytes = data.as_bytes();
-    let data_len = bytes.len() + 3;
+    let data_len = bytes.len() + (padding as usize);
     let ph = data_len / 256;
     let pl = data_len
         .checked_add_signed(-256 * isize::try_from(ph)?)
@@ -19,4 +14,23 @@ pub fn get_parameters_number_2(data: &str) -> Result<(u8, u8)> {
         )))?;
 
     Ok((u8::try_from(pl)?, u8::try_from(ph)?))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_parameters_number_2() {
+        assert_eq!(get_parameters_number_2("test123456", 3).unwrap(), (13, 0));
+        assert_eq!(
+            get_parameters_number_2("test123456".repeat(200).as_str(), 4).unwrap(),
+            (212, 7)
+        );
+        assert_eq!(
+            get_parameters_number_2("1".repeat(65_531).as_str(), 4).unwrap(),
+            (255, 255)
+        );
+        assert!(get_parameters_number_2("1".repeat(65_600).as_str(), 4).is_err());
+    }
 }

@@ -1,10 +1,10 @@
 //! Barcodes and 2D codes
 mod barcodes;
-mod gs1_databar;
+mod gs1_databar_2d;
 mod qrcode;
 
-#[cfg(feature = "gs1_databar")]
-pub use gs1_databar::*;
+#[cfg(feature = "gs1_databar_2d")]
+pub use gs1_databar_2d::*;
 
 #[cfg(feature = "qrcode")]
 pub use qrcode::*;

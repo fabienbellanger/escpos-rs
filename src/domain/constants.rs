@@ -88,12 +88,12 @@ pub const GS_2D_QRCODE_CORRECTION_LEVEL: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 69]
 pub const GS_2D_QRCODE_PRINT_SYMBOL_DATA: &[u8] = &[GS, b'(', b'k', 3, 0, 49, 81, 48];
 
 // GS1 DataBar
-#[cfg(feature = "gs1_databar")]
-pub const GS_GS1_DATABAR_WIDTH: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 67];
-#[cfg(feature = "gs1_databar")]
-pub const GS_GS1_DATABAR_WIDTH_EXTENDED: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 71];
-#[cfg(feature = "gs1_databar")]
-pub const GS_GS1_DATABAR_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 81, 48];
+#[cfg(feature = "gs1_databar_2d")]
+pub const GS_2D_GS1_DATABAR_WIDTH: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 67];
+#[cfg(feature = "gs1_databar_2d")]
+pub const GS_2D_GS1_DATABAR_WIDTH_EXTENDED: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 71];
+#[cfg(feature = "gs1_databar_2d")]
+pub const GS_2D_GS1_DATABAR_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 81, 48];
 
 // Image
 

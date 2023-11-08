@@ -311,6 +311,7 @@ impl Graphic {
     }
 
     /// Get (xL, xH) or (yL, yH) number of dots
+    // TODO: Use get_parameters_number_2 instead
     pub fn dots_per_direction(&self, length: usize) -> Result<(u8, u8)> {
         let ph = length / 256;
         let pl = length

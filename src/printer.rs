@@ -358,18 +358,6 @@ impl<D: Driver> Printer<D> {
     }
 
     #[cfg(feature = "qrcode")]
-    /// Print QR code with default option
-    pub fn qrcode(&mut self, data: &str) -> Result<&mut Self> {
-        self.qrcode_builder(data, None)
-    }
-
-    #[cfg(feature = "qrcode")]
-    /// Print QR code with option
-    pub fn qrcode_option(&mut self, data: &str, option: QRCodeOption) -> Result<&mut Self> {
-        self.qrcode_builder(data, Some(option))
-    }
-
-    #[cfg(feature = "qrcode")]
     /// Construct QR code
     fn qrcode_builder(&mut self, data: &str, option: Option<QRCodeOption>) -> Result<&mut Self> {
         let qrcode = QRCode::new(data, option)?;
@@ -381,6 +369,33 @@ impl<D: Driver> Printer<D> {
             qrcode.option.size,
         )?;
         self.command("print qrcode", commands.as_slice())
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// Print QR code with default option
+    pub fn qrcode(&mut self, data: &str) -> Result<&mut Self> {
+        self.qrcode_builder(data, None)
+    }
+
+    #[cfg(feature = "qrcode")]
+    /// Print QR code with option
+    pub fn qrcode_option(&mut self, data: &str, option: QRCodeOption) -> Result<&mut Self> {
+        self.qrcode_builder(data, Some(option))
+    }
+
+    #[cfg(feature = "gs1_databar_2d")]
+    /// Construct 2D GS1 DataBar
+    pub fn gs1_databar_2d_option(&mut self, data: &str, option: GS1DataBar2DOption) -> Result<&mut Self> {
+        let code = GS1DataBar2D::new(data, option)?;
+
+        let commands = self.protocol.gs1_databar_2d(&code.data, code.option)?;
+        self.command("print 2D GS1 DataBar", commands.as_slice())
+    }
+
+    #[cfg(feature = "gs1_databar_2d")]
+    /// Construct 2D GS1 DataBar
+    pub fn gs1_databar_2d(&mut self, data: &str) -> Result<&mut Self> {
+        self.gs1_databar_2d_option(data, GS1DataBar2DOption::default())
     }
 
     // #[cfg(feature = "graphics")]

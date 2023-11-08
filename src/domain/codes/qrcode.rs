@@ -2,7 +2,7 @@
 
 #![cfg(feature = "qrcode")]
 
-use crate::errors::{PrinterError, Result};
+use crate::errors::Result;
 use std::fmt;
 
 const QRCODE_MAX_DATA_SIZE: usize = 7089;
@@ -130,21 +130,6 @@ impl QRCode {
         }
         Ok(())
     }
-
-    /// Get size (pL, pH) information
-    // TODO: Rename and factor to get_parameters_number_2(data: &str) -> Result<(u8, u8)>
-    pub fn get_size_values(data: &str) -> Result<(u8, u8)> {
-        Self::check_data(data)?;
-
-        let bytes = data.as_bytes();
-        let data_len = bytes.len() + 3;
-        let ph = data_len / 256;
-        let pl = data_len
-            .checked_add_signed(-256 * isize::try_from(ph)?)
-            .ok_or(PrinterError::Input("QR code invalid data".to_owned()))?;
-
-        Ok((u8::try_from(pl)?, u8::try_from(ph)?))
-    }
 }
 
 #[cfg(test)]
@@ -169,20 +154,5 @@ mod tests {
 
         let data = "azerty123456789QTG,{".repeat(400);
         assert!(QRCode::check_data(&data).is_err());
-    }
-
-    #[test]
-    fn test_qrcode_get_size_values() {
-        let data = "azerty123456789QTG,{".repeat(400);
-        assert!(QRCode::get_size_values(&data).is_err());
-
-        let data = "azerty123456789QTG,{";
-        assert_eq!(QRCode::get_size_values(data).unwrap(), (23, 0));
-
-        let data = "azerty123456789QTG,{".repeat(200);
-        assert_eq!(QRCode::get_size_values(&data).unwrap(), (163, 15));
-
-        let data = "";
-        assert_eq!(QRCode::get_size_values(data).unwrap(), (3, 0));
     }
 }

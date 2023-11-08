@@ -287,7 +287,7 @@ impl Protocol {
     /// QR code data
     pub(crate) fn qrcode_data(&self, data: &str) -> Result<Command> {
         let mut cmd = GS_2D.to_vec();
-        let (pl, ph) = QRCode::get_size_values(data)?;
+        let (pl, ph) = get_parameters_number_2(data, 3)?;
         cmd.append(&mut vec![pl, ph, 49, 80, 48]);
         cmd.append(&mut data.as_bytes().to_vec());
         Ok(cmd)
@@ -394,28 +394,26 @@ impl Protocol {
         Ok(cmd)
     }
 
-    #[cfg(feature = "gs1_databar")]
-    /// GS1 DataBar width
-    // TODO: Add tests with different widths
-    pub(crate) fn gs1_databar_width(&self, size: u8) -> Command {
-        let mut cmd = GS_GS1_DATABAR_WIDTH.to_vec();
-        cmd.push(size);
+    #[cfg(feature = "gs1_databar_2d")]
+    /// 2D GS1 DataBar width
+    pub(crate) fn gs1_databar_2d_width(&self, size: GS1DataBar2DWidth) -> Command {
+        let mut cmd = GS_2D_GS1_DATABAR_WIDTH.to_vec();
+        cmd.push(size.into());
         cmd
     }
 
-    #[cfg(feature = "gs1_databar")]
-    /// GS1 DataBar expanded max width
+    #[cfg(feature = "gs1_databar_2d")]
+    /// 2D GS1 DataBar expanded max width
     // TODO: Add tests
-    pub(crate) fn gs1_databar_expanded_width(&self, _max: u8) -> Command {
+    pub(crate) fn _gs1_databar_2d_expanded_width(&self, _max: u8) -> Command {
         unimplemented!()
     }
 
-    #[cfg(feature = "gs1_databar")]
-    /// GS1 DataBar data
-    // TODO: Add tests
-    pub(crate) fn gs1_databar_data(&self, data: &str, code_type: GS1DataBarType) -> Result<Command> {
+    #[cfg(feature = "gs1_databar_2d")]
+    /// 2D GS1 DataBar data
+    pub(crate) fn gs1_databar_2d_data(&self, data: &str, code_type: GS1DataBar2DType) -> Result<Command> {
         let mut cmd = GS_2D.to_vec();
-        let (pl, ph) = get_parameters_number_2(data)?;
+        let (pl, ph) = get_parameters_number_2(data, 4)?;
         cmd.push(pl);
         cmd.push(ph);
         cmd.append(&mut vec![51, 80, 48]);
@@ -425,18 +423,20 @@ impl Protocol {
         Ok(cmd)
     }
 
-    #[cfg(feature = "gs1_databar")]
-    /// GS1 DataBar print
-    // TODO: Add tests
-    pub(crate) fn gs1_databar_print(&self, data: &str, code_type: GS1DataBarType) -> Command {
-        GS_GS1_DATABAR_PRINT.to_vec()
+    #[cfg(feature = "gs1_databar_2d")]
+    /// 2D GS1 DataBar print
+    pub(crate) fn gs1_databar_2d_print(&self) -> Command {
+        GS_2D_GS1_DATABAR_PRINT.to_vec()
     }
 
-    #[cfg(feature = "gs1_databar")]
-    /// GS1 DataBar
-    // TODO: Add tests
-    pub(crate) fn gs1_databar(&self, data: &str, option: Option<GS1DataBarOption>) -> Command {
-        unimplemented!()
+    #[cfg(feature = "gs1_databar_2d")]
+    /// 2D GS1 DataBar
+    pub(crate) fn gs1_databar_2d(&self, data: &str, option: GS1DataBar2DOption) -> Result<Vec<Command>> {
+        Ok(vec![
+            self.gs1_databar_2d_width(option.width),
+            self.gs1_databar_2d_data(data, option.code_type)?,
+            self.gs1_databar_2d_print(),
+        ])
     }
 }
 
@@ -793,6 +793,43 @@ mod tests {
                 .unwrap(),
             expected
         );
+    }
+
+    #[cfg(feature = "gs1_databar_2d")]
+    #[test]
+    fn test_gs1_databar_2d_width() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.gs1_databar_2d_width(GS1DataBar2DWidth::S),
+            vec![29, 40, 107, 3, 0, 51, 67, 2]
+        );
+        assert_eq!(
+            protocol.gs1_databar_2d_width(GS1DataBar2DWidth::M),
+            vec![29, 40, 107, 3, 0, 51, 67, 1]
+        );
+        assert_eq!(
+            protocol.gs1_databar_2d_width(GS1DataBar2DWidth::L),
+            vec![29, 40, 107, 3, 0, 51, 67, 4]
+        );
+    }
+
+    #[cfg(feature = "gs1_databar_2d")]
+    #[test]
+    fn test_gs1_databar_2d_data() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol
+                .gs1_databar_2d_data("8245789658745", GS1DataBar2DOption::default().code_type)
+                .unwrap(),
+            vec![29, 40, 107, 17, 0, 51, 80, 48, 72, 56, 50, 52, 53, 55, 56, 57, 54, 53, 56, 55, 52, 53]
+        );
+    }
+
+    #[cfg(feature = "gs1_databar_2d")]
+    #[test]
+    fn test_gs1_databar_2d_print() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.gs1_databar_2d_print(), vec![29, 40, 107, 3, 0, 51, 81, 48]);
     }
 
     // #[cfg(feature = "graphics")]

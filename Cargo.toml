@@ -14,12 +14,12 @@ version = "0.2.1"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-2d_codes = ["qrcode", "gs1_databar"]
+codes_2d = ["qrcode", "gs1_databar_2d"]
 barcodes = []
-default = ["barcodes", "2d_codes"]
+default = ["barcodes", "codes_2d"]
 full = ["barcodes", "qrcode", "graphics"]
 graphics = ["dep:image"]
-gs1_databar = []
+gs1_databar_2d = []
 qrcode = []
 
 [dependencies]
