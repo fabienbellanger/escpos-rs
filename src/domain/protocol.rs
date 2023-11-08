@@ -404,9 +404,11 @@ impl Protocol {
 
     #[cfg(feature = "gs1_databar_2d")]
     /// 2D GS1 DataBar expanded max width
-    // TODO: Add tests
-    pub(crate) fn _gs1_databar_2d_expanded_width(&self, _max: u8) -> Command {
-        unimplemented!()
+    // TODO: To implement
+    pub(crate) fn gs1_databar_2d_expanded_width(&self, _max: u8) -> Command {
+        let mut cmd = GS_2D_GS1_DATABAR_WIDTH_EXTENDED.to_vec();
+        cmd.append(&mut vec![0, 0]);
+        cmd
     }
 
     #[cfg(feature = "gs1_databar_2d")]
@@ -434,6 +436,7 @@ impl Protocol {
     pub(crate) fn gs1_databar_2d(&self, data: &str, option: GS1DataBar2DOption) -> Result<Vec<Command>> {
         Ok(vec![
             self.gs1_databar_2d_width(option.width),
+            self.gs1_databar_2d_expanded_width(0),
             self.gs1_databar_2d_data(data, option.code_type)?,
             self.gs1_databar_2d_print(),
         ])
@@ -810,6 +813,16 @@ mod tests {
         assert_eq!(
             protocol.gs1_databar_2d_width(GS1DataBar2DWidth::L),
             vec![29, 40, 107, 3, 0, 51, 67, 4]
+        );
+    }
+
+    #[cfg(feature = "gs1_databar_2d")]
+    #[test]
+    fn test_gs1_databar_2d_expanded_width() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.gs1_databar_2d_expanded_width(0),
+            vec![29, 40, 107, 3, 0, 51, 71, 0, 0]
         );
     }
 

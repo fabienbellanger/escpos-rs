@@ -42,6 +42,8 @@ fn main() -> Result<()> {
             },
         )?
         .feed()?
+        .gs1_databar_2d("8245789658745")?
+        .feed()?
         .bit_image_option(
             "./resources/images/rust-logo-small.png",
             BitImageOption::new(Some(128), None, BitImageSize::Normal)?,
