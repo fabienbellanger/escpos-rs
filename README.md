@@ -44,7 +44,7 @@ cargo add escpos -F full
 | Name             | Description                                                        | Default |
 |------------------|--------------------------------------------------------------------|:-------:|
 | `barcodes`       | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
-| `qrcode`         | Print QR codes                                                     |    ✅    |
+| `qrcode`         | Print 2D QR codes                                                  |    ✅    |
 | `gs1_databar_2d` | Print 2D GS1 DataBar                                               |    ✅    |
 | `codes_2d`       | Print 2D codes                                                     |    ✅    |
 | `graphics`       | Print raster images                                                |    ❌    |
@@ -59,6 +59,7 @@ To launch an example, use the following command:
 
 ```bash
 RUST_LOG=debug cargo run --example full --features "full"
+RUST_LOG=debug cargo run --example codes
 RUST_LOG=debug cargo run --example debug
 ```
 
