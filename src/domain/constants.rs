@@ -95,6 +95,22 @@ pub const GS_2D_GS1_DATABAR_WIDTH_EXTENDED: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 
 #[cfg(feature = "gs1_databar_2d")]
 pub const GS_2D_GS1_DATABAR_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 51, 81, 48];
 
+// PDF417
+#[cfg(feature = "pdf417")]
+pub const GS_2D_PDF417_COLUMNS: &[u8] = &[GS, b'(', b'k', 3, 0, 48, 65];
+#[cfg(feature = "pdf417")]
+pub const GS_2D_PDF417_ROWS: &[u8] = &[GS, b'(', b'k', 3, 0, 48, 66];
+#[cfg(feature = "pdf417")]
+pub const GS_2D_PDF417_WIDTH: &[u8] = &[GS, b'(', b'k', 3, 0, 48, 67];
+#[cfg(feature = "pdf417")]
+pub const GS_2D_PDF417_ROW_HEIGHT: &[u8] = &[GS, b'(', b'k', 3, 0, 48, 68];
+#[cfg(feature = "pdf417")]
+pub const GS_2D_PDF417_CORRECTION_LEVEL: &[u8] = &[GS, b'(', b'k', 3, 0, 48, 69];
+#[cfg(feature = "pdf417")]
+pub const GS_2D_PDF417_TYPE: &[u8] = &[GS, b'(', b'k', 3, 0, 48, 70];
+#[cfg(feature = "pdf417")]
+pub const GS_2D_PDF417_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 48, 81, 48];
+
 // Image
 
 #[cfg(feature = "graphics")]

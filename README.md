@@ -45,6 +45,7 @@ cargo add escpos -F full
 | `barcodes`       | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
 | `qrcode`         | Print 2D QR codes                                                  |    ✅    |
 | `gs1_databar_2d` | Print 2D GS1 DataBar                                               |    ✅    |
+| `pdf417`         | Print PDF417                                                       |    ✅    |
 | `codes_2d`       | Print 2D codes                                                     |    ✅    |
 | `graphics`       | Print raster images                                                |    ❌    |
 | `full`           | Enable all features                                                |    ❌    |
