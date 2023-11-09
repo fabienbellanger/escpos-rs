@@ -15,18 +15,18 @@ fn main() -> Result<()> {
         .page_code(PageCode::default())?
         .bold(true)?
         .underline(UnderlineMode::Single)?
-        .writeln("Bold underline")?
+        .writeln("Bold underline left")?
         .justify(JustifyMode::CENTER)?
         .reverse(true)?
         .bold(false)?
-        .writeln("Hello world - Reverse")?
+        .writeln("Normal reverse center")?
         .feed()?
         .justify(JustifyMode::RIGHT)?
         .reverse(false)?
         .underline(UnderlineMode::None)?
         .size(2, 3)?
-        .writeln("Hello world - Normal")?
-        .write("")?
+        .writeln("Bigger right")?
+        .writeln("")?
         .justify(JustifyMode::CENTER)?
         .ean13_option(
             "1234567890265",
@@ -42,7 +42,10 @@ fn main() -> Result<()> {
             },
         )?
         .feed()?
-        .gs1_databar_2d("8245789658745")?
+        .gs1_databar_2d_option(
+            "8245789658745",
+            GS1DataBar2DOption::new(GS1DataBar2DWidth::S, GS1DataBar2DType::Stacked),
+        )?
         .feed()?
         .bit_image_option(
             "./resources/images/rust-logo-small.png",
