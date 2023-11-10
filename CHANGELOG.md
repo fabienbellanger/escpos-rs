@@ -20,9 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add PDF417
+
 ## `0.3.0` (2023-11-09) [CURRENT]
 
 ### Added
+
 - Add Select character code table command
 - Add Select an international character set
 - Add 2D GS1 DataBar
