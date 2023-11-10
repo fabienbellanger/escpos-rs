@@ -441,6 +441,89 @@ impl Protocol {
             self.gs1_databar_2d_print(),
         ])
     }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417 number of columns
+    pub(crate) fn pdf417_columns(&self, option: &Pdf417Option) -> Command {
+        let mut cmd = GS_2D_PDF417_COLUMNS.to_vec();
+        cmd.push(option.columns);
+        cmd
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417 number of rows
+    pub(crate) fn pdf417_rows(&self, option: &Pdf417Option) -> Command {
+        let mut cmd = GS_2D_PDF417_ROWS.to_vec();
+        cmd.push(option.rows);
+        cmd
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417 width
+    pub(crate) fn pdf417_width(&self, option: &Pdf417Option) -> Command {
+        let mut cmd = GS_2D_PDF417_WIDTH.to_vec();
+        cmd.push(option.width);
+        cmd
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417 row height
+    pub(crate) fn pdf417_row_height(&self, option: &Pdf417Option) -> Command {
+        let mut cmd = GS_2D_PDF417_ROW_HEIGHT.to_vec();
+        cmd.push(option.row_height);
+        cmd
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417 error correction level
+    pub(crate) fn pdf417_correction_level(&self, option: &Pdf417Option) -> Command {
+        let mut cmd = GS_2D_PDF417_CORRECTION_LEVEL.to_vec();
+        let (m, n) = option.correction_level.into();
+        cmd.push(m);
+        cmd.push(n);
+        cmd
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417 type
+    pub(crate) fn pdf417_type(&self, option: &Pdf417Option) -> Command {
+        let mut cmd = GS_2D_PDF417_TYPE.to_vec();
+        cmd.push(option.code_type.into());
+        cmd
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417 data
+    pub(crate) fn pdf417_data(&self, data: &str) -> Result<Command> {
+        let mut cmd = GS_2D.to_vec();
+        let (pl, ph) = get_parameters_number_2(data, 3)?;
+        cmd.push(pl);
+        cmd.push(ph);
+        cmd.append(&mut vec![48, 80, 48]);
+        cmd.append(&mut data.as_bytes().to_vec());
+        Ok(cmd)
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417 print
+    pub(crate) fn pdf417_print(&self) -> Command {
+        GS_2D_PDF417_PRINT.to_vec()
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417
+    pub(crate) fn pdf417(&self, data: &str, option: Pdf417Option) -> Result<Vec<Command>> {
+        Ok(vec![
+            self.pdf417_columns(&option),
+            self.pdf417_rows(&option),
+            self.pdf417_width(&option),
+            self.pdf417_row_height(&option),
+            self.pdf417_correction_level(&option),
+            self.pdf417_type(&option),
+            self.pdf417_data(data)?,
+            self.pdf417_print(),
+        ])
+    }
 }
 
 #[cfg(test)]
@@ -843,6 +926,132 @@ mod tests {
     fn test_gs1_databar_2d_print() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.gs1_databar_2d_print(), vec![29, 40, 107, 3, 0, 51, 81, 48]);
+    }
+
+    #[cfg(feature = "gs1_databar_2d")]
+    #[test]
+    fn test_gs1_databar_2d() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol
+                .gs1_databar_2d("8245789658745", GS1DataBar2DOption::default())
+                .unwrap(),
+            vec![
+                vec![29, 40, 107, 3, 0, 51, 67, 1],
+                vec![29, 40, 107, 3, 0, 51, 71, 0, 0],
+                vec![29, 40, 107, 17, 0, 51, 80, 48, 72, 56, 50, 52, 53, 55, 56, 57, 54, 53, 56, 55, 52, 53],
+                vec![29, 40, 107, 3, 0, 51, 81, 48]
+            ]
+        );
+    }
+
+    #[cfg(feature = "pdf417")]
+    #[test]
+    fn test_pdf417_columns() {
+        let protocol = Protocol::new(Encoder::default());
+        let mut option = Pdf417Option::default();
+        option.columns = 16;
+        assert_eq!(protocol.pdf417_columns(&option), vec![29, 40, 107, 3, 0, 48, 65, 16]);
+    }
+
+    #[cfg(feature = "pdf417")]
+    #[test]
+    fn test_pdf417_rows() {
+        let protocol = Protocol::new(Encoder::default());
+        let mut option = Pdf417Option::default();
+        option.rows = 16;
+        assert_eq!(protocol.pdf417_rows(&option), vec![29, 40, 107, 3, 0, 48, 66, 16]);
+    }
+
+    #[cfg(feature = "pdf417")]
+    #[test]
+    fn test_pdf417_width() {
+        let protocol = Protocol::new(Encoder::default());
+        let mut option = Pdf417Option::default();
+        option.width = 2;
+        assert_eq!(protocol.pdf417_width(&option), vec![29, 40, 107, 3, 0, 48, 67, 2]);
+    }
+
+    #[cfg(feature = "pdf417")]
+    #[test]
+    fn test_pdf417_row_height() {
+        let protocol = Protocol::new(Encoder::default());
+        let mut option = Pdf417Option::default();
+        option.row_height = 2;
+        assert_eq!(protocol.pdf417_row_height(&option), vec![29, 40, 107, 3, 0, 48, 68, 2]);
+    }
+
+    #[cfg(feature = "pdf417")]
+    #[test]
+    fn test_pdf417_correction_level() {
+        let protocol = Protocol::new(Encoder::default());
+        let mut option = Pdf417Option::default();
+        option.correction_level = Pdf417CorrectionLevel::Level5;
+        assert_eq!(
+            protocol.pdf417_correction_level(&option),
+            vec![29, 40, 107, 3, 0, 48, 69, 48, 53]
+        );
+
+        option.correction_level = Pdf417CorrectionLevel::Ratio(15);
+        assert_eq!(
+            protocol.pdf417_correction_level(&option),
+            vec![29, 40, 107, 3, 0, 48, 69, 49, 15]
+        );
+
+        option.correction_level = Pdf417CorrectionLevel::Ratio(45);
+        assert_eq!(
+            protocol.pdf417_correction_level(&option),
+            vec![29, 40, 107, 3, 0, 48, 69, 49, 1]
+        );
+    }
+
+    #[cfg(feature = "pdf417")]
+    #[test]
+    fn test_pdf417_type() {
+        let protocol = Protocol::new(Encoder::default());
+        let mut option = Pdf417Option::default();
+        option.code_type = Pdf417Type::Standard;
+        assert_eq!(protocol.pdf417_type(&option), vec![29, 40, 107, 3, 0, 48, 70, 0]);
+
+        option.code_type = Pdf417Type::Truncated;
+        assert_eq!(protocol.pdf417_type(&option), vec![29, 40, 107, 3, 0, 48, 70, 1]);
+    }
+
+    #[cfg(feature = "pdf417")]
+    #[test]
+    fn test_pdf417_data() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.pdf417_data("test").unwrap(),
+            vec![29, 40, 107, 7, 0, 48, 80, 48, 116, 101, 115, 116]
+        );
+    }
+
+    #[cfg(feature = "pdf417")]
+    #[test]
+    fn test_pdf417_print() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.pdf417_print(), vec![29, 40, 107, 3, 0, 48, 81, 48])
+    }
+
+    #[cfg(feature = "pdf417")]
+    #[test]
+    fn test_pdf417() {
+        let protocol = Protocol::new(Encoder::default());
+        let option = Pdf417Option::default();
+        assert_eq!(
+            protocol.pdf417("test", option).unwrap(),
+            vec![
+                vec![29, 40, 107, 3, 0, 48, 65, 0],
+                vec![29, 40, 107, 3, 0, 48, 66, 0],
+                vec![29, 40, 107, 3, 0, 48, 67, 0],
+                vec![29, 40, 107, 3, 0, 48, 68, 0],
+                vec![29, 40, 107, 3, 0, 48, 69, 49, 1],
+                vec![29, 40, 107, 3, 0, 48, 70, 0],
+                vec![29, 40, 107, 7, 0, 48, 80, 48, 116, 101, 115, 116],
+                vec![29, 40, 107, 3, 0, 48, 81, 48]
+            ]
+        );
     }
 
     // #[cfg(feature = "graphics")]

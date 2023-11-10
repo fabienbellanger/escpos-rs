@@ -384,10 +384,9 @@ impl<D: Driver> Printer<D> {
     }
 
     #[cfg(feature = "gs1_databar_2d")]
-    /// Construct 2D GS1 DataBar
+    /// Construct 2D GS1 DataBar with custom option
     pub fn gs1_databar_2d_option(&mut self, data: &str, option: GS1DataBar2DOption) -> Result<&mut Self> {
         let code = GS1DataBar2D::new(data, option)?;
-
         let commands = self.protocol.gs1_databar_2d(&code.data, code.option)?;
         self.command("print 2D GS1 DataBar", commands.as_slice())
     }
@@ -396,6 +395,22 @@ impl<D: Driver> Printer<D> {
     /// Construct 2D GS1 DataBar
     pub fn gs1_databar_2d(&mut self, data: &str) -> Result<&mut Self> {
         self.gs1_databar_2d_option(data, GS1DataBar2DOption::default())
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417
+    pub fn pdf417_option(&mut self, data: &str, option: Pdf417Option) -> Result<&mut Self> {
+        let code = Pdf417::new(data, option);
+        let commands = self.protocol.pdf417(&code.data, code.option)?;
+        self.command("print PDF417", commands.as_slice())
+    }
+
+    #[cfg(feature = "pdf417")]
+    /// PDF417
+    pub fn pdf417(&mut self, data: &str) -> Result<&mut Self> {
+        let code = Pdf417::new(data, Pdf417Option::default());
+        let commands = self.protocol.pdf417(&code.data, code.option)?;
+        self.command("print PDF417", commands.as_slice())
     }
 
     // #[cfg(feature = "graphics")]

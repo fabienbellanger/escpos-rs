@@ -13,11 +13,14 @@ fn main() -> Result<()> {
         .init()?
         .smoothing(true)?
         .page_code(PageCode::default())?
+        // EAN13
+        .writeln("EAN13")?
         .ean13_option(
             "1234567890265",
             BarcodeOption::new("M", "S", "A", BarcodePosition::Below),
         )?
-        .feed()?
+        // QR Code
+        .writeln("QR Code")?
         .qrcode_option(
             "https://www.google.com",
             QRCodeOption {
@@ -26,21 +29,24 @@ fn main() -> Result<()> {
                 correction_level: QRCodeCorrectionLevel::M,
             },
         )?
-        .feed()?
+        // GS1 DataBar
+        .writeln("GS1 DataBar Expanded")?
         .gs1_databar_2d("8245789658745")?
-        .gs1_databar_2d_option(
-            "8245789658745",
-            GS1DataBar2DOption::new(GS1DataBar2DWidth::M, GS1DataBar2DType::Stacked),
-        )?
-        .feed()?
+        .writeln("GS1 DataBar ExpandedStacked")?
         .gs1_databar_2d_option(
             "1245789658745",
             GS1DataBar2DOption::new(GS1DataBar2DWidth::L, GS1DataBar2DType::StackedOmnidirectional),
         )?
-        .feed()?
+        .writeln("GS1 DataBar StackedOmnidirectional")?
         .gs1_databar_2d_option(
             "1245789658745AC!4545A5151C12457896",
             GS1DataBar2DOption::new(GS1DataBar2DWidth::S, GS1DataBar2DType::ExpandedStacked),
+        )?
+        // PDF417
+        .writeln("PDF417")?
+        .pdf417_option(
+            "1245789658745",
+            Pdf417Option::new(16, 16, 6, 2, Pdf417Type::Standard, Pdf417CorrectionLevel::Ratio(32))?,
         )?
         .feed()?
         .print_cut()?;

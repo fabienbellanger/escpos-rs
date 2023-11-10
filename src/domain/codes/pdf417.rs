@@ -1,13 +1,10 @@
-// TODO: Remove!
-#![allow(dead_code, unused_variables)]
-
 //! PDF417
 
 use crate::errors::Result;
 use std::fmt;
 
 /// PDF417 correction level
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Pdf417CorrectionLevel {
     Level0,
     Level1,
@@ -64,7 +61,7 @@ impl From<Pdf417CorrectionLevel> for (u8, u8) {
 }
 
 /// PDF417 type
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone, Copy)]
 pub enum Pdf417Type {
     #[default]
     Standard,
@@ -103,7 +100,6 @@ pub struct Pdf417Option {
 
 impl Pdf417Option {
     /// Create a new `Pdf417Option`
-    // TODO: Add test
     pub fn new(
         columns: u8,
         rows: u8,
@@ -112,7 +108,56 @@ impl Pdf417Option {
         code_type: Pdf417Type,
         correction_level: Pdf417CorrectionLevel,
     ) -> Result<Self> {
-        todo!()
+        if !(0..=30).contains(&columns) {
+            return Err(crate::errors::PrinterError::Input(format!(
+                "number of PDF417 columns is not valid(0-30): {columns}"
+            )));
+        }
+
+        if rows != 0 && !(3..=90).contains(&rows) {
+            return Err(crate::errors::PrinterError::Input(format!(
+                "number of PDF417 rows is not valid(0, 3-90): {rows}"
+            )));
+        }
+
+        Ok(Self {
+            columns,
+            rows,
+            width,
+            row_height,
+            code_type,
+            correction_level,
+        })
+    }
+
+    /// Get number of columns
+    pub fn columns(&self) -> u8 {
+        self.columns
+    }
+
+    /// Get number of rows
+    pub fn rows(&self) -> u8 {
+        self.rows
+    }
+
+    /// Get width
+    pub fn width(&self) -> u8 {
+        self.width
+    }
+
+    /// Get row height
+    pub fn row_height(&self) -> u8 {
+        self.row_height
+    }
+
+    /// Get code type
+    pub fn code_type(&self) -> Pdf417Type {
+        self.code_type
+    }
+
+    /// Get correction level
+    pub fn correction_level(&self) -> Pdf417CorrectionLevel {
+        self.correction_level
     }
 }
 
@@ -130,5 +175,18 @@ impl Pdf417 {
             data: data.to_string(),
             option,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_pfd417_option_new() {
+        assert!(Pdf417Option::new(31, 0, 8, 8, Pdf417Type::Standard, Pdf417CorrectionLevel::Level0).is_err());
+        assert!(Pdf417Option::new(0, 2, 8, 8, Pdf417Type::Standard, Pdf417CorrectionLevel::Level0).is_err());
+        assert!(Pdf417Option::new(0, 100, 8, 8, Pdf417Type::Standard, Pdf417CorrectionLevel::Level0).is_err());
+        assert!(Pdf417Option::new(0, 0, 8, 8, Pdf417Type::Standard, Pdf417CorrectionLevel::Level0).is_ok());
     }
 }
