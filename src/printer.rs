@@ -253,6 +253,60 @@ impl<D: Driver> Printer<D> {
         self.write(text)?.feed()
     }
 
+    /// Custom command
+    ///
+    /// ```rust
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::{driver::*, errors::Result};
+    ///
+    /// const EURO: &[u8] = &[0xD5]; // '€' in code page PC858
+    ///
+    /// fn main() -> Result<()> {
+    ///     let driver = ConsoleDriver::open(false);
+    ///     Printer::new(driver, Protocol::default())
+    ///         .init()?
+    ///         .page_code(PageCode::PC858)?
+    ///         .custom(EURO)?
+    ///         .page_code(PageCode::PC437)?
+    ///         .print_cut()?;
+    ///
+    ///     Ok(())
+    /// }
+    /// ```
+    pub fn custom(&mut self, cmd: &[u8]) -> Result<&mut Self> {
+        self.command("custom command", &[cmd.to_vec()])
+    }
+
+    /// Custom command with page code
+    ///
+    /// ```rust
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::{driver::*, errors::Result};
+    ///
+    /// const EURO: &[u8] = &[0xD5]; // '€' in code page PC858
+    ///
+    /// fn main() -> Result<()> {
+    ///     let driver = ConsoleDriver::open(false);
+    ///     Printer::new(driver, Protocol::default())
+    ///         .init()?
+    ///         .custom_with_page_code(EURO, PageCode::PC858)?
+    ///         .page_code(PageCode::PC437)?
+    ///         .writeln("My test")?
+    ///         .print_cut()?;
+    ///
+    ///     Ok(())
+    /// }
+    /// ```
+    pub fn custom_with_page_code(&mut self, cmd: &[u8], page_code: PageCode) -> Result<&mut Self> {
+        self.page_code(page_code)?;
+        self.command(
+            &format!("custom command width page code {}", page_code),
+            &[cmd.to_vec()],
+        )
+    }
+
     /// Set horizontal and vertical motion units
     pub fn motion_units(&mut self, x: u8, y: u8) -> Result<&mut Self> {
         let cmd = self.protocol.motion_units(x, y);

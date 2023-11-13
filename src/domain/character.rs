@@ -39,7 +39,7 @@ impl fmt::Display for Font {
 }
 
 /// Character page code
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Copy, Clone)]
 pub enum PageCode {
     #[default]
     PC437,
