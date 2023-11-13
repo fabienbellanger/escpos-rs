@@ -247,7 +247,7 @@ fn main() -> Result<()> {
 - [x] Complete `README.md`
 - [x] Complete documentation
 - [x] Add tests
-- [ ] Improve `receipt.rs`)
+- [ ] Improve `receipt.rs`
 - [ ] Add more commands:
   - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)
   - [ ] Others 2D codes:
