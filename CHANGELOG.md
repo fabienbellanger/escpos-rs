@@ -20,9 +20,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+## `0.4.0` (2023-11-13) [CURRENT]
+
+### Added
+
 - Add PDF417
 
-## `0.3.0` (2023-11-09) [CURRENT]
+### Changed
+
+- Bump `env_logger` to `0.10.1`
+
+## `0.3.0` (2023-11-09)
 
 ### Added
 
