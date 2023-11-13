@@ -28,8 +28,8 @@ fn main() -> Result<()> {
     let tax = Item::new("Tax (20%)", None, subtotal.price * 0.20, true);
     let total = Item::new("Total", None, subtotal.price + tax.price, true);
 
-    let driver = NetworkDriver::open("192.168.1.248", 9100)?;
-    // let driver = ConsoleDriver::open(true);
+    // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
+    let driver = ConsoleDriver::open(true);
     let mut printer = Printer::new(driver, Protocol::default());
 
     printer
@@ -68,6 +68,7 @@ fn main() -> Result<()> {
     }
 
     // Total
+    total.print(&mut printer)?;
     let subtotal: String = subtotal.into();
     let tax: String = tax.into();
     let total: String = total.into();
@@ -105,6 +106,38 @@ impl Item {
             price,
             symbol,
         }
+    }
+
+    pub fn print<D: Driver>(&self, printer: &mut Printer<D>) -> Result<()> {
+        let right_cols = CHARS_BY_LINE / 4;
+        let left_cols = if self.quantity.is_some() {
+            CHARS_BY_LINE - right_cols - 2
+        } else {
+            CHARS_BY_LINE - right_cols
+        };
+        let right_cols = if self.symbol { right_cols - 2 } else { right_cols };
+
+        let qty = if let Some(quantity) = self.quantity {
+            format!("{} ", quantity)
+        } else {
+            String::new()
+        };
+        let left = format!("{: <width$}", self.name, width = left_cols);
+        let right = if self.symbol {
+            format!("{: >width$.2} ", self.price, width = right_cols)
+        } else {
+            format!("{: >width$.2}", self.price, width = right_cols)
+        };
+
+        let label = format!("{}{}{}", qty, left, right);
+
+        printer.write(&label)?;
+        if self.symbol {
+            printer.custom_with_page_code(EURO, PageCode::PC858)?;
+        }
+        printer.feed()?;
+
+        Ok(())
     }
 }
 
