@@ -19,8 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add 2 new methods `custom` and `custom_with_page_code` to `Printer`
 
 ### Changed
+- [Breaking] Merge `qrcode`, `gs1_databar` and `pdf417` into `codes_2d` feature
+- Improve `receipt.rs` example
 
 ## `0.4.0` (2023-11-13) [CURRENT]
 

@@ -411,7 +411,7 @@ impl<D: Driver> Printer<D> {
         self.barcode(Barcode::new(BarcodeSystem::ITF, data, Some(option))?)
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     /// Construct QR code
     fn qrcode_builder(&mut self, data: &str, option: Option<QRCodeOption>) -> Result<&mut Self> {
         let qrcode = QRCode::new(data, option)?;
@@ -425,19 +425,19 @@ impl<D: Driver> Printer<D> {
         self.command("print qrcode", commands.as_slice())
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     /// Print QR code with default option
     pub fn qrcode(&mut self, data: &str) -> Result<&mut Self> {
         self.qrcode_builder(data, None)
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     /// Print QR code with option
     pub fn qrcode_option(&mut self, data: &str, option: QRCodeOption) -> Result<&mut Self> {
         self.qrcode_builder(data, Some(option))
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     /// Construct 2D GS1 DataBar with custom option
     pub fn gs1_databar_2d_option(&mut self, data: &str, option: GS1DataBar2DOption) -> Result<&mut Self> {
         let code = GS1DataBar2D::new(data, option)?;
@@ -445,13 +445,13 @@ impl<D: Driver> Printer<D> {
         self.command("print 2D GS1 DataBar", commands.as_slice())
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     /// Construct 2D GS1 DataBar
     pub fn gs1_databar_2d(&mut self, data: &str) -> Result<&mut Self> {
         self.gs1_databar_2d_option(data, GS1DataBar2DOption::default())
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417
     pub fn pdf417_option(&mut self, data: &str, option: Pdf417Option) -> Result<&mut Self> {
         let code = Pdf417::new(data, option);
@@ -459,7 +459,7 @@ impl<D: Driver> Printer<D> {
         self.command("print PDF417", commands.as_slice())
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417
     pub fn pdf417(&mut self, data: &str) -> Result<&mut Self> {
         let code = Pdf417::new(data, Pdf417Option::default());

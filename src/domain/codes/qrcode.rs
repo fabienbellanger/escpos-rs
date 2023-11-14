@@ -1,6 +1,6 @@
 //! QR Code
 
-#![cfg(feature = "qrcode")]
+#![cfg(feature = "codes_2d")]
 
 use crate::errors::Result;
 use std::fmt;

@@ -257,7 +257,7 @@ impl Protocol {
         ])
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     /// QR code model
     pub(crate) fn qrcode_model(&self, model: QRCodeModel) -> Command {
         let mut cmd = GS_2D_QRCODE_MODEL.to_vec();
@@ -266,7 +266,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     /// QR code error correction level
     pub(crate) fn qrcode_correction_level(&self, level: QRCodeCorrectionLevel) -> Command {
         let mut cmd = GS_2D_QRCODE_CORRECTION_LEVEL.to_vec();
@@ -274,7 +274,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     /// QR code size (0 <= size <= 15, 0 <=> 4)
     pub(crate) fn qrcode_size(&self, size: u8) -> Command {
         let size = if size > 15 { 15 } else { size };
@@ -283,7 +283,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     /// QR code data
     pub(crate) fn qrcode_data(&self, data: &str) -> Result<Command> {
         let mut cmd = GS_2D.to_vec();
@@ -293,13 +293,13 @@ impl Protocol {
         Ok(cmd)
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     /// QR code print
     pub(crate) fn qrcode_print(&self) -> Command {
         GS_2D_QRCODE_PRINT_SYMBOL_DATA.to_vec()
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     /// QR code print
     pub(crate) fn qrcode(
         &self,
@@ -394,7 +394,7 @@ impl Protocol {
         Ok(cmd)
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     /// 2D GS1 DataBar width
     pub(crate) fn gs1_databar_2d_width(&self, size: GS1DataBar2DWidth) -> Command {
         let mut cmd = GS_2D_GS1_DATABAR_WIDTH.to_vec();
@@ -402,7 +402,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     /// 2D GS1 DataBar expanded max width
     // TODO: To implement
     pub(crate) fn gs1_databar_2d_expanded_width(&self, _max: u8) -> Command {
@@ -411,7 +411,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     /// 2D GS1 DataBar data
     pub(crate) fn gs1_databar_2d_data(&self, data: &str, code_type: GS1DataBar2DType) -> Result<Command> {
         let mut cmd = GS_2D.to_vec();
@@ -425,13 +425,13 @@ impl Protocol {
         Ok(cmd)
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     /// 2D GS1 DataBar print
     pub(crate) fn gs1_databar_2d_print(&self) -> Command {
         GS_2D_GS1_DATABAR_PRINT.to_vec()
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     /// 2D GS1 DataBar
     pub(crate) fn gs1_databar_2d(&self, data: &str, option: GS1DataBar2DOption) -> Result<Vec<Command>> {
         Ok(vec![
@@ -442,7 +442,7 @@ impl Protocol {
         ])
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417 number of columns
     pub(crate) fn pdf417_columns(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_COLUMNS.to_vec();
@@ -450,7 +450,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417 number of rows
     pub(crate) fn pdf417_rows(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_ROWS.to_vec();
@@ -458,7 +458,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417 width
     pub(crate) fn pdf417_width(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_WIDTH.to_vec();
@@ -466,7 +466,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417 row height
     pub(crate) fn pdf417_row_height(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_ROW_HEIGHT.to_vec();
@@ -474,7 +474,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417 error correction level
     pub(crate) fn pdf417_correction_level(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_CORRECTION_LEVEL.to_vec();
@@ -484,7 +484,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417 type
     pub(crate) fn pdf417_type(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_TYPE.to_vec();
@@ -492,7 +492,7 @@ impl Protocol {
         cmd
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417 data
     pub(crate) fn pdf417_data(&self, data: &str) -> Result<Command> {
         let mut cmd = GS_2D.to_vec();
@@ -504,13 +504,13 @@ impl Protocol {
         Ok(cmd)
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417 print
     pub(crate) fn pdf417_print(&self) -> Command {
         GS_2D_PDF417_PRINT.to_vec()
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     /// PDF417
     pub(crate) fn pdf417(&self, data: &str, option: Pdf417Option) -> Result<Vec<Command>> {
         Ok(vec![
@@ -789,7 +789,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_qrcode_model() {
         let protocol = Protocol::new(Encoder::default());
@@ -807,7 +807,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_qrcode_correction_level() {
         let protocol = Protocol::new(Encoder::default());
@@ -829,7 +829,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_qrcode_size() {
         let protocol = Protocol::new(Encoder::default());
@@ -841,7 +841,7 @@ mod tests {
         assert_eq!(protocol.qrcode_size(255), vec![29, 40, 107, 3, 0, 49, 67, 15]);
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_qrcode_data() {
         let protocol = Protocol::new(Encoder::default());
@@ -855,14 +855,14 @@ mod tests {
         assert_eq!(protocol.qrcode_data("").unwrap(), vec![29, 40, 107, 3, 0, 49, 80, 48]);
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_qrcode_print() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.qrcode_print(), vec![29, 40, 107, 3, 0, 49, 81, 48]);
     }
 
-    #[cfg(feature = "qrcode")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_qrcode() {
         let protocol = Protocol::new(Encoder::default());
@@ -881,7 +881,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_gs1_databar_2d_width() {
         let protocol = Protocol::new(Encoder::default());
@@ -899,7 +899,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_gs1_databar_2d_expanded_width() {
         let protocol = Protocol::new(Encoder::default());
@@ -909,7 +909,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_gs1_databar_2d_data() {
         let protocol = Protocol::new(Encoder::default());
@@ -921,14 +921,14 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_gs1_databar_2d_print() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.gs1_databar_2d_print(), vec![29, 40, 107, 3, 0, 51, 81, 48]);
     }
 
-    #[cfg(feature = "gs1_databar_2d")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_gs1_databar_2d() {
         let protocol = Protocol::new(Encoder::default());
@@ -945,7 +945,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_pdf417_columns() {
         let protocol = Protocol::new(Encoder::default());
@@ -954,7 +954,7 @@ mod tests {
         assert_eq!(protocol.pdf417_columns(&option), vec![29, 40, 107, 3, 0, 48, 65, 16]);
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_pdf417_rows() {
         let protocol = Protocol::new(Encoder::default());
@@ -963,7 +963,7 @@ mod tests {
         assert_eq!(protocol.pdf417_rows(&option), vec![29, 40, 107, 3, 0, 48, 66, 16]);
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_pdf417_width() {
         let protocol = Protocol::new(Encoder::default());
@@ -972,7 +972,7 @@ mod tests {
         assert_eq!(protocol.pdf417_width(&option), vec![29, 40, 107, 3, 0, 48, 67, 2]);
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_pdf417_row_height() {
         let protocol = Protocol::new(Encoder::default());
@@ -981,7 +981,7 @@ mod tests {
         assert_eq!(protocol.pdf417_row_height(&option), vec![29, 40, 107, 3, 0, 48, 68, 2]);
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_pdf417_correction_level() {
         let protocol = Protocol::new(Encoder::default());
@@ -1005,7 +1005,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_pdf417_type() {
         let protocol = Protocol::new(Encoder::default());
@@ -1017,7 +1017,7 @@ mod tests {
         assert_eq!(protocol.pdf417_type(&option), vec![29, 40, 107, 3, 0, 48, 70, 1]);
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_pdf417_data() {
         let protocol = Protocol::new(Encoder::default());
@@ -1027,14 +1027,14 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_pdf417_print() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.pdf417_print(), vec![29, 40, 107, 3, 0, 48, 81, 48])
     }
 
-    #[cfg(feature = "pdf417")]
+    #[cfg(feature = "codes_2d")]
     #[test]
     fn test_pdf417() {
         let protocol = Protocol::new(Encoder::default());

@@ -77,7 +77,7 @@
 //! }
 //! ```
 //!
-//! ### QR Code (with `qrcode` feature enabled)
+//! ### QR Code (with `codes_2d` feature enabled)
 //!
 //! ```rust
 //! use escpos::printer::Printer;
