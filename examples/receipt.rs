@@ -31,11 +31,7 @@ fn main() -> Result<()> {
     // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
     let driver = ConsoleDriver::open(true);
     let mut printer = Printer::new(driver, Protocol::default());
-
-    printer
-        .init()?
-        .page_code(PageCode::PC437)?
-        .justify(JustifyMode::CENTER)?;
+    printer.init()?.justify(JustifyMode::CENTER)?;
 
     // Logo
     #[cfg(feature = "graphics")]
@@ -63,26 +59,16 @@ fn main() -> Result<()> {
 
     // Items
     for item in items {
-        let label: String = item.clone().into();
-        printer.writeln(&label)?;
+        item.print(&mut printer, 1)?;
     }
 
     // Total
-    total.print(&mut printer)?;
-    let subtotal: String = subtotal.into();
-    let tax: String = tax.into();
-    let total: String = total.into();
     printer.writeln("-".repeat(42).as_str())?;
-    printer.bold(true)?;
-    printer.write(&subtotal)?;
-    printer.custom_with_page_code(EURO, PageCode::PC858)?;
-    printer.feed()?;
-    printer.write(&tax)?;
-    printer.custom_with_page_code(EURO, PageCode::PC858)?;
-    printer.feed()?;
-    printer.write(&total)?;
-    printer.custom_with_page_code(EURO, PageCode::PC858)?;
-    printer.feed()?;
+    subtotal.print(&mut printer, 1)?;
+    tax.print(&mut printer, 1)?;
+    printer.size(2, 2)?;
+    total.print(&mut printer, 2)?;
+    printer.reset_size()?;
 
     printer.print_cut()?;
 
@@ -90,15 +76,15 @@ fn main() -> Result<()> {
 }
 
 #[derive(Clone)]
-pub struct Item {
-    pub name: String,
-    pub quantity: Option<u8>,
-    pub price: f32,
-    pub symbol: bool,
+struct Item {
+    name: String,
+    quantity: Option<u8>,
+    price: f32,
+    symbol: bool,
 }
 
 impl Item {
-    pub fn new(name: &str, quantity: Option<u8>, price: f32, symbol: bool) -> Item {
+    fn new(name: &str, quantity: Option<u8>, price: f32, symbol: bool) -> Item {
         let name = name.to_string();
         Item {
             name,
@@ -108,61 +94,31 @@ impl Item {
         }
     }
 
-    pub fn print<D: Driver>(&self, printer: &mut Printer<D>) -> Result<()> {
-        let right_cols = CHARS_BY_LINE / 4;
-        let left_cols = if self.quantity.is_some() {
-            CHARS_BY_LINE - right_cols - 2
-        } else {
-            CHARS_BY_LINE - right_cols
-        };
-        let right_cols = if self.symbol { right_cols - 2 } else { right_cols };
-
-        let qty = if let Some(quantity) = self.quantity {
-            format!("{} ", quantity)
-        } else {
-            String::new()
-        };
-        let left = format!("{: <width$}", self.name, width = left_cols);
-        let right = if self.symbol {
-            format!("{: >width$.2} ", self.price, width = right_cols)
-        } else {
-            format!("{: >width$.2}", self.price, width = right_cols)
-        };
-
-        let label = format!("{}{}{}", qty, left, right);
-
-        printer.write(&label)?;
+    fn print<D: Driver>(&self, printer: &mut Printer<D>, size: u8) -> Result<()> {
+        // Length of characters
+        let mut characters_length = self.name.len() + self.price.to_string().len() + 3;
+        if self.quantity.is_some() {
+            characters_length += 2;
+        }
         if self.symbol {
+            characters_length += 2;
+        }
+        characters_length *= size as usize;
+
+        // Number of spaces between name and price
+        let spaces = " ".repeat((CHARS_BY_LINE - characters_length) / size as usize);
+
+        // Print item
+        if let Some(quantity) = self.quantity {
+            printer.write(&format!("{} ", quantity))?;
+        }
+        printer.write(&format!("{}{}{:.2}", self.name, spaces, self.price))?;
+        if self.symbol {
+            printer.write(" ")?;
             printer.custom_with_page_code(EURO, PageCode::PC858)?;
         }
         printer.feed()?;
 
         Ok(())
-    }
-}
-
-impl From<Item> for String {
-    fn from(item: Item) -> Self {
-        let right_cols = CHARS_BY_LINE / 4;
-        let left_cols = if item.quantity.is_some() {
-            CHARS_BY_LINE - right_cols - 2
-        } else {
-            CHARS_BY_LINE - right_cols
-        };
-        let right_cols = if item.symbol { right_cols - 2 } else { right_cols };
-
-        let qty = if let Some(quantity) = item.quantity {
-            format!("{} ", quantity)
-        } else {
-            String::new()
-        };
-        let left = format!("{: <width$}", item.name, width = left_cols);
-        let right = if item.symbol {
-            format!("{: >width$.2} ", item.price, width = right_cols)
-        } else {
-            format!("{: >width$.2}", item.price, width = right_cols)
-        };
-
-        format!("{}{}{}", qty, left, right)
     }
 }

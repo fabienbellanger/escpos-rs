@@ -8,7 +8,7 @@ This crate implements a subset of Epson's ESC/POS protocol for thermal receipt p
 It allows you to generate and print documents with basic text formatting, cutting, barcodes, QR codes and raster images
 on a compatible printer.
 
-![Ticket](resources/documentation/ticket.jpg)  
+![Ticket](resources/documentation/ticket.jpg) ![Receipt](resources/documentation/receipt.jpg)   
 _Printed on Aures ODP 333_
 
 This project is strongly inspired by [recibo](https://github.com/jamhall/recibo/tree/main) _(
