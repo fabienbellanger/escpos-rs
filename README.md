@@ -229,6 +229,8 @@ fn main() -> Result<()> {
 |   ✅    | `gs1_databar_2d_option`   | Print 2D GS1 DataBar with custom option           | `codes_2d` |
 |   ✅    | `pdf417`                  | Print PDF417 with default option                  | `codes_2d` |
 |   ✅    | `pdf417_option`           | Print PDF417 with custom option                   | `codes_2d` |
+|   ✅    | `maxi_code`               | Print MaxiCode with default option                | `codes_2d` |
+|   ✅    | `maxi_code_option`        | Print MaxiCode with custom option                 | `codes_2d` |
 |   🚧   | `graphic()`               | Print raster graphic with default option          | `graphics` |
 |   🚧   | `graphic_option()`        | Print raster graphic with custom option           | `graphics` |
 |   ❌    | `?`                       | Print DataMatrix                                  | `?`        |
@@ -254,4 +256,4 @@ fn main() -> Result<()> {
         - [x] GS1 DataBar
         - [x] PDF157
         - [ ] DataMatrix
-        - [ ] MaxiCode
+        - [x] MaxiCode

@@ -463,8 +463,22 @@ impl<D: Driver> Printer<D> {
     /// PDF417
     pub fn pdf417(&mut self, data: &str) -> Result<&mut Self> {
         let code = Pdf417::new(data, Pdf417Option::default());
-        let commands = self.protocol.pdf417(&code.data, code.option)?;
-        self.command("print PDF417", commands.as_slice())
+        self.pdf417_option(data, code.option)
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// MaxiCode
+    pub fn maxi_code_option(&mut self, data: &str, mode: MaxiCodeMode) -> Result<&mut Self> {
+        let code = MaxiCode::new(data, mode);
+        let commands = self.protocol.maxi_code(&code.data, code.mode)?;
+        self.command("print MaxiCode", commands.as_slice())
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// MaxiCode
+    pub fn maxi_code(&mut self, data: &str) -> Result<&mut Self> {
+        let code = MaxiCode::new(data, MaxiCodeMode::default());
+        self.maxi_code_option(data, code.mode)
     }
 
     // #[cfg(feature = "graphics")]

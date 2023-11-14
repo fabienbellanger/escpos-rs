@@ -5,14 +5,14 @@ use escpos::{driver::*, errors::Result};
 fn main() -> Result<()> {
     env_logger::init();
 
-    // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
-    let driver = ConsoleDriver::open(true);
+    let driver = NetworkDriver::open("192.168.1.248", 9100)?;
+    // let driver = ConsoleDriver::open(true);
     let mut printer = Printer::new(driver, Protocol::default());
     printer
         .debug_mode(Some(DebugMode::Dec))
         .init()?
         .smoothing(true)?
-        .page_code(PageCode::default())?
+        .justify(JustifyMode::CENTER)?
         // EAN13
         .writeln("EAN13")?
         .ean13_option(
@@ -46,8 +46,11 @@ fn main() -> Result<()> {
         .writeln("PDF417")?
         .pdf417_option(
             "1245789658745",
-            Pdf417Option::new(16, 16, 6, 2, Pdf417Type::Standard, Pdf417CorrectionLevel::Ratio(32))?,
+            Pdf417Option::new(16, 16, 4, 2, Pdf417Type::Standard, Pdf417CorrectionLevel::Ratio(32))?,
         )?
+        // MaxiCode
+        .writeln("MaxiCode")?
+        .maxi_code_option("1245789658745", MaxiCodeMode::Mode2)?
         .feed()?
         .print_cut()?;
 

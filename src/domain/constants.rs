@@ -111,6 +111,12 @@ pub const GS_2D_PDF417_TYPE: &[u8] = &[GS, b'(', b'k', 3, 0, 48, 70];
 #[cfg(feature = "codes_2d")]
 pub const GS_2D_PDF417_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 48, 81, 48];
 
+// MaxiCode
+#[cfg(feature = "codes_2d")]
+pub const GS_2D_MAXI_CODE_MODE: &[u8] = &[GS, b'(', b'k', 3, 0, 50, 65];
+#[cfg(feature = "codes_2d")]
+pub const GS_2D_MAXI_CODE_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 50, 81, 48];
+
 // Image
 
 #[cfg(feature = "graphics")]
