@@ -117,6 +117,14 @@ pub const GS_2D_MAXI_CODE_MODE: &[u8] = &[GS, b'(', b'k', 3, 0, 50, 65];
 #[cfg(feature = "codes_2d")]
 pub const GS_2D_MAXI_CODE_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 50, 81, 48];
 
+// DataMatrix
+#[cfg(feature = "codes_2d")]
+pub const GS_2D_DATA_MATRIX_TYPE: &[u8] = &[GS, b'(', b'k', 5, 0, 54, 66];
+#[cfg(feature = "codes_2d")]
+pub const GS_2D_DATA_MATRIX_SIZE: &[u8] = &[GS, b'(', b'k', 3, 0, 54, 67];
+#[cfg(feature = "codes_2d")]
+pub const GS_2D_DATA_MATRIX_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 54, 81, 48];
+
 // Image
 
 #[cfg(feature = "graphics")]
