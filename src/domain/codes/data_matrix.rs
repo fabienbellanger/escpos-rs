@@ -68,8 +68,8 @@ impl TryFrom<DataMatrixType> for (u8, u8, u8) {
 /// DataMatrix option
 #[derive(Debug)]
 pub struct DataMatrixOption {
-    pub(crate) code_type: DataMatrixType,
-    pub(crate) size: u8,
+    code_type: DataMatrixType,
+    size: u8,
 }
 
 impl Default for DataMatrixOption {
@@ -125,7 +125,7 @@ mod tests {
     use crate::errors::Result;
 
     #[test]
-    fn test_tyr_from_data_matrix_type_square() {
+    fn test_try_from_data_matrix_type_square() {
         let t: Result<(u8, u8, u8)> = DataMatrixType::Square(0).try_into();
         assert!(t.is_ok());
 
@@ -134,7 +134,7 @@ mod tests {
     }
 
     #[test]
-    fn test_tyr_from_data_matrix_type_rectangle() {
+    fn test_try_from_data_matrix_type_rectangle() {
         let t: Result<(u8, u8, u8)> = DataMatrixType::Rectangle(8, 0).try_into();
         assert!(t.is_ok());
 
@@ -146,7 +146,7 @@ mod tests {
     }
 
     #[test]
-    fn test_tyr_from_data_matrix_option() {
+    fn test_data_matrix_option_new() {
         assert!(DataMatrixOption::new(DataMatrixType::default(), 3).is_ok());
         assert!(DataMatrixOption::new(DataMatrixType::default(), 1).is_err());
         assert!(DataMatrixOption::new(DataMatrixType::default(), 17).is_err());

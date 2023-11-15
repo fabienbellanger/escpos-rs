@@ -49,6 +49,10 @@ fn main() -> Result<()> {
         .feed()?
         .pdf417("8245789658745")?
         .feed()?
+        .maxi_code("1245789658745")?
+        .feed()?
+        .data_matrix("test1245789658745")?
+        .feed()?
         .bit_image_option(
             "./resources/images/rust-logo-small.png",
             BitImageOption::new(Some(128), None, BitImageSize::Normal)?,

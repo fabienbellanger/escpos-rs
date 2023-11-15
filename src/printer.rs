@@ -482,7 +482,7 @@ impl<D: Driver> Printer<D> {
     }
 
     #[cfg(feature = "codes_2d")]
-    /// MaxiCode
+    /// DataMatrix
     pub fn data_matrix_option(&mut self, data: &str, option: DataMatrixOption) -> Result<&mut Self> {
         let code = DataMatrix::new(data, option);
         let commands = self.protocol.data_matrix(&code.data, code.option)?;
@@ -490,10 +490,25 @@ impl<D: Driver> Printer<D> {
     }
 
     #[cfg(feature = "codes_2d")]
-    /// MaxiCode
+    /// DataMatrix
     pub fn data_matrix(&mut self, data: &str) -> Result<&mut Self> {
         let code = DataMatrix::new(data, DataMatrixOption::default());
         self.data_matrix_option(data, code.option)
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// Aztec code
+    pub fn aztec_option(&mut self, data: &str, option: AztecOption) -> Result<&mut Self> {
+        let code = Aztec::new(data, option);
+        let commands = self.protocol.aztec(&code.data, code.option)?;
+        self.command("print Aztec", commands.as_slice())
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// Aztec code
+    pub fn aztec(&mut self, data: &str) -> Result<&mut Self> {
+        let code = Aztec::new(data, AztecOption::default());
+        self.aztec_option(data, code.option)
     }
 
     // #[cfg(feature = "graphics")]

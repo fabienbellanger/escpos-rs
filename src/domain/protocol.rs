@@ -527,10 +527,67 @@ impl Protocol {
     /// DataMatrix
     pub(crate) fn data_matrix(&self, data: &str, option: DataMatrixOption) -> Result<Vec<Command>> {
         Ok(vec![
-            self.data_matrix_type(option.code_type)?,
-            self.data_matrix_size(option.size),
+            self.data_matrix_type(option.code_type())?,
+            self.data_matrix_size(option.size()),
             self.data_matrix_data(data)?,
             self.data_matrix_print(),
+        ])
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// Aztec code mode
+    fn aztec_mode(&self, mode: AztecMode) -> Result<Command> {
+        let mut cmd = GS_2D_AZTEC_CODE_MODE.to_vec();
+        let (n1, n2) = mode.try_into()?;
+        cmd.push(n1);
+        cmd.push(n2);
+        Ok(cmd)
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// Aztec code size
+    fn aztec_size(&self, size: u8) -> Command {
+        let mut cmd = GS_2D_AZTEC_CODE_SIZE.to_vec();
+        cmd.push(size);
+        cmd
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// Aztec code error correction level
+    fn aztec_correction_level(&self, level: u8) -> Command {
+        let mut cmd = GS_2D_AZTEC_CODE_CORRECTION_LEVEL.to_vec();
+        cmd.push(level);
+        cmd
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// Aztec code data
+    fn aztec_data(&self, data: &str) -> Result<Command> {
+        let mut cmd = GS_2D.to_vec();
+        let (pl, ph) = get_parameters_number_2(data, 3)?;
+        cmd.push(pl);
+        cmd.push(ph);
+        cmd.append(&mut vec![53, 80, 48]);
+        cmd.append(&mut data.as_bytes().to_vec());
+        Ok(cmd)
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// Aztec code print
+    fn aztec_print(&self) -> Command {
+        GS_2D_AZTEC_CODE_PRINT.to_vec()
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// Aztec code
+    pub(crate) fn aztec(&self, data: &str, option: AztecOption) -> Result<Vec<Command>> {
+        let code = Aztec::new(data, option);
+        Ok(vec![
+            self.aztec_mode(code.option.mode())?,
+            self.aztec_size(code.option.size()),
+            self.aztec_correction_level(code.option.correction_level()),
+            self.aztec_data(data)?,
+            self.aztec_print(),
         ])
     }
 
@@ -1274,6 +1331,73 @@ mod tests {
                 vec![29, 40, 107, 3, 0, 54, 67, 16],
                 vec![29, 40, 107, 10, 0, 54, 80, 48, 116, 101, 115, 116, 49, 50, 51],
                 vec![29, 40, 107, 3, 0, 54, 81, 48],
+            ]
+        );
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_aztec_mode() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.aztec_mode(AztecMode::default()).unwrap(),
+            vec![29, 40, 107, 4, 0, 53, 66, 0, 0]
+        );
+        assert_eq!(
+            protocol.aztec_mode(AztecMode::FullRange(16)).unwrap(),
+            vec![29, 40, 107, 4, 0, 53, 66, 0, 16]
+        );
+        assert_eq!(
+            protocol.aztec_mode(AztecMode::Compact(2)).unwrap(),
+            vec![29, 40, 107, 4, 0, 53, 66, 1, 2]
+        );
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_aztec_size() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.aztec_size(2), vec![29, 40, 107, 3, 0, 53, 67, 2]);
+        assert_eq!(protocol.aztec_size(16), vec![29, 40, 107, 3, 0, 53, 67, 16]);
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_aztec_correction_level() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.aztec_correction_level(5), vec![29, 40, 107, 4, 0, 53, 69, 5]);
+        assert_eq!(protocol.aztec_correction_level(95), vec![29, 40, 107, 4, 0, 53, 69, 95]);
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_aztec_data() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.aztec_data("test123").unwrap(),
+            vec![29, 40, 107, 10, 0, 53, 80, 48, 116, 101, 115, 116, 49, 50, 51]
+        );
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_aztec_print() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.aztec_print(), vec![29, 40, 107, 3, 0, 53, 81, 48]);
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_aztec() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.aztec("test123", AztecOption::default()).unwrap(),
+            vec![
+                vec![29, 40, 107, 4, 0, 53, 66, 0, 0],
+                vec![29, 40, 107, 3, 0, 53, 67, 3],
+                vec![29, 40, 107, 4, 0, 53, 69, 23],
+                vec![29, 40, 107, 10, 0, 53, 80, 48, 116, 101, 115, 116, 49, 50, 51],
+                vec![29, 40, 107, 3, 0, 53, 81, 48],
             ]
         );
     }

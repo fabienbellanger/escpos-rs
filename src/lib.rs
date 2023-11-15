@@ -14,6 +14,9 @@
 //!
 //! ```bash
 //! cargo run --example full --features "full"
+//! RUST_LOG=debug cargo run --example receipt -F full
+//! RUST_LOG=debug cargo run --example codes
+//! RUST_LOG=debug cargo run --example debug
 //! ```
 //!
 //! ### Simple text formatting

@@ -1,4 +1,5 @@
 //! Barcodes and 2D codes
+mod aztec;
 mod barcodes;
 mod data_matrix;
 mod gs1_databar_2d;
@@ -8,6 +9,9 @@ mod qrcode;
 
 #[cfg(feature = "barcodes")]
 pub use barcodes::*;
+
+#[cfg(feature = "codes_2d")]
+pub use aztec::*;
 
 #[cfg(feature = "codes_2d")]
 pub use data_matrix::*;

@@ -125,6 +125,16 @@ pub const GS_2D_DATA_MATRIX_SIZE: &[u8] = &[GS, b'(', b'k', 3, 0, 54, 67];
 #[cfg(feature = "codes_2d")]
 pub const GS_2D_DATA_MATRIX_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 54, 81, 48];
 
+// Aztec code
+#[cfg(feature = "codes_2d")]
+pub const GS_2D_AZTEC_CODE_MODE: &[u8] = &[GS, b'(', b'k', 4, 0, 53, 66];
+#[cfg(feature = "codes_2d")]
+pub const GS_2D_AZTEC_CODE_SIZE: &[u8] = &[GS, b'(', b'k', 3, 0, 53, 67];
+#[cfg(feature = "codes_2d")]
+pub const GS_2D_AZTEC_CODE_CORRECTION_LEVEL: &[u8] = &[GS, b'(', b'k', 4, 0, 53, 69];
+#[cfg(feature = "codes_2d")]
+pub const GS_2D_AZTEC_CODE_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 53, 81, 48];
+
 // Image
 
 #[cfg(feature = "graphics")]
