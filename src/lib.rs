@@ -137,64 +137,73 @@
 //!
 //! | Name       | Description                                                        | Default |
 //! |------------|--------------------------------------------------------------------|:-------:|
-//! | `barcode`  | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
-//! | `qrcode`   | Print QR codes                                                     |    ✅    |
+//! | `barcodes` | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
+//! | `codes_2d` | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, etc.)    |    ✅    |
 //! | `graphics` | Print raster images                                                |    ❌    |
 //! | `full`     | Enable all features                                                |    ❌    |
 //!
 //! ## Commands list
 //!
-//! | Status | Command                | Description                                       | Feature    |
-//! |:------:|------------------------|---------------------------------------------------|------------|
-//! |   ✅    | `init()`               | Initialize printer (`ESC @`)                      |            |
-//! |   ✅    | `print()`              | Print document                                    |            |
-//! |   ✅    | `reset()`              | Hardware reset (`ESC ? LF 0`)                     |            |
-//! |   ✅    | `cut()`                | Paper cut (`GS V A 0`)                            |            |
-//! |   ✅    | `partial_cut()`        | Partial paper cut (`GS V A 1`)                    |            |
-//! |   ✅    | `print_cut()`          | Print and paper cut                               |            |
-//! |   ✅    | `bold()`               | Text bold (`ESC E`)                               |            |
-//! |   ✅    | `underline()`          | Text underline (`ESC -`)                          |            |
-//! |   ✅    | `double_strike()`      | Text double strike (`ESC G`)                      |            |
-//! |   ✅    | `font()`               | Text font (`ESC M`)                               |            |
-//! |   ✅    | `flip()`               | Text flip (`ESC V`)                               |            |
-//! |   ✅    | `justify()`            | Text justify (`ESC a`)                            |            |
-//! |   ✅    | `reserve()`            | Text reserve color (`GS B`)                       |            |
-//! |   ✅    | `size()`               | Text size (`GS !`)                                |            |
-//! |   ✅    | `reset_size()`         | Reset text size (`GS !`)                          |            |
-//! |   ✅    | `smoothing()`          | Smoothing mode (`GS b`)                           |            |
-//! |   ✅    | `feed()`               | Line feed (`ESC d`)                               |            |
-//! |   ✅    | `feeds()`              | Multiple lines feed (`ESC d`)                     |            |
-//! |   ✅    | `line_spacing()`       | Line spacing (`ESC 3`)                            |            |
-//! |   ✅    | `reset_line_spacing()` | Reset line spacing (`ESC 2`)                      |            |
-//! |   ✅    | `upside_down()`        | Upside-down mode (`ESC {`)                        |            |
-//! |   ✅    | `cash_drawer()`        | Generate pulse (`ESC p`)                          |            |
-//! |   ✅    | `write()`              | Write text                                        |            |
-//! |   ✅    | `writeln()`            | Write text and line feed                          |            |
-//! |   ✅    | `motion_units()`       | Set horizontal and vertical motion units (`GS P`) |            |
-//! |   ✅    | `ean13()`              | Print EAN13 with default option                   | `barcode`  |
-//! |   ✅    | `ean13_option()`       | Print EAN13 with custom option                    | `barcode`  |
-//! |   ✅    | `ean8()`               | Print EAN8 with default option                    | `barcode`  |
-//! |   ✅    | `ean8_option()`        | Print EAN8 with custom option                     | `barcode`  |
-//! |   ✅    | `upca()`               | Print UPC-A with default option                   | `barcode`  |
-//! |   ✅    | `upca_option()`        | Print UPC-A with custom option                    | `barcode`  |
-//! |   ✅    | `upce()`               | Print UPC-E with default option                   | `barcode`  |
-//! |   ✅    | `upce_option()`        | Print UPC-E with custom option                    | `barcode`  |
-//! |   ✅    | `code39()`             | Print CODE 39 with default option                 | `barcode`  |
-//! |   ✅    | `code39_option()`      | Print CODE 39 with custom option                  | `barcode`  |
-//! |   ✅    | `codabar()`            | Print CODABAR with default option                 | `barcode`  |
-//! |   ✅    | `codabar_option()`     | Print CODABAR with custom option                  | `barcode`  |
-//! |   ✅    | `itf()`                | Print ITF with default option                     | `barcode`  |
-//! |   ✅    | `itf_option()`         | Print ITF with custom option                      | `barcode`  |
-//! |   ✅    | `qrcode()`             | Print QR code with default option                 | `qrcode`   |
-//! |   ✅    | `qrcode_option()`      | Print QR code with custom option                  | `qrcode`   |
-//! |   ✅    | `bit_image()`          | Print raster bit image with default option        | `graphics` |
-//! |   ✅    | `bit_image_option()`   | Print raster bit image with custom option         | `graphics` |
-//! |   🚧   | `graphic()`            | Print raster graphic with default option          | `graphics` |
-//! |   🚧   | `graphic_option()`     | Print raster graphic with custom option           | `graphics` |
-//! |   ❌    | `?`                    | Print PDF147                                      | `?`        |
-//! |   ❌    | `?`                    | Print GS1                                         | `?`        |
-//! |   ❌    | `?`                    | Print DataMatrix                                  | `?`        |
-//! |   ❌    | `?`                    | Print MaxiCode                                    | `?`        |
+//! | Status | Command                   | Description                                       | Feature    |
+//! |:------:|---------------------------|---------------------------------------------------|------------|
+//! |   ✅    | `init()`                  | Initialize printer (`ESC @`)                      |            |
+//! |   ✅    | `print()`                 | Print document                                    |            |
+//! |   ✅    | `reset()`                 | Hardware reset (`ESC ? LF 0`)                     |            |
+//! |   ✅    | `cut()`                   | Paper cut (`GS V A 0`)                            |            |
+//! |   ✅    | `partial_cut()`           | Partial paper cut (`GS V A 1`)                    |            |
+//! |   ✅    | `print_cut()`             | Print and paper cut                               |            |
+//! |   ✅    | `page_code()`             | Select character code table (`ESC t`)             |            |
+//! |   ✅    | `character_set()`         | Select an international character set (`ESC R`)   |            |
+//! |   ✅    | `bold()`                  | Text bold (`ESC E`)                               |            |
+//! |   ✅    | `underline()`             | Text underline (`ESC -`)                          |            |
+//! |   ✅    | `double_strike()`         | Text double strike (`ESC G`)                      |            |
+//! |   ✅    | `font()`                  | Text font (`ESC M`)                               |            |
+//! |   ✅    | `flip()`                  | Text flip (`ESC V`)                               |            |
+//! |   ✅    | `justify()`               | Text justify (`ESC a`)                            |            |
+//! |   ✅    | `reserve()`               | Text reserve color (`GS B`)                       |            |
+//! |   ✅    | `size()`                  | Text size (`GS !`)                                |            |
+//! |   ✅    | `reset_size()`            | Reset text size (`GS !`)                          |            |
+//! |   ✅    | `smoothing()`             | Smoothing mode (`GS b`)                           |            |
+//! |   ✅    | `feed()`                  | Line feed (`ESC d`)                               |            |
+//! |   ✅    | `feeds()`                 | Multiple lines feed (`ESC d`)                     |            |
+//! |   ✅    | `line_spacing()`          | Line spacing (`ESC 3`)                            |            |
+//! |   ✅    | `reset_line_spacing()`    | Reset line spacing (`ESC 2`)                      |            |
+//! |   ✅    | `upside_down()`           | Upside-down mode (`ESC {`)                        |            |
+//! |   ✅    | `cash_drawer()`           | Generate pulse (`ESC p`)                          |            |
+//! |   ✅    | `write()`                 | Write text                                        |            |
+//! |   ✅    | `writeln()`               | Write text and line feed                          |            |
+//! |   ✅    | `custom()`                | Custom command                                    |            |
+//! |   ✅    | `custom_with_page_code()` | Custom command with page code                     |            |
+//! |   ✅    | `motion_units()`          | Set horizontal and vertical motion units (`GS P`) |            |
+//! |   ✅    | `ean13()`                 | Print EAN13 with default option                   | `barcode`  |
+//! |   ✅    | `ean13_option()`          | Print EAN13 with custom option                    | `barcode`  |
+//! |   ✅    | `ean8()`                  | Print EAN8 with default option                    | `barcode`  |
+//! |   ✅    | `ean8_option()`           | Print EAN8 with custom option                     | `barcode`  |
+//! |   ✅    | `upca()`                  | Print UPC-A with default option                   | `barcode`  |
+//! |   ✅    | `upca_option()`           | Print UPC-A with custom option                    | `barcode`  |
+//! |   ✅    | `upce()`                  | Print UPC-E with default option                   | `barcode`  |
+//! |   ✅    | `upce_option()`           | Print UPC-E with custom option                    | `barcode`  |
+//! |   ✅    | `code39()`                | Print CODE 39 with default option                 | `barcode`  |
+//! |   ✅    | `code39_option()`         | Print CODE 39 with custom option                  | `barcode`  |
+//! |   ✅    | `codabar()`               | Print CODABAR with default option                 | `barcode`  |
+//! |   ✅    | `codabar_option()`        | Print CODABAR with custom option                  | `barcode`  |
+//! |   ✅    | `itf()`                   | Print ITF with default option                     | `barcode`  |
+//! |   ✅    | `itf_option()`            | Print ITF with custom option                      | `barcode`  |
+//! |   ✅    | `qrcode()`                | Print QR code with default option                 | `codes_2d` |
+//! |   ✅    | `qrcode_option()`         | Print QR code with custom option                  | `codes_2d` |
+//! |   ✅    | `bit_image()`             | Print raster bit image with default option        | `graphics` |
+//! |   ✅    | `bit_image_option()`      | Print raster bit image with custom option         | `graphics` |
+//! |   ✅    | `gs1_databar_2d`          | Print 2D GS1 DataBar with default option          | `codes_2d` |
+//! |   ✅    | `gs1_databar_2d_option`   | Print 2D GS1 DataBar with custom option           | `codes_2d` |
+//! |   ✅    | `pdf417`                  | Print PDF417 with default option                  | `codes_2d` |
+//! |   ✅    | `pdf417_option`           | Print PDF417 with custom option                   | `codes_2d` |
+//! |   ✅    | `maxi_code`               | Print MaxiCode with default option                | `codes_2d` |
+//! |   ✅    | `maxi_code_option`        | Print MaxiCode with custom option                 | `codes_2d` |
+//! |   ✅    | `data_matrix`             | Print DataMatrix with default option              | `codes_2d` |
+//! |   ✅    | `data_matrix_option`      | Print DataMatrix with custom option               | `codes_2d` |
+//! |   🚧   | `graphic()`               | Print raster graphic with default option          | `graphics` |
+//! |   🚧   | `graphic_option()`        | Print raster graphic with custom option           | `graphics` |
+//! |   ❌    | `?`                       | Print Aztec Code                                  | `?`        |
 //!
 //! - ✅ Done
 //! - 🚧 In progress
