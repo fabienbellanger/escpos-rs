@@ -1,5 +1,3 @@
-#![allow(dead_code)] // TODO: Remove!
-
 //! DataMatrix
 
 use crate::errors::{PrinterError, Result};
@@ -91,6 +89,16 @@ impl DataMatrixOption {
         }
 
         Ok(Self { code_type, size })
+    }
+
+    /// Get type, number of rows and columns
+    pub fn code_type(&self) -> DataMatrixType {
+        self.code_type
+    }
+
+    /// Get size
+    pub fn size(&self) -> u8 {
+        self.size
     }
 }
 

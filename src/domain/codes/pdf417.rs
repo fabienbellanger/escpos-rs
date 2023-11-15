@@ -1,6 +1,6 @@
 //! PDF417
 
-use crate::errors::Result;
+use crate::errors::{PrinterError, Result};
 use std::fmt;
 
 /// PDF417 correction level
@@ -41,21 +41,23 @@ impl fmt::Display for Pdf417CorrectionLevel {
     }
 }
 
-// TODO: From => TryFrom ?
-impl From<Pdf417CorrectionLevel> for (u8, u8) {
-    fn from(value: Pdf417CorrectionLevel) -> Self {
+impl TryFrom<Pdf417CorrectionLevel> for (u8, u8) {
+    type Error = PrinterError;
+    fn try_from(value: Pdf417CorrectionLevel) -> core::result::Result<Self, Self::Error> {
         match value {
-            Pdf417CorrectionLevel::Level0 => (48, 48),
-            Pdf417CorrectionLevel::Level1 => (48, 49),
-            Pdf417CorrectionLevel::Level2 => (48, 50),
-            Pdf417CorrectionLevel::Level3 => (48, 51),
-            Pdf417CorrectionLevel::Level4 => (48, 52),
-            Pdf417CorrectionLevel::Level5 => (48, 53),
-            Pdf417CorrectionLevel::Level6 => (48, 54),
-            Pdf417CorrectionLevel::Level7 => (48, 55),
-            Pdf417CorrectionLevel::Level8 => (48, 56),
-            Pdf417CorrectionLevel::Ratio(value) if (1..=40).contains(&value) => (49, value),
-            _ => (49, 1),
+            Pdf417CorrectionLevel::Level0 => Ok((48, 48)),
+            Pdf417CorrectionLevel::Level1 => Ok((48, 49)),
+            Pdf417CorrectionLevel::Level2 => Ok((48, 50)),
+            Pdf417CorrectionLevel::Level3 => Ok((48, 51)),
+            Pdf417CorrectionLevel::Level4 => Ok((48, 52)),
+            Pdf417CorrectionLevel::Level5 => Ok((48, 53)),
+            Pdf417CorrectionLevel::Level6 => Ok((48, 54)),
+            Pdf417CorrectionLevel::Level7 => Ok((48, 55)),
+            Pdf417CorrectionLevel::Level8 => Ok((48, 56)),
+            Pdf417CorrectionLevel::Ratio(value) if (1..=40).contains(&value) => Ok((49, value)),
+            Pdf417CorrectionLevel::Ratio(value) => Err(PrinterError::Input(format!(
+                "invalid PDF417 correction level: Ratio({value})"
+            ))),
         }
     }
 }

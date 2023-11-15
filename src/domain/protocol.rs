@@ -399,12 +399,12 @@ impl Protocol {
 
     #[cfg(feature = "codes_2d")]
     /// PDF417 error correction level
-    fn pdf417_correction_level(&self, option: &Pdf417Option) -> Command {
+    fn pdf417_correction_level(&self, option: &Pdf417Option) -> Result<Command> {
         let mut cmd = GS_2D_PDF417_CORRECTION_LEVEL.to_vec();
-        let (m, n) = option.correction_level.into();
+        let (m, n) = option.correction_level.try_into()?;
         cmd.push(m);
         cmd.push(n);
-        cmd
+        Ok(cmd)
     }
 
     #[cfg(feature = "codes_2d")]
@@ -441,7 +441,7 @@ impl Protocol {
             self.pdf417_rows(&option),
             self.pdf417_width(&option),
             self.pdf417_row_height(&option),
-            self.pdf417_correction_level(&option),
+            self.pdf417_correction_level(&option)?,
             self.pdf417_type(&option),
             self.pdf417_data(data)?,
             self.pdf417_print(),
@@ -483,6 +483,54 @@ impl Protocol {
             self.maxi_code_mode(code.mode),
             self.maxi_code_data(&code.data)?,
             self.maxi_code_print(),
+        ])
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// DataMatrix type, numbers of rows and columns
+    fn data_matrix_type(&self, code_type: DataMatrixType) -> Result<Command> {
+        let mut cmd = GS_2D_DATA_MATRIX_TYPE.to_vec();
+        let (m, d1, d2) = code_type.try_into()?;
+        cmd.push(m);
+        cmd.push(d1);
+        cmd.push(d2);
+        Ok(cmd)
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// DataMatrix size
+    fn data_matrix_size(&self, size: u8) -> Command {
+        let mut cmd = GS_2D_DATA_MATRIX_SIZE.to_vec();
+        cmd.push(size);
+        cmd
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// DataMatrix data
+    fn data_matrix_data(&self, data: &str) -> Result<Command> {
+        let mut cmd = GS_2D.to_vec();
+        let (pl, ph) = get_parameters_number_2(data, 3)?;
+        cmd.push(pl);
+        cmd.push(ph);
+        cmd.append(&mut vec![54, 80, 48]);
+        cmd.append(&mut data.as_bytes().to_vec());
+        Ok(cmd)
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// DataMatrix print
+    fn data_matrix_print(&self) -> Command {
+        GS_2D_DATA_MATRIX_PRINT.to_vec()
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// DataMatrix
+    pub(crate) fn data_matrix(&self, data: &str, option: DataMatrixOption) -> Result<Vec<Command>> {
+        Ok(vec![
+            self.data_matrix_type(option.code_type)?,
+            self.data_matrix_size(option.size),
+            self.data_matrix_data(data)?,
+            self.data_matrix_print(),
         ])
     }
 
@@ -1026,21 +1074,18 @@ mod tests {
         let mut option = Pdf417Option::default();
         option.correction_level = Pdf417CorrectionLevel::Level5;
         assert_eq!(
-            protocol.pdf417_correction_level(&option),
+            protocol.pdf417_correction_level(&option).unwrap(),
             vec![29, 40, 107, 3, 0, 48, 69, 48, 53]
         );
 
         option.correction_level = Pdf417CorrectionLevel::Ratio(15);
         assert_eq!(
-            protocol.pdf417_correction_level(&option),
+            protocol.pdf417_correction_level(&option).unwrap(),
             vec![29, 40, 107, 3, 0, 48, 69, 49, 15]
         );
 
         option.correction_level = Pdf417CorrectionLevel::Ratio(45);
-        assert_eq!(
-            protocol.pdf417_correction_level(&option),
-            vec![29, 40, 107, 3, 0, 48, 69, 49, 1]
-        );
+        assert!(protocol.pdf417_correction_level(&option).is_err());
     }
 
     #[cfg(feature = "codes_2d")]
@@ -1157,6 +1202,78 @@ mod tests {
                 vec![29, 40, 107, 3, 0, 50, 65, 50],
                 vec![29, 40, 107, 11, 0, 50, 80, 48, 116, 101, 115, 116, 49, 50, 52, 53],
                 vec![29, 40, 107, 3, 0, 50, 81, 48],
+            ]
+        );
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_data_matrix_type() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.data_matrix_type(DataMatrixType::default()).unwrap(),
+            vec![29, 40, 107, 5, 0, 54, 66, 0, 0, 0]
+        );
+        assert_eq!(
+            protocol.data_matrix_type(DataMatrixType::Square(144)).unwrap(),
+            vec![29, 40, 107, 5, 0, 54, 66, 0, 144, 144]
+        );
+        assert_eq!(
+            protocol.data_matrix_type(DataMatrixType::Rectangle(8, 0)).unwrap(),
+            vec![29, 40, 107, 5, 0, 54, 66, 1, 8, 0]
+        );
+        assert!(protocol.data_matrix_type(DataMatrixType::Square(2)).is_err());
+        assert!(protocol.data_matrix_type(DataMatrixType::Square(145)).is_err());
+        assert!(protocol.data_matrix_type(DataMatrixType::Rectangle(0, 0)).is_err());
+        assert!(protocol.data_matrix_type(DataMatrixType::Rectangle(16, 32)).is_err());
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_data_matrix_size() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.data_matrix_size(2), vec![29, 40, 107, 3, 0, 54, 67, 2]);
+        assert_eq!(protocol.data_matrix_size(16), vec![29, 40, 107, 3, 0, 54, 67, 16]);
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_data_matrix_data() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.data_matrix_data("test123").unwrap(),
+            vec![29, 40, 107, 10, 0, 54, 80, 48, 116, 101, 115, 116, 49, 50, 51]
+        );
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_data_matrix_print() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.data_matrix_print(), vec![29, 40, 107, 3, 0, 54, 81, 48]);
+    }
+
+    #[cfg(feature = "codes_2d")]
+    #[test]
+    fn test_data_matrix() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.data_matrix("test123", DataMatrixOption::default()).unwrap(),
+            vec![
+                vec![29, 40, 107, 5, 0, 54, 66, 0, 0, 0],
+                vec![29, 40, 107, 3, 0, 54, 67, 3],
+                vec![29, 40, 107, 10, 0, 54, 80, 48, 116, 101, 115, 116, 49, 50, 51],
+                vec![29, 40, 107, 3, 0, 54, 81, 48],
+            ]
+        );
+        let option = DataMatrixOption::new(DataMatrixType::Rectangle(8, 0), 16).unwrap();
+        assert_eq!(
+            protocol.data_matrix("test123", option).unwrap(),
+            vec![
+                vec![29, 40, 107, 5, 0, 54, 66, 1, 8, 0],
+                vec![29, 40, 107, 3, 0, 54, 67, 16],
+                vec![29, 40, 107, 10, 0, 54, 80, 48, 116, 101, 115, 116, 49, 50, 51],
+                vec![29, 40, 107, 3, 0, 54, 81, 48],
             ]
         );
     }

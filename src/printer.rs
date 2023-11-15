@@ -481,6 +481,21 @@ impl<D: Driver> Printer<D> {
         self.maxi_code_option(data, code.mode)
     }
 
+    #[cfg(feature = "codes_2d")]
+    /// MaxiCode
+    pub fn data_matrix_option(&mut self, data: &str, option: DataMatrixOption) -> Result<&mut Self> {
+        let code = DataMatrix::new(data, option);
+        let commands = self.protocol.data_matrix(&code.data, code.option)?;
+        self.command("print DataMatrix", commands.as_slice())
+    }
+
+    #[cfg(feature = "codes_2d")]
+    /// MaxiCode
+    pub fn data_matrix(&mut self, data: &str) -> Result<&mut Self> {
+        let code = DataMatrix::new(data, DataMatrixOption::default());
+        self.data_matrix_option(data, code.option)
+    }
+
     // #[cfg(feature = "graphics")]
     // /// Print image
     // fn _image(&mut self, path: &str) -> Result<&mut Self> {

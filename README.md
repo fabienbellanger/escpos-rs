@@ -21,14 +21,14 @@ For standard functionalities (e.g. printing text), no additional dependencies ar
 
 ```toml
 [dependencies]
-escpos = "0.4.0"
+escpos = "0.5.0"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.4.0", features = ["full"] }
+escpos = { version = "0.5.0", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
@@ -43,7 +43,7 @@ cargo add escpos -F full
 | Name       | Description                                                        | Default |
 |------------|--------------------------------------------------------------------|:-------:|
 | `barcodes` | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
-| `codes_2d` | Print 2D codes (QR Code, PDF417, GS1 DataBar, etc.)                |    ✅    |
+| `codes_2d` | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, etc.)    |    ✅    |
 | `graphics` | Print raster images                                                |    ❌    |
 | `full`     | Enable all features                                                |    ❌    |
 
@@ -231,10 +231,11 @@ fn main() -> Result<()> {
 |   ✅    | `pdf417_option`           | Print PDF417 with custom option                   | `codes_2d` |
 |   ✅    | `maxi_code`               | Print MaxiCode with default option                | `codes_2d` |
 |   ✅    | `maxi_code_option`        | Print MaxiCode with custom option                 | `codes_2d` |
+|   ✅    | `data_matrix`             | Print DataMatrix with default option              | `codes_2d` |
+|   ✅    | `data_matrix_option`      | Print DataMatrix with custom option               | `codes_2d` |
 |   🚧   | `graphic()`               | Print raster graphic with default option          | `graphics` |
 |   🚧   | `graphic_option()`        | Print raster graphic with custom option           | `graphics` |
-|   ❌    | `?`                       | Print DataMatrix                                  | `?`        |
-|   ❌    | `?`                       | Print MaxiCode                                    | `?`        |
+|   ❌    | `?`                       | Print Aztec Code                                  | `?`        |
 
 - ✅ Done
 - 🚧 In progress
@@ -255,5 +256,6 @@ fn main() -> Result<()> {
     - [ ] Others 2D codes:
         - [x] GS1 DataBar
         - [x] PDF157
-        - [ ] DataMatrix
+        - [x] DataMatrix
         - [x] MaxiCode
+        - [ ] Aztec Code

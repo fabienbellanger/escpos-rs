@@ -19,13 +19,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+## `0.5.0` (2023-11-15) [CURRENT]
+
+### Added
 - Add 2 new methods `custom` and `custom_with_page_code` to `Printer`
+- Add MaxiCode 2D code
+- Add DataMatrix 2D code
 
 ### Changed
 - [Breaking] Merge `qrcode`, `gs1_databar` and `pdf417` into `codes_2d` feature
-- Improve `receipt.rs` example
+- Improve `receipt.rs` and `codes.rs` examples
 
-## `0.4.0` (2023-11-13) [CURRENT]
+## `0.4.0` (2023-11-13)
 
 ### Added
 
