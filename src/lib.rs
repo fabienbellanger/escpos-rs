@@ -204,9 +204,10 @@
 //! |   ✅    | `maxi_code_option`        | Print MaxiCode with custom option                 | `codes_2d` |
 //! |   ✅    | `data_matrix`             | Print DataMatrix with default option              | `codes_2d` |
 //! |   ✅    | `data_matrix_option`      | Print DataMatrix with custom option               | `codes_2d` |
+//! |   ✅    | `aztec`                   | Print Aztec code with default option              | `codes_2d` |
+//! |   ✅    | `aztec_option`            | Print Aztec code with custom option               | `codes_2d` |
 //! |   🚧   | `graphic()`               | Print raster graphic with default option          | `graphics` |
 //! |   🚧   | `graphic_option()`        | Print raster graphic with custom option           | `graphics` |
-//! |   ❌    | `?`                       | Print Aztec Code                                  | `?`        |
 //!
 //! - ✅ Done
 //! - 🚧 In progress

@@ -511,20 +511,6 @@ impl<D: Driver> Printer<D> {
         self.aztec_option(data, code.option)
     }
 
-    // #[cfg(feature = "graphics")]
-    // /// Print image
-    // fn _image(&mut self, path: &str) -> Result<&mut Self> {
-    //     let cmd = self.protocol.graphic_density(GraphicDensity::Low);
-    //     self.command("set graphic density", cmd)?;
-    //
-    //     let cmd = self.protocol.graphic_data(path)?;
-    //     self.command("set graphic data", cmd)?;
-    //
-    //     // Print
-    //     let cmd = self.protocol.graphic_print();
-    //     self.command("print graphic", cmd)
-    // }
-
     #[cfg(feature = "graphics")]
     /// Print image
     pub fn bit_image_option(&mut self, path: &str, option: BitImageOption) -> Result<&mut Self> {
@@ -544,6 +530,20 @@ impl<D: Driver> Printer<D> {
         let cmd = self.protocol.bit_image(path, None)?;
         self.command("print bit image", &[cmd])
     }
+
+    // #[cfg(feature = "graphics")]
+    // /// Print image
+    // fn _image(&mut self, path: &str) -> Result<&mut Self> {
+    //     let cmd = self.protocol.graphic_density(GraphicDensity::Low);
+    //     self.command("set graphic density", cmd)?;
+    //
+    //     let cmd = self.protocol.graphic_data(path)?;
+    //     self.command("set graphic data", cmd)?;
+    //
+    //     // Print
+    //     let cmd = self.protocol.graphic_print();
+    //     self.command("print graphic", cmd)
+    // }
 }
 
 #[cfg(test)]

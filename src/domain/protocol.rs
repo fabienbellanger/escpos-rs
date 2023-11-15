@@ -591,6 +591,25 @@ impl Protocol {
         ])
     }
 
+    #[cfg(feature = "graphics")]
+    /// Print bit image
+    pub(crate) fn bit_image(&self, path: &str, option: Option<BitImageOption>) -> Result<Command> {
+        let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
+        let bit_image = BitImage::new(path, option)?;
+
+        // Size
+        cmd.push(bit_image.size().into());
+
+        // Width and height
+        cmd.append(&mut bit_image.with_bytes_u8()?);
+        cmd.append(&mut bit_image.height_u8()?);
+
+        // Data
+        cmd.append(&mut bit_image.raster_data()?);
+
+        Ok(cmd)
+    }
+
     // #[cfg(feature = "graphics")]
     // /// Graphic density
     // pub(crate) fn graphic_density(&self, density: GraphicDensity) -> Command {
@@ -648,25 +667,6 @@ impl Protocol {
     //
     //     Ok(cmd)
     // }
-
-    #[cfg(feature = "graphics")]
-    /// Print bit image
-    pub(crate) fn bit_image(&self, path: &str, option: Option<BitImageOption>) -> Result<Command> {
-        let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
-        let bit_image = BitImage::new(path, option)?;
-
-        // Size
-        cmd.push(bit_image.size().into());
-
-        // Width and height
-        cmd.append(&mut bit_image.with_bytes_u8()?);
-        cmd.append(&mut bit_image.height_u8()?);
-
-        // Data
-        cmd.append(&mut bit_image.raster_data()?);
-
-        Ok(cmd)
-    }
 }
 
 #[cfg(test)]
@@ -1402,6 +1402,19 @@ mod tests {
         );
     }
 
+    #[cfg(feature = "graphics")]
+    #[test]
+    fn test_bit_image() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.bit_image("./resources/images/small.jpg", None).unwrap(),
+            vec![
+                29, 118, 48, 0, 2, 0, 16, 0, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 255, 255, 255,
+                255, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128
+            ]
+        );
+    }
+
     // #[cfg(feature = "graphics")]
     // #[test]
     // fn test_graphic_density() {
@@ -1432,17 +1445,4 @@ mod tests {
     //         vec![29, 40, 76, 48, 1, 1, 49, 200, 0, 200, 0]
     //     );
     // }
-
-    #[cfg(feature = "graphics")]
-    #[test]
-    fn test_bit_image() {
-        let protocol = Protocol::new(Encoder::default());
-        assert_eq!(
-            protocol.bit_image("./resources/images/small.jpg", None).unwrap(),
-            vec![
-                29, 118, 48, 0, 2, 0, 16, 0, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 255, 255, 255,
-                255, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128
-            ]
-        );
-    }
 }

@@ -53,6 +53,8 @@ fn main() -> Result<()> {
         .feed()?
         .data_matrix("test1245789658745")?
         .feed()?
+        .aztec("test1245789658745")?
+        .feed()?
         .bit_image_option(
             "./resources/images/rust-logo-small.png",
             BitImageOption::new(Some(128), None, BitImageSize::Normal)?,

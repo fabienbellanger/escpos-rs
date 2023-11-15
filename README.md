@@ -21,14 +21,14 @@ For standard functionalities (e.g. printing text), no additional dependencies ar
 
 ```toml
 [dependencies]
-escpos = "0.5.0"
+escpos = "0.6.0"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.5.0", features = ["full"] }
+escpos = { version = "0.6.0", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
@@ -233,6 +233,8 @@ fn main() -> Result<()> {
 |   ✅    | `maxi_code_option`        | Print MaxiCode with custom option                 | `codes_2d` |
 |   ✅    | `data_matrix`             | Print DataMatrix with default option              | `codes_2d` |
 |   ✅    | `data_matrix_option`      | Print DataMatrix with custom option               | `codes_2d` |
+|   ✅    | `aztec`                   | Print Aztec code with default option              | `codes_2d` |
+|   ✅    | `aztec_option`            | Print Aztec code with custom option               | `codes_2d` |
 |   🚧   | `graphic()`               | Print raster graphic with default option          | `graphics` |
 |   🚧   | `graphic_option()`        | Print raster graphic with custom option           | `graphics` |
 |   ❌    | `?`                       | Print Aztec Code                                  | `?`        |
@@ -258,4 +260,4 @@ fn main() -> Result<()> {
         - [x] PDF157
         - [x] DataMatrix
         - [x] MaxiCode
-        - [ ] Aztec Code
+        - [x] Aztec Code

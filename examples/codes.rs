@@ -54,6 +54,9 @@ fn main() -> Result<()> {
         // DataMatrix
         .writeln("DataMatrix")?
         .data_matrix("test1245789658745")?
+        // Aztec code
+        .writeln("Aztec code")?
+        .aztec("test1245789658745")?
         .feed()?
         .print_cut()?;
 
