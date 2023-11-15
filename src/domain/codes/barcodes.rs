@@ -57,7 +57,7 @@ impl fmt::Display for BarcodeSystem {
 }
 
 /// Barcode fonts
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Copy)]
 pub enum BarcodeFont {
     #[default]
     A,
@@ -105,7 +105,7 @@ impl fmt::Display for BarcodeFont {
 }
 
 /// Barcode position
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub enum BarcodePosition {
     None,
     Above,
@@ -136,7 +136,7 @@ impl fmt::Display for BarcodePosition {
 }
 
 /// Barcode width
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Copy)]
 pub enum BarcodeWidth {
     XS,
     S,
@@ -172,7 +172,7 @@ impl From<&str> for BarcodeWidth {
 }
 
 /// Barcode height
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Copy)]
 pub enum BarcodeHeight {
     XS,
     #[default]
@@ -210,10 +210,10 @@ impl From<&str> for BarcodeHeight {
 /// Barcode option
 #[derive(Debug, Clone)]
 pub struct BarcodeOption {
-    pub width: BarcodeWidth,
-    pub height: BarcodeHeight,
-    pub font: BarcodeFont,
-    pub position: BarcodePosition,
+    width: BarcodeWidth,
+    height: BarcodeHeight,
+    font: BarcodeFont,
+    position: BarcodePosition,
 }
 
 impl Default for BarcodeOption {
@@ -229,13 +229,33 @@ impl Default for BarcodeOption {
 
 impl BarcodeOption {
     /// Create new `BarcodeOption`
-    pub fn new(width: &str, height: &str, font: &str, position: BarcodePosition) -> Self {
+    pub fn new(width: BarcodeWidth, height: BarcodeHeight, font: BarcodeFont, position: BarcodePosition) -> Self {
         Self {
-            width: width.into(),
-            height: height.into(),
-            font: font.into(),
+            width,
+            height,
+            font,
             position,
         }
+    }
+
+    /// Get width
+    pub fn width(&self) -> BarcodeWidth {
+        self.width
+    }
+
+    /// Get height
+    pub fn height(&self) -> BarcodeHeight {
+        self.height
+    }
+
+    /// Get font
+    pub fn font(&self) -> BarcodeFont {
+        self.font
+    }
+
+    /// Get position
+    pub fn position(&self) -> BarcodePosition {
+        self.position
     }
 }
 
@@ -249,14 +269,8 @@ pub struct Barcode {
 
 impl Barcode {
     /// Create a new `Barcode`
-    pub fn new(system: BarcodeSystem, data: &str, option: Option<BarcodeOption>) -> Result<Self> {
+    pub fn new(system: BarcodeSystem, data: &str, option: BarcodeOption) -> Result<Self> {
         Self::validate(system, data)?;
-
-        let option = if let Some(option) = option {
-            option
-        } else {
-            BarcodeOption::default()
-        };
 
         Ok(Self {
             system,
@@ -333,11 +347,11 @@ mod tests {
 
     #[test]
     fn test_barcode_new() {
-        assert!(Barcode::new(BarcodeSystem::UPCA, "12587965874", None).is_ok());
+        assert!(Barcode::new(BarcodeSystem::UPCA, "12587965874", BarcodeOption::default()).is_ok());
         assert!(Barcode::new(
             BarcodeSystem::UPCA,
             "12587965874",
-            Some(BarcodeOption::new("L", "M", "A", BarcodePosition::None))
+            BarcodeOption::new(BarcodeWidth::L, BarcodeHeight::M, BarcodeFont::A, BarcodePosition::None)
         )
         .is_ok());
     }

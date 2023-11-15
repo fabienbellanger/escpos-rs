@@ -69,9 +69,9 @@ impl fmt::Display for QRCodeCorrectionLevel {
 /// QR code option
 #[derive(Debug)]
 pub struct QRCodeOption {
-    pub model: QRCodeModel,
-    pub size: u8,
-    pub correction_level: QRCodeCorrectionLevel,
+    model: QRCodeModel,
+    size: u8,
+    correction_level: QRCodeCorrectionLevel,
 }
 
 impl Default for QRCodeOption {
@@ -92,6 +92,21 @@ impl QRCodeOption {
             size,
             correction_level,
         }
+    }
+
+    /// Get model
+    pub fn model(&self) -> QRCodeModel {
+        self.model
+    }
+
+    /// Get size
+    pub fn size(&self) -> u8 {
+        self.size
+    }
+
+    /// Get error correction level
+    pub fn correction_level(&self) -> QRCodeCorrectionLevel {
+        self.correction_level
     }
 }
 

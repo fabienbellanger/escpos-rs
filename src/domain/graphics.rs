@@ -115,6 +115,7 @@ impl fmt::Display for GraphicSize {
 }
 
 #[derive(Debug)]
+// TODO: Make fields private
 pub struct GraphicOption {
     /// Image max width
     pub max_width: Option<u32>,

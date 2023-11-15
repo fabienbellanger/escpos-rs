@@ -8,7 +8,7 @@ const EXPANDED_STACKED_VALID_CHARS: [char; 36] = [
     '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '_', '{',
 ];
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Copy)]
 pub enum GS1DataBar2DType {
     #[default]
     Stacked,
@@ -36,7 +36,7 @@ impl From<GS1DataBar2DType> for u8 {
     }
 }
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Copy)]
 pub enum GS1DataBar2DWidth {
     S,
     #[default]
@@ -67,14 +67,24 @@ impl From<GS1DataBar2DWidth> for u8 {
 /// GS1 DataBar option
 #[derive(Debug, Clone, Default)]
 pub struct GS1DataBar2DOption {
-    pub width: GS1DataBar2DWidth,
-    pub code_type: GS1DataBar2DType,
+    width: GS1DataBar2DWidth,
+    code_type: GS1DataBar2DType,
 }
 
 impl GS1DataBar2DOption {
     /// Create a new `GS1DataBar2DOption`
     pub fn new(width: GS1DataBar2DWidth, code_type: GS1DataBar2DType) -> Self {
         Self { width, code_type }
+    }
+
+    /// Get width
+    pub fn width(&self) -> GS1DataBar2DWidth {
+        self.width
+    }
+
+    /// Get code type
+    pub fn code_type(&self) -> GS1DataBar2DType {
+        self.code_type
     }
 }
 

@@ -111,7 +111,12 @@ fn main() -> Result<()> {
         .init()?
         .ean13_option(
             "1234567890265",
-            BarcodeOption::new("M", "S", "A", BarcodePosition::Below),
+            BarcodeOption::new(
+                BarcodeWidth::M,
+                BarcodeHeight::S,
+                BarcodeFont::A,
+                BarcodePosition::Below,
+            )
         )?
         .feed()?
         .print_cut()?;
@@ -136,11 +141,7 @@ fn main() -> Result<()> {
         .init()?
         .qrcode_option(
             "https://www.google.com",
-            QRCodeOption {
-                model: QRCodeModel::Model1,
-                size: 6,
-                correction_level: QRCodeCorrectionLevel::M,
-            },
+            QRCodeOption::new(QRCodeModel::Model1, 6, QRCodeCorrectionLevel::M),
         )?
         .feed()?
         .print_cut()?;
@@ -255,7 +256,7 @@ fn main() -> Result<()> {
 - [x] Improve `receipt.rs`
 - [ ] Add more commands:
     - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)
-    - [ ] Others 2D codes:
+    - [x] Others 2D codes:
         - [x] GS1 DataBar
         - [x] PDF157
         - [x] DataMatrix

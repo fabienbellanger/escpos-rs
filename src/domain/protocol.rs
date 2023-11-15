@@ -239,20 +239,12 @@ impl Protocol {
 
     #[cfg(feature = "barcodes")]
     /// Configure and print barcode
-    pub(crate) fn barcode(
-        &self,
-        data: &str,
-        system: BarcodeSystem,
-        width: u8,
-        height: u8,
-        font: BarcodeFont,
-        position: BarcodePosition,
-    ) -> Result<Vec<Command>> {
+    pub(crate) fn barcode(&self, data: &str, system: BarcodeSystem, option: BarcodeOption) -> Result<Vec<Command>> {
         Ok(vec![
-            self.barcode_width(width)?,
-            self.barcode_height(height)?,
-            self.barcode_font(font),
-            self.barcode_position(position),
+            self.barcode_width(option.width().into())?,
+            self.barcode_height(option.height().into())?,
+            self.barcode_font(option.font()),
+            self.barcode_position(option.position()),
             self.barcode_print(system, data),
         ])
     }
@@ -301,17 +293,11 @@ impl Protocol {
 
     #[cfg(feature = "codes_2d")]
     /// QR code print
-    pub(crate) fn qrcode(
-        &self,
-        data: &str,
-        model: QRCodeModel,
-        level: QRCodeCorrectionLevel,
-        size: u8,
-    ) -> Result<Vec<Command>> {
+    pub(crate) fn qrcode(&self, data: &str, option: QRCodeOption) -> Result<Vec<Command>> {
         Ok(vec![
-            self.qrcode_model(model),
-            self.qrcode_size(size),
-            self.qrcode_correction_level(level),
+            self.qrcode_model(option.model()),
+            self.qrcode_size(option.size()),
+            self.qrcode_correction_level(option.correction_level()),
             self.qrcode_data(data)?,
             self.qrcode_print(),
         ])
@@ -358,9 +344,9 @@ impl Protocol {
     /// 2D GS1 DataBar
     pub(crate) fn gs1_databar_2d(&self, data: &str, option: GS1DataBar2DOption) -> Result<Vec<Command>> {
         Ok(vec![
-            self.gs1_databar_2d_width(option.width),
+            self.gs1_databar_2d_width(option.width()),
             self.gs1_databar_2d_expanded_width(0),
-            self.gs1_databar_2d_data(data, option.code_type)?,
+            self.gs1_databar_2d_data(data, option.code_type())?,
             self.gs1_databar_2d_print(),
         ])
     }
@@ -369,7 +355,7 @@ impl Protocol {
     /// PDF417 number of columns
     fn pdf417_columns(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_COLUMNS.to_vec();
-        cmd.push(option.columns);
+        cmd.push(option.columns());
         cmd
     }
 
@@ -377,7 +363,7 @@ impl Protocol {
     /// PDF417 number of rows
     fn pdf417_rows(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_ROWS.to_vec();
-        cmd.push(option.rows);
+        cmd.push(option.rows());
         cmd
     }
 
@@ -385,7 +371,7 @@ impl Protocol {
     /// PDF417 width
     fn pdf417_width(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_WIDTH.to_vec();
-        cmd.push(option.width);
+        cmd.push(option.width());
         cmd
     }
 
@@ -393,7 +379,7 @@ impl Protocol {
     /// PDF417 row height
     fn pdf417_row_height(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_ROW_HEIGHT.to_vec();
-        cmd.push(option.row_height);
+        cmd.push(option.row_height());
         cmd
     }
 
@@ -401,7 +387,7 @@ impl Protocol {
     /// PDF417 error correction level
     fn pdf417_correction_level(&self, option: &Pdf417Option) -> Result<Command> {
         let mut cmd = GS_2D_PDF417_CORRECTION_LEVEL.to_vec();
-        let (m, n) = option.correction_level.try_into()?;
+        let (m, n) = option.correction_level().try_into()?;
         cmd.push(m);
         cmd.push(n);
         Ok(cmd)
@@ -411,7 +397,7 @@ impl Protocol {
     /// PDF417 type
     fn pdf417_type(&self, option: &Pdf417Option) -> Command {
         let mut cmd = GS_2D_PDF417_TYPE.to_vec();
-        cmd.push(option.code_type.into());
+        cmd.push(option.code_type().into());
         cmd
     }
 
@@ -593,7 +579,7 @@ impl Protocol {
 
     #[cfg(feature = "graphics")]
     /// Print bit image
-    pub(crate) fn bit_image(&self, path: &str, option: Option<BitImageOption>) -> Result<Command> {
+    pub(crate) fn bit_image(&self, path: &str, option: BitImageOption) -> Result<Command> {
         let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
         let bit_image = BitImage::new(path, option)?;
 
@@ -911,7 +897,7 @@ mod tests {
         let protocol = Protocol::new(Encoder::default());
         let expected: Vec<Command> = vec![
             [29, 119, 4].to_vec(),
-            [29, 104, 4].to_vec(),
+            [29, 104, 102].to_vec(),
             [29, 102, 0].to_vec(),
             [29, 72, 0].to_vec(),
             [29, 107, 2, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 0].to_vec(),
@@ -922,10 +908,7 @@ mod tests {
                 .barcode(
                     "123456789012",
                     BarcodeSystem::EAN13,
-                    4,
-                    4,
-                    BarcodeFont::A,
-                    BarcodePosition::None
+                    BarcodeOption::new(BarcodeWidth::L, BarcodeHeight::S, BarcodeFont::A, BarcodePosition::None),
                 )
                 .unwrap(),
             expected
@@ -1018,7 +1001,10 @@ mod tests {
         ];
         assert_eq!(
             protocol
-                .qrcode("test", QRCodeModel::Model1, QRCodeCorrectionLevel::L, 4)
+                .qrcode(
+                    "test",
+                    QRCodeOption::new(QRCodeModel::Model1, 4, QRCodeCorrectionLevel::L)
+                )
                 .unwrap(),
             expected
         );
@@ -1058,7 +1044,7 @@ mod tests {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(
             protocol
-                .gs1_databar_2d_data("8245789658745", GS1DataBar2DOption::default().code_type)
+                .gs1_databar_2d_data("8245789658745", GS1DataBar2DOption::default().code_type())
                 .unwrap(),
             vec![29, 40, 107, 17, 0, 51, 80, 48, 72, 56, 50, 52, 53, 55, 56, 57, 54, 53, 56, 55, 52, 53]
         );
@@ -1092,8 +1078,7 @@ mod tests {
     #[test]
     fn test_pdf417_columns() {
         let protocol = Protocol::new(Encoder::default());
-        let mut option = Pdf417Option::default();
-        option.columns = 16;
+        let option = Pdf417Option::new(16, 0, 0, 0, Pdf417Type::default(), Pdf417CorrectionLevel::Level0).unwrap();
         assert_eq!(protocol.pdf417_columns(&option), vec![29, 40, 107, 3, 0, 48, 65, 16]);
     }
 
@@ -1101,8 +1086,7 @@ mod tests {
     #[test]
     fn test_pdf417_rows() {
         let protocol = Protocol::new(Encoder::default());
-        let mut option = Pdf417Option::default();
-        option.rows = 16;
+        let option = Pdf417Option::new(0, 16, 0, 0, Pdf417Type::default(), Pdf417CorrectionLevel::Level0).unwrap();
         assert_eq!(protocol.pdf417_rows(&option), vec![29, 40, 107, 3, 0, 48, 66, 16]);
     }
 
@@ -1110,8 +1094,7 @@ mod tests {
     #[test]
     fn test_pdf417_width() {
         let protocol = Protocol::new(Encoder::default());
-        let mut option = Pdf417Option::default();
-        option.width = 2;
+        let option = Pdf417Option::new(0, 0, 2, 0, Pdf417Type::default(), Pdf417CorrectionLevel::Level0).unwrap();
         assert_eq!(protocol.pdf417_width(&option), vec![29, 40, 107, 3, 0, 48, 67, 2]);
     }
 
@@ -1119,8 +1102,7 @@ mod tests {
     #[test]
     fn test_pdf417_row_height() {
         let protocol = Protocol::new(Encoder::default());
-        let mut option = Pdf417Option::default();
-        option.row_height = 2;
+        let option = Pdf417Option::new(0, 0, 0, 2, Pdf417Type::default(), Pdf417CorrectionLevel::Level0).unwrap();
         assert_eq!(protocol.pdf417_row_height(&option), vec![29, 40, 107, 3, 0, 48, 68, 2]);
     }
 
@@ -1128,20 +1110,19 @@ mod tests {
     #[test]
     fn test_pdf417_correction_level() {
         let protocol = Protocol::new(Encoder::default());
-        let mut option = Pdf417Option::default();
-        option.correction_level = Pdf417CorrectionLevel::Level5;
+        let option = Pdf417Option::new(0, 0, 0, 0, Pdf417Type::default(), Pdf417CorrectionLevel::Level5).unwrap();
         assert_eq!(
             protocol.pdf417_correction_level(&option).unwrap(),
             vec![29, 40, 107, 3, 0, 48, 69, 48, 53]
         );
 
-        option.correction_level = Pdf417CorrectionLevel::Ratio(15);
+        let option = Pdf417Option::new(0, 0, 0, 0, Pdf417Type::default(), Pdf417CorrectionLevel::Ratio(15)).unwrap();
         assert_eq!(
             protocol.pdf417_correction_level(&option).unwrap(),
             vec![29, 40, 107, 3, 0, 48, 69, 49, 15]
         );
 
-        option.correction_level = Pdf417CorrectionLevel::Ratio(45);
+        let option = Pdf417Option::new(0, 0, 0, 0, Pdf417Type::default(), Pdf417CorrectionLevel::Ratio(45)).unwrap();
         assert!(protocol.pdf417_correction_level(&option).is_err());
     }
 
@@ -1149,11 +1130,11 @@ mod tests {
     #[test]
     fn test_pdf417_type() {
         let protocol = Protocol::new(Encoder::default());
-        let mut option = Pdf417Option::default();
-        option.code_type = Pdf417Type::Standard;
+
+        let option = Pdf417Option::new(0, 0, 0, 0, Pdf417Type::Standard, Pdf417CorrectionLevel::Level5).unwrap();
         assert_eq!(protocol.pdf417_type(&option), vec![29, 40, 107, 3, 0, 48, 70, 0]);
 
-        option.code_type = Pdf417Type::Truncated;
+        let option = Pdf417Option::new(0, 0, 0, 0, Pdf417Type::Truncated, Pdf417CorrectionLevel::Level5).unwrap();
         assert_eq!(protocol.pdf417_type(&option), vec![29, 40, 107, 3, 0, 48, 70, 1]);
     }
 
@@ -1407,7 +1388,12 @@ mod tests {
     fn test_bit_image() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(
-            protocol.bit_image("./resources/images/small.jpg", None).unwrap(),
+            protocol
+                .bit_image(
+                    "./resources/images/small.jpg",
+                    BitImageOption::new(None, None, BitImageSize::default()).unwrap(),
+                )
+                .unwrap(),
             vec![
                 29, 118, 48, 0, 2, 0, 16, 0, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 255, 255, 255,
                 255, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128

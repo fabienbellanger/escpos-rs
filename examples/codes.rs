@@ -17,17 +17,18 @@ fn main() -> Result<()> {
         .writeln("EAN13")?
         .ean13_option(
             "1234567890265",
-            BarcodeOption::new("M", "S", "A", BarcodePosition::Below),
+            BarcodeOption::new(
+                BarcodeWidth::M,
+                BarcodeHeight::S,
+                BarcodeFont::A,
+                BarcodePosition::Below,
+            ),
         )?
         // QR Code
         .writeln("QR Code")?
         .qrcode_option(
             "https://www.google.com",
-            QRCodeOption {
-                model: QRCodeModel::Model1,
-                size: 6,
-                correction_level: QRCodeCorrectionLevel::M,
-            },
+            QRCodeOption::new(QRCodeModel::Model1, 6, QRCodeCorrectionLevel::M),
         )?
         // GS1 DataBar
         .writeln("GS1 DataBar Expanded")?

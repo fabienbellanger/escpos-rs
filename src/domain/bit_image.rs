@@ -7,8 +7,9 @@ use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
 use std::fmt;
 
 /// BitImage size
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy)]
 pub enum BitImageSize {
+    #[default]
     Normal,
     DoubleWidth,
     DoubleHeight,
@@ -93,14 +94,8 @@ pub struct BitImage {
 
 impl BitImage {
     /// Create a new image
-    pub fn new(path: &str, option: Option<BitImageOption>) -> Result<Self> {
+    pub fn new(path: &str, option: BitImageOption) -> Result<Self> {
         let img = image::open(path)?;
-
-        let option = if let Some(option) = option {
-            option
-        } else {
-            BitImageOption::default()
-        };
 
         // Resize image with max width and max height constraints and convert to grayscale
         let mut img = match (option.max_width, option.max_height) {

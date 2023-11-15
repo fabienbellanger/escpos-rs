@@ -92,12 +92,12 @@ impl From<Pdf417Type> for u8 {
 // TODO: Make all Option type (barcode, qrcode, GS1, etc.) pub(crate) instead of pub?
 #[derive(Debug, Default)]
 pub struct Pdf417Option {
-    pub(crate) columns: u8,    // Default: 0
-    pub(crate) rows: u8,       // Default: 0
-    pub(crate) width: u8,      // Default: ?
-    pub(crate) row_height: u8, // Default: ?
-    pub(crate) code_type: Pdf417Type,
-    pub(crate) correction_level: Pdf417CorrectionLevel,
+    columns: u8,    // Default: 0
+    rows: u8,       // Default: 0
+    width: u8,      // Default: ?
+    row_height: u8, // Default: ?
+    code_type: Pdf417Type,
+    correction_level: Pdf417CorrectionLevel,
 }
 
 impl Pdf417Option {

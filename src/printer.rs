@@ -316,112 +316,101 @@ impl<D: Driver> Printer<D> {
     #[cfg(feature = "barcodes")]
     /// Print barcode
     fn barcode(&mut self, barcode: Barcode) -> Result<&mut Self> {
-        let commands = self.protocol.barcode(
-            &barcode.data,
-            barcode.system,
-            barcode.option.width.into(),
-            barcode.option.height.into(),
-            barcode.option.font,
-            barcode.option.position,
-        )?;
+        let commands = self
+            .protocol
+            .barcode(&barcode.data, barcode.system, BarcodeOption::default())?;
         self.command(&format!("print {} barcode", barcode.system), commands.as_slice())
     }
 
     #[cfg(feature = "barcodes")]
     /// Print EAN13 barcode with default option
     pub fn ean13(&mut self, data: &str) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::EAN13, data, None)?)
+        self.barcode(Barcode::new(BarcodeSystem::EAN13, data, BarcodeOption::default())?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print EAN13 barcode with option
     pub fn ean13_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::EAN13, data, Some(option))?)
+        self.barcode(Barcode::new(BarcodeSystem::EAN13, data, option)?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print EAN8 barcode with default option
     pub fn ean8(&mut self, data: &str) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::EAN8, data, None)?)
+        self.barcode(Barcode::new(BarcodeSystem::EAN8, data, BarcodeOption::default())?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print EAN8 barcode with option
     pub fn ean8_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::EAN8, data, Some(option))?)
+        self.barcode(Barcode::new(BarcodeSystem::EAN8, data, option)?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print UPC-A barcode with default option
     pub fn upca(&mut self, data: &str) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::UPCA, data, None)?)
+        self.barcode(Barcode::new(BarcodeSystem::UPCA, data, BarcodeOption::default())?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print UPC-A barcode with option
     pub fn upca_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::UPCA, data, Some(option))?)
+        self.barcode(Barcode::new(BarcodeSystem::UPCA, data, option)?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print UPC-E barcode with default option
     pub fn upce(&mut self, data: &str) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::UPCE, data, None)?)
+        self.barcode(Barcode::new(BarcodeSystem::UPCE, data, BarcodeOption::default())?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print UPC-E barcode with option
     pub fn upce_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::UPCE, data, Some(option))?)
+        self.barcode(Barcode::new(BarcodeSystem::UPCE, data, option)?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print CODE 39 barcode with default option
     pub fn code39(&mut self, data: &str) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::CODE39, data, None)?)
+        self.barcode(Barcode::new(BarcodeSystem::CODE39, data, BarcodeOption::default())?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print CODE 39 barcode with option
     pub fn code39_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::CODE39, data, Some(option))?)
+        self.barcode(Barcode::new(BarcodeSystem::CODE39, data, option)?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print CODABAR barcode with default option
     pub fn codabar(&mut self, data: &str) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::CODABAR, data, None)?)
+        self.barcode(Barcode::new(BarcodeSystem::CODABAR, data, BarcodeOption::default())?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print CODABAR barcode with option
     pub fn codabar_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::CODABAR, data, Some(option))?)
+        self.barcode(Barcode::new(BarcodeSystem::CODABAR, data, option)?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print ITF barcode with default option
     pub fn itf(&mut self, data: &str) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::ITF, data, None)?)
+        self.barcode(Barcode::new(BarcodeSystem::ITF, data, BarcodeOption::default())?)
     }
 
     #[cfg(feature = "barcodes")]
     /// Print ITF barcode with option
     pub fn itf_option(&mut self, data: &str, option: BarcodeOption) -> Result<&mut Self> {
-        self.barcode(Barcode::new(BarcodeSystem::ITF, data, Some(option))?)
+        self.barcode(Barcode::new(BarcodeSystem::ITF, data, option)?)
     }
 
     #[cfg(feature = "codes_2d")]
     /// Construct QR code
     fn qrcode_builder(&mut self, data: &str, option: Option<QRCodeOption>) -> Result<&mut Self> {
         let qrcode = QRCode::new(data, option)?;
-
-        let commands = self.protocol.qrcode(
-            &qrcode.data,
-            qrcode.option.model,
-            qrcode.option.correction_level,
-            qrcode.option.size,
-        )?;
+        let commands = self.protocol.qrcode(&qrcode.data, qrcode.option)?;
         self.command("print qrcode", commands.as_slice())
     }
 
@@ -517,18 +506,14 @@ impl<D: Driver> Printer<D> {
         let cmd = self.protocol.cancel();
         self.command("cancel data", &[cmd])?;
 
-        let cmd = self.protocol.bit_image(path, Some(option))?;
+        let cmd = self.protocol.bit_image(path, option)?;
         self.command("print bit image", &[cmd])
     }
 
     #[cfg(feature = "graphics")]
     /// Print image
     pub fn bit_image(&mut self, path: &str) -> Result<&mut Self> {
-        let cmd = self.protocol.cancel();
-        self.command("cancel data", &[cmd])?;
-
-        let cmd = self.protocol.bit_image(path, None)?;
-        self.command("print bit image", &[cmd])
+        self.bit_image_option(path, BitImageOption::default())
     }
 
     // #[cfg(feature = "graphics")]
