@@ -238,7 +238,6 @@ fn main() -> Result<()> {
 |   ✅    | `aztec_option`            | Print Aztec code with custom option               | `codes_2d` |
 |   🚧   | `graphic()`               | Print raster graphic with default option          | `graphics` |
 |   🚧   | `graphic_option()`        | Print raster graphic with custom option           | `graphics` |
-|   ❌    | `?`                       | Print Aztec Code                                  | `?`        |
 
 - ✅ Done
 - 🚧 In progress
