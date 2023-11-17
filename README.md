@@ -40,12 +40,12 @@ cargo add escpos -F full
 
 ## Features list
 
-| Name       | Description                                                        | Default |
-|------------|--------------------------------------------------------------------|:-------:|
-| `barcodes` | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
-| `codes_2d` | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, etc.)    |    ✅    |
-| `graphics` | Print raster images                                                |    ❌    |
-| `full`     | Enable all features                                                |    ❌    |
+| Name       | Description                                                            | Default |
+|------------|------------------------------------------------------------------------|:-------:|
+| `barcodes` | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |    ✅    |
+| `codes_2d` | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |    ✅    |
+| `graphics` | Print raster images                                                    |    ❌    |
+| `full`     | Enable all features                                                    |    ❌    |
 
 ## Examples
 

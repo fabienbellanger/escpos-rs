@@ -18,10 +18,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## `0.6.0` (2023-11-17) [CURRENT]
+
 ### Added
 - Add Aztec 2D code
 
-## `0.5.0` (2023-11-15) [CURRENT]
+### Changed
+- [Breaking] Change barcodes and 2D codes option signature
+
+### Fixed
+- Fix `lib.rs` documentation
+
+## `0.5.0` (2023-11-15)
 
 ### Added
 - Add 2 new methods `custom` and `custom_with_page_code` to `Printer`
