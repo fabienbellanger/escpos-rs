@@ -241,7 +241,7 @@ fn main() -> Result<()> {
 
 - ✅ Done
 - 🚧 In progress
-- ❌ To sdo
+- ❌ To do
 
 ## External resources
 
