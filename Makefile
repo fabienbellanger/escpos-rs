@@ -37,6 +37,7 @@ help: Makefile
 ## upgrade: Upgrade crates
 upgrade:
 	$(CARGO) upgrade
+	$(CARGO) update
 
 ## lint: Run clippy and rustfmt
 lint:
