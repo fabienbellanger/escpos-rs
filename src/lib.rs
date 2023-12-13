@@ -12,7 +12,7 @@
 //!
 //! To launch an example, use the following command:
 //!
-//! ```bash
+//! ```shell
 //! cargo run --example full --features "full"
 //! RUST_LOG=debug cargo run --example receipt -F full
 //! RUST_LOG=debug cargo run --example codes

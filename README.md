@@ -54,7 +54,7 @@ The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and
 
 To launch an example, use the following command:
 
-```bash
+```shell
 RUST_LOG=debug cargo run --example full --features "full"
 RUST_LOG=debug cargo run --example receipt -F full
 RUST_LOG=debug cargo run --example codes
