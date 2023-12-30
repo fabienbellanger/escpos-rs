@@ -318,7 +318,7 @@ impl<D: Driver> Printer<D> {
     fn barcode(&mut self, barcode: Barcode) -> Result<&mut Self> {
         let commands = self
             .protocol
-            .barcode(&barcode.data, barcode.system, BarcodeOption::default())?;
+            .barcode(&barcode.data, barcode.system, barcode.option)?;
         self.command(&format!("print {} barcode", barcode.system), commands.as_slice())
     }
 
