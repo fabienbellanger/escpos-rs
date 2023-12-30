@@ -18,7 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## `0.6.0` (2023-11-17) [CURRENT]
+## `0.6.1` (2023-12-30) [CURRENT]
+
+### Fixed
+
+- Fix Barcode options [#2](https://github.com/fabienbellanger/escpos-rs/pull/2)
+
+## `0.6.0` (2023-11-17)
 
 ### Added
 - Add Aztec 2D code
