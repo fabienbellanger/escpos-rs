@@ -19,7 +19,7 @@ impl fmt::Display for CashDrawer {
 }
 
 /// Justify mode
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum JustifyMode {
     LEFT,
     CENTER,
