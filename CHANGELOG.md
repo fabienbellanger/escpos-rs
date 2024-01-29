@@ -18,7 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## `0.6.1` (2023-12-30) [CURRENT]
+## `0.6.2` (2024-01-29) [CURRENT]
+
+### Changed
+
+- Add Copy and Clone traits to JustifyMode and CashDrawer enums [#4](https://github.com/fabienbellanger/escpos-rs/pull/4)
+- Bump `env_logger` to `0.11.1`
+- Bump `image` to `0.24.8`
+
+## `0.6.1` (2023-12-30)
 
 ### Fixed
 
