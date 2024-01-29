@@ -3,7 +3,7 @@
 use std::fmt;
 
 /// Cash drawer pin
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum CashDrawer {
     Pin2,
     Pin5,
