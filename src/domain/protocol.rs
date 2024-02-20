@@ -614,7 +614,7 @@ impl Protocol {
     // #[cfg(feature = "graphics")]
     // /// Print graphic
     // pub(crate) fn graphic_data(&self, path: &str) -> Result<Command> {
-    //     let mut cmd = GS_IMAGE_HIGHT_PREFIX.to_vec();
+    //     let mut cmd = GS_IMAGE_HIGH_PREFIX.to_vec();
     //
     //     // pL, pH => Parameters
     //     let graphic = Graphic::new(path, None)?;

@@ -18,11 +18,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed (for changes in existing functionality)
+
+- Bump `env_logger` to `0.11.2`
+
+### Fixed (for any bug fixes)
+
+- Fix typo
+
 ## `0.6.2` (2024-01-29) [CURRENT]
 
 ### Changed
 
-- Add Copy and Clone traits to JustifyMode and CashDrawer enums [#4](https://github.com/fabienbellanger/escpos-rs/pull/4)
+- Add Copy and Clone traits to JustifyMode and CashDrawer
+  enums [#4](https://github.com/fabienbellanger/escpos-rs/pull/4)
 - Bump `env_logger` to `0.11.1`
 - Bump `image` to `0.24.8`
 
@@ -35,22 +44,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## `0.6.0` (2023-11-17)
 
 ### Added
+
 - Add Aztec 2D code
 
 ### Changed
+
 - [Breaking] Change barcodes and 2D codes option signature
 
 ### Fixed
+
 - Fix `lib.rs` documentation
 
 ## `0.5.0` (2023-11-15)
 
 ### Added
+
 - Add 2 new methods `custom` and `custom_with_page_code` to `Printer`
 - Add MaxiCode 2D code
 - Add DataMatrix 2D code
 
 ### Changed
+
 - [Breaking] Merge `qrcode`, `gs1_databar` and `pdf417` into `codes_2d` feature
 - Improve `receipt.rs` and `codes.rs` examples
 
