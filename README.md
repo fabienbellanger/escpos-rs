@@ -11,8 +11,8 @@ on a compatible printer.
 ![Ticket](resources/documentation/ticket.jpg) ![Receipt](resources/documentation/receipt.jpg)  
 _Printed on Aures ODP 333_
 
-This project is strongly inspired by [recibo](https://github.com/jamhall/recibo/tree/main) _(
-Rust)_, [escposify](https://github.com/local-group/rust-escposify) _(Rust)_
+This project is strongly inspired by [recibo](https://github.com/jamhall/recibo/tree/main) _(Rust)_,
+[escposify](https://github.com/local-group/rust-escposify) _(Rust)_
 and [escpos](https://github.com/hennedo/escpos) _(Go)_.
 
 ## Installation
