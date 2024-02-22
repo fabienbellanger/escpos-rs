@@ -18,11 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## `0.7.0` (2024-02-23) [CURRENT]
+## `0.7.0` (2024-02-22) [CURRENT]
 
 ### Changed
 
-- [Breaking] Manage special characters by using Page Code tables (only `PC437` and `PC858` are currently implemented).  
+- [Breaking] Manage special characters by using Page Code tables (only `PC437`, `PC865` and `PC858` are currently implemented).  
   The `new` method for `Printer` has a third parameter to specify the Page Code to use.  
   Before:
   ```rust
