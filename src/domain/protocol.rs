@@ -4,6 +4,7 @@
 use super::bit_image::*;
 use super::codes::*;
 use super::{character::*, common::get_parameters_number_2, constants::*, types::*};
+use crate::domain::page_codes::PageCodeTable;
 use crate::{
     errors::{PrinterError, Result},
     io::encoder::Encoder,
@@ -176,8 +177,37 @@ impl Protocol {
     }
 
     /// Print text
-    pub(crate) fn text(&self, text: &str) -> Result<Command> {
-        self.encoder.encode(text)
+    // TODO Complete tests with Page code
+    pub(crate) fn text(&self, text: &str, page_code: Option<PageCode>) -> Result<Command> {
+        match page_code {
+            Some(page_code) => {
+                let table: PageCodeTable = page_code.try_into()?;
+                let table = table.get_table();
+
+                let mut cmd = Vec::new();
+                let mut current = String::new();
+
+                for c in text.chars() {
+                    if let Some(&n) = table.get(&c) {
+                        if !current.is_empty() {
+                            cmd.append(&mut self.encoder.encode(&current)?);
+                            current.clear();
+                        }
+
+                        cmd.push(n);
+                    } else {
+                        current.push(c);
+                    }
+                }
+
+                if !current.is_empty() {
+                    cmd.append(&mut self.encoder.encode(&current)?);
+                }
+
+                Ok(cmd)
+            }
+            None => self.encoder.encode(text),
+        }
     }
 
     /// Set horizontal and vertical motion units
@@ -806,9 +836,29 @@ mod tests {
     }
 
     #[test]
-    fn test_text() {
+    fn test_text_without_page_code() {
         let protocol = Protocol::new(Encoder::default());
-        assert_eq!(protocol.text("My text").unwrap(), "My text".as_bytes());
+        assert_eq!(protocol.text("My text", None).unwrap(), "My text".as_bytes());
+    }
+
+    #[test]
+    fn test_text_with_page_code() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.text("My text", Some(PageCode::PC858)).unwrap(),
+            "My text".as_bytes()
+        );
+        assert_eq!(
+            protocol.text("My text é €", Some(PageCode::PC858)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 130, 32, 213]
+        );
+        assert_eq!(
+            protocol.text("My text ø ¤", Some(PageCode::PC865)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 155, 32, 175]
+        );
+
+        // With page code table not yet implemented
+        assert!(protocol.text("My text", Some(PageCode::Katakana)).is_err());
     }
 
     #[test]

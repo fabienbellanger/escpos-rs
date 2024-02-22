@@ -18,15 +18,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed (for changes in existing functionality)
+## `0.7.0` (2024-02-22) [CURRENT]
 
+### Changed
+
+- [Breaking] Manage special characters by using Page Code tables (only `PC437`, `PC865` and `PC858` are currently implemented).  
+  The `new` method for `Printer` has a third parameter to specify the Page Code to use.  
+  Before:
+  ```rust
+  Printer::new(driver, Protocol::default())
+  ```
+  Now:
+  ```rust
+  Printer::new(driver, Protocol::default(), None)
+  Printer::new(driver, Protocol::default(), Some(PageCode::PC858))
+  ```
 - Bump `env_logger` to `0.11.2`
 
-### Fixed (for any bug fixes)
+### Fixed
 
 - Fix typo
 
-## `0.6.2` (2024-01-29) [CURRENT]
+## `0.6.2` (2024-01-29)
 
 ### Changed
 

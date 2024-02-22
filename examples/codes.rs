@@ -7,7 +7,7 @@ fn main() -> Result<()> {
 
     // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
     let driver = ConsoleDriver::open(true);
-    let mut printer = Printer::new(driver, Protocol::default());
+    let mut printer = Printer::new(driver, Protocol::default(), None);
     printer
         .debug_mode(Some(DebugMode::Dec))
         .init()?

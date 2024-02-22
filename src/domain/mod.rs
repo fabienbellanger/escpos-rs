@@ -4,6 +4,7 @@ mod codes;
 pub(crate) mod common;
 mod constants;
 mod graphics;
+mod page_codes;
 mod protocol;
 mod types;
 

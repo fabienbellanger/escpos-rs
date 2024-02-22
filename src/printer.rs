@@ -17,7 +17,7 @@ use log::debug;
 ///
 /// fn main() -> Result<()> {
 ///     let driver = ConsoleDriver::open(false);
-///     let mut printer = Printer::new(driver, Protocol::default());
+///     let mut printer = Printer::new(driver, Protocol::default(), None);
 ///     printer.init()?
 ///         .debug_mode(Some(DebugMode::Dec))
 ///         .writeln("My example")?
@@ -30,6 +30,7 @@ use log::debug;
 pub struct Printer<D: Driver> {
     driver: D,
     protocol: Protocol,
+    page_code: Option<PageCode>,
     instructions: Vec<Instruction>,
     debug_mode: Option<DebugMode>,
 }
@@ -44,15 +45,16 @@ impl<D: Driver> Printer<D> {
     ///
     /// fn main() -> Result<()> {
     ///     let driver = ConsoleDriver::open(false);
-    ///     Printer::new(driver, Protocol::default());
+    ///     Printer::new(driver, Protocol::default(), None);
     ///
     ///     Ok(())
     /// }
     /// ```
-    pub fn new(driver: D, protocol: Protocol) -> Self {
+    pub fn new(driver: D, protocol: Protocol, page_code: Option<PageCode>) -> Self {
         Self {
             driver,
             protocol,
+            page_code,
             instructions: vec![],
             debug_mode: None,
         }
@@ -107,7 +109,15 @@ impl<D: Driver> Printer<D> {
     /// Hardware initialization
     pub fn init(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.init();
-        self.command("initialization", &[cmd])
+        self.command("initialization", &[cmd])?;
+
+        // Set page code
+        if let Some(page_code) = self.page_code {
+            let cmd = self.protocol.page_code(page_code);
+            self.command("character page code", &[cmd])?;
+        }
+
+        Ok(self)
     }
 
     /// Hardware reset
@@ -136,6 +146,8 @@ impl<D: Driver> Printer<D> {
 
     /// Character page code
     pub fn page_code(&mut self, code: PageCode) -> Result<&mut Self> {
+        self.page_code = Some(code);
+
         let cmd = self.protocol.page_code(code);
         self.command("character page code", &[cmd])
     }
@@ -244,7 +256,7 @@ impl<D: Driver> Printer<D> {
 
     /// Text
     pub fn write(&mut self, text: &str) -> Result<&mut Self> {
-        let cmd = self.protocol.text(text)?;
+        let cmd = self.protocol.text(text, self.page_code)?;
         self.command("text", &[cmd])
     }
 
@@ -264,11 +276,11 @@ impl<D: Driver> Printer<D> {
     ///
     /// fn main() -> Result<()> {
     ///     let driver = ConsoleDriver::open(false);
-    ///     Printer::new(driver, Protocol::default())
+    ///     Printer::new(driver, Protocol::default(), None)
     ///         .init()?
     ///         .page_code(PageCode::PC858)?
     ///         .custom(EURO)?
-    ///         .page_code(PageCode::PC437)?
+    ///         .feed()?
     ///         .print_cut()?;
     ///
     ///     Ok(())
@@ -289,7 +301,7 @@ impl<D: Driver> Printer<D> {
     ///
     /// fn main() -> Result<()> {
     ///     let driver = ConsoleDriver::open(false);
-    ///     Printer::new(driver, Protocol::default())
+    ///     Printer::new(driver, Protocol::default(), None)
     ///         .init()?
     ///         .custom_with_page_code(EURO, PageCode::PC858)?
     ///         .page_code(PageCode::PC437)?
@@ -538,7 +550,7 @@ mod tests {
     fn test_command() {
         let driver = ConsoleDriver::open(false);
         let debug_mode = None;
-        let mut printer = Printer::new(driver, Protocol::default());
+        let mut printer = Printer::new(driver, Protocol::default(), None);
         printer.debug_mode(debug_mode).init().unwrap();
         let cmd = printer.protocol.cut(false);
         let printer = printer.command("test paper cut", &[cmd]).unwrap();
