@@ -10,6 +10,7 @@ use std::iter::{IntoIterator, Iterator};
 pub(crate) enum PageCodeTable {
     PC437,
     PC858,
+    PC865,
 }
 
 impl PageCodeTable {
@@ -18,6 +19,7 @@ impl PageCodeTable {
         match self {
             Self::PC437 => &PC437_TABLE,
             Self::PC858 => &PC858_TABLE,
+            Self::PC865 => &PC865_TABLE,
         }
     }
 }
@@ -29,6 +31,7 @@ impl TryFrom<PageCode> for PageCodeTable {
         match value {
             PageCode::PC437 => Ok(Self::PC437),
             PageCode::PC858 => Ok(Self::PC858),
+            PageCode::PC865 => Ok(Self::PC865),
             _ => Err(PrinterError::Input(format!("no table for this page code: {value}"))),
         }
     }
@@ -61,6 +64,22 @@ lazy_static! {
         'ð', 'Ð', 'Ê', 'Ë', 'È', '€', 'Í', 'Î', 'Ï', '┘', '┌', '█', '▄', '¦', 'Ì', '▀',
         'Ó', 'ß', 'Ô', 'Ô', 'õ', 'Õ', 'µ', 'þ', 'Þ', 'Ú', 'Û', 'Ù', 'ý', 'Ý', '¯', '´',
         '-', '±', '‗', '¾', '¶', '§', '÷', '¸', '°', '¨', '·', '¹', '³', '²', '■']
+    .into_iter().enumerate()
+    .map(|(i, c)| (c, (i + 128) as u8))
+    .collect();
+}
+
+lazy_static! {
+    /// PC865 Page code table
+    static ref PC865_TABLE: HashMap<char, u8> = [
+        'Ç', 'ü', 'é', 'â', 'ä', 'à', 'å', 'ç', 'ê', 'ë', 'è', 'ï', 'î', 'ì', 'Ä', 'Å',
+        'É', 'æ', 'Æ', 'ô', 'ö', 'ò', 'û', 'ù', 'ÿ', 'Ö', 'Ü', 'ø', '£', 'Ø', '₧', 'ƒ',
+        'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'ª', 'º', '¿', '⌐', '¬', '½', '¼', '¡', '«', '¤',
+        '░', '▒', '▓', '│', '┤', '╡', '╢', '╖', '╕', '╣', '║', '╗', '╝', '╜', '╛', '┐',
+        '└', '┴', '┬', '├', '─', '┼', '╞', '╟', '╚', '╔', '╩', '╦', '╠', '═', '╬', '╧',
+        '╨', '╤', '╥', '╙', '╘', '╒', '╓', '╫', '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀',
+        'α', 'ß', 'Γ', 'π', 'Σ', 'σ', 'µ', 'τ', 'Φ', 'Θ', 'Ω', 'δ', '∞', 'φ', 'ε', '∩',
+        '≡', '±', '≥', '≤', '⌠', '⌡', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■']
     .into_iter().enumerate()
     .map(|(i, c)| (c, (i + 128) as u8))
     .collect();
