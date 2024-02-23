@@ -73,7 +73,7 @@ fn main() -> Result<()> {
     env_logger::init();
 
     let driver = NetworkDriver::open("192.168.1.248", 9100)?;
-    Printer::new(driver, Protocol::default())
+    Printer::new(driver, Protocol::default(), None)
         .debug_mode(Some(DebugMode::Dec))
         .init()?
         .smoothing(true)?
@@ -107,7 +107,7 @@ fn main() -> Result<()> {
     env_logger::init();
 
     let driver = ConsoleDriver::open(true);
-    Printer::new(driver, Protocol::default())
+    Printer::new(driver, Protocol::default(), None)
         .debug_mode(Some(DebugMode::Hex))
         .init()?
         .ean13_option(
@@ -137,7 +137,7 @@ fn main() -> Result<()> {
     env_logger::init();
 
     let driver = ConsoleDriver::open(true);
-    Printer::new(driver, Protocol::default())
+    Printer::new(driver, Protocol::default(), None)
         .debug_mode(Some(DebugMode::Hex))
         .init()?
         .qrcode_option(
@@ -162,7 +162,7 @@ fn main() -> Result<()> {
     env_logger::init();
 
     let driver = ConsoleDriver::open(true);
-    let mut printer = Printer::new(driver, Protocol::default());
+    let mut printer = Printer::new(driver, Protocol::default(), None);
     printer.debug_mode(Some(DebugMode::Hex))
         .init()?
         .bit_image_option(
@@ -250,15 +250,5 @@ fn main() -> Result<()> {
 
 ## Todo
 
-- [x] Complete `README.md`
-- [x] Complete documentation
-- [x] Add tests
-- [x] Improve `receipt.rs`
 - [ ] Add more commands:
   - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)
-  - [x] Others 2D codes:
-    - [x] GS1 DataBar
-    - [x] PDF157
-    - [x] DataMatrix
-    - [x] MaxiCode
-    - [x] Aztec Code
