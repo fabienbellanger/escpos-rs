@@ -14,6 +14,8 @@ pub enum PrinterError {
     Input(String),
 }
 
+impl std::error::Error for PrinterError {}
+
 impl fmt::Display for PrinterError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
