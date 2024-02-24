@@ -610,20 +610,32 @@ impl Protocol {
     #[cfg(feature = "graphics")]
     /// Print bit image
     pub(crate) fn bit_image(&self, path: &str, option: BitImageOption) -> Result<Command> {
-        let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
         let bit_image = BitImage::new(path, option)?;
+        self.build_bit_image(bit_image)
+    }
 
-        // Size
-        cmd.push(bit_image.size().into());
+    #[cfg(feature = "graphics")]
+    /// Print bit image from bytes
+    pub(crate) fn bit_image_from_bytes(&self, bytes: &[u8], option: BitImageOption) -> Result<Command> {
+        let bit_image = BitImage::from_bytes(bytes, option)?;
+        self.build_bit_image(bit_image)
+    }
+    
+    #[cfg(feature = "graphics")]
+    fn build_bit_image(&self, bit_image: BitImage) -> Result<Command> {
+      let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
 
-        // Width and height
-        cmd.append(&mut bit_image.with_bytes_u8()?);
-        cmd.append(&mut bit_image.height_u8()?);
+      // Size
+      cmd.push(bit_image.size().into());
 
-        // Data
-        cmd.append(&mut bit_image.raster_data()?);
+      // Width and height
+      cmd.append(&mut bit_image.with_bytes_u8()?);
+      cmd.append(&mut bit_image.height_u8()?);
 
-        Ok(cmd)
+      // Data
+      cmd.append(&mut bit_image.raster_data()?);
+
+      Ok(cmd)
     }
 
     // #[cfg(feature = "graphics")]
