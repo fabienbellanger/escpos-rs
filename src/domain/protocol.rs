@@ -623,19 +623,19 @@ impl Protocol {
     
     #[cfg(feature = "graphics")]
     fn build_bit_image(&self, bit_image: BitImage) -> Result<Command> {
-      let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
+        let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
 
-      // Size
-      cmd.push(bit_image.size().into());
+        // Size
+        cmd.push(bit_image.size().into());
 
-      // Width and height
-      cmd.append(&mut bit_image.with_bytes_u8()?);
-      cmd.append(&mut bit_image.height_u8()?);
+        // Width and height
+        cmd.append(&mut bit_image.with_bytes_u8()?);
+        cmd.append(&mut bit_image.height_u8()?);
 
-      // Data
-      cmd.append(&mut bit_image.raster_data()?);
+        // Data
+        cmd.append(&mut bit_image.raster_data()?);
 
-      Ok(cmd)
+        Ok(cmd)
     }
 
     // #[cfg(feature = "graphics")]
