@@ -856,6 +856,10 @@ mod tests {
             protocol.text("My text ø ¤", Some(PageCode::PC865)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 155, 32, 175]
         );
+        assert_eq!(
+            protocol.text("My text č Ž š Đ", Some(PageCode::PC852)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 159, 32, 166, 32, 231, 32, 209]
+        );
 
         // With page code table not yet implemented
         assert!(protocol.text("My text", Some(PageCode::Katakana)).is_err());
