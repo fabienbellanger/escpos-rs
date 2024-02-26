@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add 2 new methods `bit_image_from_bytes` and `bit_image_from_bytes_option` to `Printer`
 
+### Changed
+
+- Bump `image` to `0.24.9`
+
 ## `0.7.2` (2024-02-24)
 
 ### Changed
