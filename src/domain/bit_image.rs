@@ -96,7 +96,17 @@ impl BitImage {
     /// Create a new image
     pub fn new(path: &str, option: BitImageOption) -> Result<Self> {
         let img = image::open(path)?;
+        Self::from_dynamic_image(img, option, path)
+    }
+  
+    /// Create a new image from bytes
+    pub fn from_bytes(bytes: &[u8], option: BitImageOption) -> Result<Self> {
+        let img = image::load_from_memory(bytes)?;
+        Self::from_dynamic_image(img, option, "")
+    }
 
+    // Create a new image from DynamicImage
+    fn from_dynamic_image(img: DynamicImage, option: BitImageOption, path: &str) -> Result<Self> {
         // Resize image with max width and max height constraints and convert to grayscale
         let mut img = match (option.max_width, option.max_height) {
             (Some(max_width), None) => {

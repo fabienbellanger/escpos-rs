@@ -610,8 +610,20 @@ impl Protocol {
     #[cfg(feature = "graphics")]
     /// Print bit image
     pub(crate) fn bit_image(&self, path: &str, option: BitImageOption) -> Result<Command> {
-        let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
         let bit_image = BitImage::new(path, option)?;
+        self.build_bit_image(bit_image)
+    }
+
+    #[cfg(feature = "graphics")]
+    /// Print bit image from bytes
+    pub(crate) fn bit_image_from_bytes(&self, bytes: &[u8], option: BitImageOption) -> Result<Command> {
+        let bit_image = BitImage::from_bytes(bytes, option)?;
+        self.build_bit_image(bit_image)
+    }
+    
+    #[cfg(feature = "graphics")]
+    fn build_bit_image(&self, bit_image: BitImage) -> Result<Command> {
+        let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
 
         // Size
         cmd.push(bit_image.size().into());

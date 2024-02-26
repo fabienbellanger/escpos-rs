@@ -526,6 +526,22 @@ impl<D: Driver> Printer<D> {
         self.bit_image_option(path, BitImageOption::default())
     }
 
+    #[cfg(feature = "graphics")]
+    /// Print image
+    pub fn bit_image_option_from_bytes(&mut self, bytes: &[u8], option: BitImageOption) -> Result<&mut Self> {
+        let cmd = self.protocol.cancel();
+        self.command("cancel data", &[cmd])?;
+
+        let cmd = self.protocol.bit_image_from_bytes(bytes, option)?;
+        self.command("print bit image from bytes", &[cmd])
+    }
+
+    #[cfg(feature = "graphics")]
+    /// Print image
+    pub fn bit_image_from_bytes(&mut self, bytes: &[u8]) -> Result<&mut Self> {
+        self.bit_image_option_from_bytes(bytes, BitImageOption::default())
+    }
+
     // #[cfg(feature = "graphics")]
     // /// Print image
     // fn _image(&mut self, path: &str) -> Result<&mut Self> {
