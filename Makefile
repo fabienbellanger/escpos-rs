@@ -16,16 +16,8 @@
 .DEFAULT_GOAL=help
 
 # Parameters
-APP_NAME="POS Async API"
-CURRENT_PATH=$(shell pwd)
-DOCKER_COMPOSE=docker-compose
-DOCKER=docker
+APP_NAME="ESC/POS printer driver"
 CARGO=cargo
-CARGO_BIN_NAME="pos-async-api-infrastructure"
-USER_LASTNAME="Admin"
-USER_FIRSTNAME="Test"
-USER_EMAIL="test2@testest.com"
-USER_PASSWORD="00000000"
 
 help: Makefile
 	@echo
