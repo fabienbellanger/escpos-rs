@@ -1467,6 +1467,26 @@ mod tests {
         );
     }
 
+    #[cfg(feature = "graphics")]
+    #[test]
+    fn test_bit_image_from_bytes() {
+        let protocol = Protocol::new(Encoder::default());
+        let bytes = std::fs::read("./resources/images/small.jpg").unwrap();
+
+        assert_eq!(
+            protocol
+                .bit_image_from_bytes(
+                    &bytes,
+                    BitImageOption::new(None, None, BitImageSize::default()).unwrap(),
+                )
+                .unwrap(),
+            vec![
+                29, 118, 48, 0, 2, 0, 16, 0, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 255, 255, 255,
+                255, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128
+            ]
+        );
+    }
+
     // #[cfg(feature = "graphics")]
     // #[test]
     // fn test_graphic_density() {
