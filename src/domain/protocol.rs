@@ -620,7 +620,7 @@ impl Protocol {
         let bit_image = BitImage::from_bytes(bytes, option)?;
         self.build_bit_image(bit_image)
     }
-    
+
     #[cfg(feature = "graphics")]
     fn build_bit_image(&self, bit_image: BitImage) -> Result<Command> {
         let mut cmd = GS_IMAGE_BITMAP_PREFIX.to_vec();
@@ -1476,7 +1476,7 @@ mod tests {
     //         vec![29, 40, 76, 4, 0, 48, 49, 50, 50]
     //     );
     //     assert_eq!(
-    //         protocol.graphic_density(GraphicDensity::Hight),
+    //         protocol.graphic_density(GraphicDensity::High),
     //         vec![29, 40, 76, 4, 0, 48, 49, 51, 51]
     //     );
     // }
