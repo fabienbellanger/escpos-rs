@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
+## [Unreleased]
+
+### Added
+
+- Add tables for page codes `ISO8859_2`, `ISO8859_7`, `ISO8859_15`
+
 ## `0.7.3` (2024-02-26) [CURRENT]
 
 ### Added
