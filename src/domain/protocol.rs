@@ -177,7 +177,6 @@ impl Protocol {
     }
 
     /// Print text
-    // TODO Complete tests with Page code
     pub(crate) fn text(&self, text: &str, page_code: Option<PageCode>) -> Result<Command> {
         match page_code {
             Some(page_code) => {
@@ -871,6 +870,18 @@ mod tests {
         assert_eq!(
             protocol.text("My text č Ž š Đ", Some(PageCode::PC852)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 159, 32, 166, 32, 231, 32, 209]
+        );
+        assert_eq!(
+            protocol.text("My text Ś š ¤", Some(PageCode::ISO8859_2)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 166, 32, 185, 32, 164]
+        );
+        assert_eq!(
+            protocol.text("My text Ψ π Θ", Some(PageCode::ISO8859_7)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 216, 32, 240, 32, 200]
+        );
+        assert_eq!(
+            protocol.text("My text £ æ þ", Some(PageCode::ISO8859_15)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 163, 32, 230, 32, 254]
         );
 
         // With page code table not yet implemented
