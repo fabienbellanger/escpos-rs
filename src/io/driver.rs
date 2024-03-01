@@ -1,6 +1,7 @@
 //! Drivers used to send data to the printer (Network or USB)
 
-use crate::errors::Result;
+use crate::errors::{PrinterError, Result};
+use hidapi::{HidApi, HidDevice};
 use std::rc::Rc;
 use std::{
     cell::RefCell,
@@ -64,6 +65,7 @@ pub struct NetworkDriver {
 }
 
 impl NetworkDriver {
+    /// Open the network driver
     pub fn open(host: &str, port: u16) -> Result<Self> {
         Ok(Self {
             host: host.to_string(),
@@ -98,6 +100,7 @@ pub struct FileDriver {
 }
 
 impl FileDriver {
+    /// Open the file driver
     pub fn open(path: &Path) -> Result<Self> {
         let file = File::options().read(true).append(true).open(path)?;
         Ok(Self {
@@ -119,5 +122,48 @@ impl Driver for FileDriver {
 
     fn flush(&self) -> Result<()> {
         Ok(self.file.try_borrow_mut()?.flush()?)
+    }
+}
+
+// ================ USB driver ================
+
+/// Driver for USB printer
+#[cfg(feature = "usb")]
+pub struct UsbDriver {
+    vendor_id: u16,
+    product_id: u16,
+    device: HidDevice,
+}
+
+#[cfg(feature = "usb")]
+impl UsbDriver {
+    /// Open a new USB connection
+    pub fn open(vendor_id: u16, product_id: u16) -> Result<Self> {
+        let api = HidApi::new().map_err(|e| PrinterError::Io(e.to_string()))?;
+        let device = api
+            .open(vendor_id, product_id)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+
+        Ok(Self {
+            vendor_id,
+            product_id,
+            device,
+        })
+    }
+}
+
+#[cfg(feature = "usb")]
+impl Driver for UsbDriver {
+    fn name(&self) -> String {
+        "USB".to_owned()
+    }
+
+    fn write(&self, data: &[u8]) -> Result<()> {
+        self.device.write(data).map_err(|e| PrinterError::Io(e.to_string()))?;
+        Ok(())
+    }
+
+    fn flush(&self) -> Result<()> {
+        Ok(())
     }
 }
