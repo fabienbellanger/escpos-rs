@@ -2,7 +2,9 @@
 
 use crate::errors::{PrinterError, Result};
 use hidapi::{HidApi, HidDevice};
+use serialport::SerialPort;
 use std::rc::Rc;
+use std::time::Duration;
 use std::{
     cell::RefCell,
     fs::File,
@@ -129,10 +131,11 @@ impl Driver for FileDriver {
 
 /// Driver for USB printer
 #[cfg(feature = "usb")]
+#[derive(Clone)]
 pub struct UsbDriver {
     vendor_id: u16,
     product_id: u16,
-    device: HidDevice,
+    device: Rc<RefCell<HidDevice>>,
 }
 
 #[cfg(feature = "usb")]
@@ -147,7 +150,7 @@ impl UsbDriver {
         Ok(Self {
             vendor_id,
             product_id,
-            device,
+            device: Rc::new(RefCell::new(device)),
         })
     }
 }
@@ -155,15 +158,62 @@ impl UsbDriver {
 #[cfg(feature = "usb")]
 impl Driver for UsbDriver {
     fn name(&self) -> String {
-        "USB".to_owned()
+        format!("USB (VID: {}, PID: {})", self.vendor_id, self.product_id)
     }
 
     fn write(&self, data: &[u8]) -> Result<()> {
-        self.device.write(data).map_err(|e| PrinterError::Io(e.to_string()))?;
+        self.device
+            .try_borrow_mut()?
+            .write(data)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(())
     }
 
     fn flush(&self) -> Result<()> {
         Ok(())
+    }
+}
+
+// ================ Serial port driver ================
+
+/// Driver for Serial printer
+#[cfg(feature = "usb")]
+#[derive(Clone)]
+pub struct SerialPortDriver {
+    path: String,
+    port: Rc<RefCell<Box<dyn SerialPort>>>,
+}
+
+#[cfg(feature = "usb")]
+impl SerialPortDriver {
+    /// Open a new Serial port connection
+    pub fn open(path: &str, baud_rate: u32, timeout: Option<Duration>) -> Result<Self> {
+        let mut port = serialport::new(path, baud_rate);
+        if let Some(timeout) = timeout {
+            port = port.timeout(timeout);
+        }
+        let port = port.open().map_err(|e| PrinterError::Io(e.to_string()))?;
+
+        Ok(Self {
+            path: path.to_string(),
+            port: Rc::new(RefCell::new(port)),
+        })
+    }
+}
+
+#[cfg(feature = "usb")]
+impl Driver for SerialPortDriver {
+    fn name(&self) -> String {
+        format!("Serial port ({})", self.path)
+    }
+
+    fn write(&self, data: &[u8]) -> Result<()> {
+        self.port.try_borrow_mut()?.write_all(data)?;
+
+        Ok(())
+    }
+
+    fn flush(&self) -> Result<()> {
+        Ok(self.port.try_borrow_mut()?.flush()?)
     }
 }
