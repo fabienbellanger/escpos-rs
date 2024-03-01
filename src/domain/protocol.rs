@@ -880,8 +880,8 @@ mod tests {
             &[77, 121, 32, 116, 101, 120, 116, 32, 216, 32, 240, 32, 200]
         );
         assert_eq!(
-            protocol.text("My text £ æ þ", Some(PageCode::ISO8859_15)).unwrap(),
-            &[77, 121, 32, 116, 101, 120, 116, 32, 163, 32, 230, 32, 254]
+            protocol.text("My text Ž £ æ þ", Some(PageCode::ISO8859_15)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 180, 32, 163, 32, 230, 32, 254]
         );
 
         // With page code table not yet implemented
