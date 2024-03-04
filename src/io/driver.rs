@@ -177,14 +177,14 @@ impl Driver for UsbDriver {
 // ================ Serial port driver ================
 
 /// Driver for Serial printer
-#[cfg(feature = "usb")]
+#[cfg(feature = "serial_port")]
 #[derive(Clone)]
 pub struct SerialPortDriver {
     path: String,
     port: Rc<RefCell<Box<dyn SerialPort>>>,
 }
 
-#[cfg(feature = "usb")]
+#[cfg(feature = "serial_port")]
 impl SerialPortDriver {
     /// Open a new Serial port connection
     pub fn open(path: &str, baud_rate: u32, timeout: Option<Duration>) -> Result<Self> {
@@ -201,7 +201,7 @@ impl SerialPortDriver {
     }
 }
 
-#[cfg(feature = "usb")]
+#[cfg(feature = "serial_port")]
 impl Driver for SerialPortDriver {
     fn name(&self) -> String {
         format!("Serial port ({})", self.path)

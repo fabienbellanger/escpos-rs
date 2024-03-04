@@ -17,17 +17,18 @@ version = "0.7.3"
 barcodes = []
 codes_2d = []
 default = ["barcodes", "codes_2d"]
-full = ["barcodes", "codes_2d", "graphics", "usb"]
 graphics = ["dep:image"]
-usb = ["dep:hidapi", "dep:serialport"]
+usb = ["dep:hidapi"]
+serial_port = ["dep:serialport"]
+full = ["barcodes", "codes_2d", "graphics", "usb", "serial_port"]
 
 [dependencies]
 encoding_rs = "0.8.33"
-hidapi = {version = "2.6.0", optional = true}
-image = {version = "0.24.9", optional = true}
+hidapi = { version = "2.6.1", optional = true }
+image = { version = "0.24.9", optional = true }
 lazy_static = "1.4.0"
 log = "0.4.21"
-serialport = {version = "4.3.0", optional = true}
+serialport = { version = "4.3.0", optional = true }
 
 [dev-dependencies]
 env_logger = "0.11.2"

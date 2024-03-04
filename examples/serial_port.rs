@@ -1,9 +1,8 @@
-use std::time::Duration;
-
 use escpos::driver::*;
 use escpos::errors::Result;
 use escpos::printer::Printer;
 use escpos::utils::*;
+use std::time::Duration;
 
 fn main() -> Result<()> {
     env_logger::init();
