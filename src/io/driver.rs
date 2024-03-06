@@ -1,7 +1,11 @@
 //! Drivers used to send data to the printer (Network or USB)
 
 use crate::errors::{PrinterError, Result};
+#[cfg(feature = "usb")]
 use hidapi::{HidApi, HidDevice};
+#[cfg(feature = "usb")]
+use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
+#[cfg(feature = "serial_port")]
 use serialport::SerialPort;
 use std::rc::Rc;
 use std::time::Duration;
@@ -165,6 +169,108 @@ impl Driver for UsbDriver {
         self.device
             .try_borrow_mut()?
             .write(data)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+        Ok(())
+    }
+
+    fn flush(&self) -> Result<()> {
+        Ok(())
+    }
+}
+
+/// Driver for USB printer
+#[cfg(feature = "usb")]
+#[derive(Clone)]
+pub struct UsbDriver2 {
+    vendor_id: u16,
+    product_id: u16,
+    endpoint: u8,
+    device: Rc<RefCell<DeviceHandle<Context>>>,
+    timeout: Duration,
+}
+
+#[cfg(feature = "usb")]
+impl UsbDriver2 {
+    /// Open a new USB connection
+    pub fn open(vendor_id: u16, product_id: u16, timeout: Option<Duration>) -> Result<Self> {
+        let context = Context::new().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+        let devices = context.devices().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+
+        for device in rusb::devices().unwrap().iter() {
+            let device_desc = device.device_descriptor().unwrap();
+
+            println!(
+                "Bus: {:03} Device: {:03} VID: {:04x} PID: {:04x}",
+                device.bus_number(),
+                device.address(),
+                device_desc.vendor_id(),
+                device_desc.product_id()
+            );
+        }
+
+        for device in devices.iter() {
+            let device_descriptor = device
+                .device_descriptor()
+                .map_err(|e| PrinterError::Io(e.to_string()))?;
+
+            if device_descriptor.vendor_id() == vendor_id && device_descriptor.product_id() == product_id {
+                let config_descriptor = device
+                    .active_config_descriptor()
+                    .map_err(|e| PrinterError::Io(e.to_string()))?;
+
+                let endpoint = config_descriptor
+                    .interfaces()
+                    .flat_map(|interface| interface.descriptors())
+                    .flat_map(|descriptor| descriptor.endpoint_descriptors())
+                    .find_map(|endpoint| match (endpoint.transfer_type(), endpoint.direction()) {
+                        (TransferType::Bulk, Direction::Out) => Some(endpoint.number()),
+                        _ => None,
+                    })
+                    .ok_or_else(|| PrinterError::Io("no suitable endpoint found for USB device".to_string()))?;
+
+                return match device.open() {
+                    Ok(mut device_handle) => {
+                        match device_handle.kernel_driver_active(0) {
+                            Ok(active) => {
+                                if active {
+                                    if let Err(e) = device_handle.detach_kernel_driver(0) {
+                                        return Err(PrinterError::Io(e.to_string()));
+                                    }
+                                }
+                            }
+                            Err(e) => return Err(PrinterError::Io(e.to_string())),
+                        }
+
+                        Ok(Self {
+                            vendor_id,
+                            product_id,
+                            endpoint,
+                            device: Rc::new(RefCell::new(device_handle)),
+                            timeout: timeout.unwrap_or(Duration::from_secs(5)),
+                        })
+                    }
+                    Err(_) => Err(PrinterError::Io("USB device busy".to_string())),
+                };
+            }
+        }
+
+        Err(PrinterError::Io("USB device not found".to_string()))
+    }
+}
+
+#[cfg(feature = "usb")]
+impl Driver for UsbDriver2 {
+    fn name(&self) -> String {
+        format!(
+            "USB (VID: {}, PID: {}, endpoint: {})",
+            self.vendor_id, self.product_id, self.endpoint
+        )
+    }
+
+    fn write(&self, data: &[u8]) -> Result<()> {
+        self.device
+            .try_borrow_mut()?
+            .write_bulk(self.endpoint, data, self.timeout)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(())
     }
