@@ -13,12 +13,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Fmt
-      run: cargo fmt
-    - name: Clippy
-      run: cargo clippy --all-features -- -D warnings
-    - name: Run tests
-      run: cargo test --all-features -- --nocapture
-    - name: Build
-      run: cargo build --all-features --verbose
+      - uses: actions/checkout@v4
+      - name: Install libudev-dev
+        run: sudo apt-get install libudev-dev
+      - name: Fmt
+        run: cargo fmt
+      - name: Clippy
+        run: cargo clippy --all-features -- -D warnings
+      - name: Run tests
+        run: cargo test --all-features -- --nocapture
+      - name: Build
+        run: cargo build --all-features --verbose
