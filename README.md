@@ -40,12 +40,15 @@ cargo add escpos -F full
 
 ## Features list
 
-| Name       | Description                                                            | Default |
-| ---------- | ---------------------------------------------------------------------- | :-----: |
-| `barcodes` | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |   ✅    |
-| `codes_2d` | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |   ✅    |
-| `graphics` | Print raster images                                                    |   ❌    |
-| `full`     | Enable all features                                                    |   ❌    |
+| Name          | Description                                                            | Default |
+| ------------- | ---------------------------------------------------------------------- | :-----: |
+| `barcodes`    | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |   ✅    |
+| `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |   ✅    |
+| `graphics`    | Print raster images                                                    |   ❌    |
+| `usb`         | Enable USB feature                                                     |   ❌    |
+| `hidapi`      | Enable HidApi feature                                                  |   ❌    |
+| `serial_port` | Enable Serial port feature                                             |   ❌    |
+| `full`        | Enable all features                                                    |   ❌    |
 
 ## Examples
 
@@ -60,6 +63,9 @@ RUST_LOG=debug cargo run --example receipt -F full
 RUST_LOG=debug cargo run --example codes
 RUST_LOG=debug cargo run --example debug
 RUST_LOG=debug cargo run --example page_codes
+RUST_LOG=debug cargo run --example usb --features "usb"
+RUST_LOG=debug cargo run --example hidapi --features "hidapi"
+RUST_LOG=debug cargo run --example serial_port --features "serial_port"
 ```
 
 ### Simple text formatting

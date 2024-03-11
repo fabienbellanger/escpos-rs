@@ -1,13 +1,14 @@
 //! Drivers used to send data to the printer (Network or USB)
 
 use crate::errors::{PrinterError, Result};
-#[cfg(feature = "usb")]
+#[cfg(feature = "hidapi")]
 use hidapi::{HidApi, HidDevice};
 #[cfg(feature = "usb")]
 use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
 #[cfg(feature = "serial_port")]
 use serialport::SerialPort;
 use std::rc::Rc;
+#[cfg(any(feature = "usb", feature = "serial_port"))]
 use std::time::Duration;
 use std::{
     cell::RefCell,
@@ -139,74 +140,17 @@ impl Driver for FileDriver {
 pub struct UsbDriver {
     vendor_id: u16,
     product_id: u16,
-    device: Rc<RefCell<HidDevice>>,
-}
-
-#[cfg(feature = "usb")]
-impl UsbDriver {
-    /// Open a new USB connection
-    pub fn open(vendor_id: u16, product_id: u16) -> Result<Self> {
-        let api = HidApi::new().map_err(|e| PrinterError::Io(e.to_string()))?;
-        let device = api
-            .open(vendor_id, product_id)
-            .map_err(|e| PrinterError::Io(e.to_string()))?;
-
-        Ok(Self {
-            vendor_id,
-            product_id,
-            device: Rc::new(RefCell::new(device)),
-        })
-    }
-}
-
-#[cfg(feature = "usb")]
-impl Driver for UsbDriver {
-    fn name(&self) -> String {
-        format!("USB (VID: {}, PID: {})", self.vendor_id, self.product_id)
-    }
-
-    fn write(&self, data: &[u8]) -> Result<()> {
-        self.device
-            .try_borrow_mut()?
-            .write(data)
-            .map_err(|e| PrinterError::Io(e.to_string()))?;
-        Ok(())
-    }
-
-    fn flush(&self) -> Result<()> {
-        Ok(())
-    }
-}
-
-/// Driver for USB printer
-#[cfg(feature = "usb")]
-#[derive(Clone)]
-pub struct UsbDriver2 {
-    vendor_id: u16,
-    product_id: u16,
     endpoint: u8,
     device: Rc<RefCell<DeviceHandle<Context>>>,
     timeout: Duration,
 }
 
 #[cfg(feature = "usb")]
-impl UsbDriver2 {
+impl UsbDriver {
     /// Open a new USB connection
     pub fn open(vendor_id: u16, product_id: u16, timeout: Option<Duration>) -> Result<Self> {
         let context = Context::new().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
         let devices = context.devices().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-
-        for device in rusb::devices().unwrap().iter() {
-            let device_desc = device.device_descriptor().unwrap();
-
-            println!(
-                "Bus: {:03} Device: {:03} VID: {:04x} PID: {:04x}",
-                device.bus_number(),
-                device.address(),
-                device_desc.vendor_id(),
-                device_desc.product_id()
-            );
-        }
 
         for device in devices.iter() {
             let device_descriptor = device
@@ -256,10 +200,24 @@ impl UsbDriver2 {
 
         Err(PrinterError::Io("USB device not found".to_string()))
     }
+
+    pub fn list_devices() {
+        for device in rusb::devices().unwrap().iter() {
+            let device_desc = device.device_descriptor().unwrap();
+
+            println!(
+                "Bus: {:03} Device: {:03} VID: {:04x} PID: {:04x}",
+                device.bus_number(),
+                device.address(),
+                device_desc.vendor_id(),
+                device_desc.product_id()
+            );
+        }
+    }
 }
 
 #[cfg(feature = "usb")]
-impl Driver for UsbDriver2 {
+impl Driver for UsbDriver {
     fn name(&self) -> String {
         format!(
             "USB (VID: {}, PID: {}, endpoint: {})",
@@ -271,6 +229,53 @@ impl Driver for UsbDriver2 {
         self.device
             .try_borrow_mut()?
             .write_bulk(self.endpoint, data, self.timeout)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+        Ok(())
+    }
+
+    fn flush(&self) -> Result<()> {
+        Ok(())
+    }
+}
+
+// ================ HidApi driver ================
+
+/// Driver for USB printer
+#[cfg(feature = "hidapi")]
+#[derive(Clone)]
+pub struct HidApiDriver {
+    vendor_id: u16,
+    product_id: u16,
+    device: Rc<RefCell<HidDevice>>,
+}
+
+#[cfg(feature = "hidapi")]
+impl HidApiDriver {
+    /// Open a new USB connection
+    pub fn open(vendor_id: u16, product_id: u16) -> Result<Self> {
+        let api = HidApi::new().map_err(|e| PrinterError::Io(e.to_string()))?;
+        let device = api
+            .open(vendor_id, product_id)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+
+        Ok(Self {
+            vendor_id,
+            product_id,
+            device: Rc::new(RefCell::new(device)),
+        })
+    }
+}
+
+#[cfg(feature = "hidapi")]
+impl Driver for HidApiDriver {
+    fn name(&self) -> String {
+        format!("HidApi (VID: {}, PID: {})", self.vendor_id, self.product_id)
+    }
+
+    fn write(&self, data: &[u8]) -> Result<()> {
+        self.device
+            .try_borrow_mut()?
+            .write(data)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(())
     }
