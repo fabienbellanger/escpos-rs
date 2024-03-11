@@ -18,13 +18,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## [Unreleased]
+## `0.8.0` (2024-03-11) [CURRENT]
 
 ### Added
 
 - Add tables for page codes `ISO8859_2`, `ISO8859_7` and `ISO8859_15`
+- Add `USB`, `HidApi` and `Serial port` drivers
 
-## `0.7.3` (2024-02-26) [CURRENT]
+### Changed
+
+- Bump `image` to `0.25.0`
+- Bump `log` to `0.4.21`
+- Bump `env_logger` to `0.11.3`
+
+## `0.7.3` (2024-02-26)
 
 ### Added
 
