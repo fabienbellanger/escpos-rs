@@ -6,6 +6,18 @@
 //! It allows you to generate and print documents with basic text formatting, cutting, barcodes,
 //! QR codes and raster images on a compatible printer.
 //!
+//! ## Features list
+//!
+//! | Name          | Description                                                            | Default |
+//! | ------------- | ---------------------------------------------------------------------- | :-----: |
+//! | `barcodes`    | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |   ✅    |
+//! | `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |   ✅    |
+//! | `graphics`    | Print raster images                                                    |   ❌    |
+//! | `usb`         | Enable USB feature                                                     |   ❌    |
+//! | `hidapi`      | Enable HidApi feature                                                  |   ❌    |
+//! | `serial_port` | Enable Serial port feature                                             |   ❌    |
+//! | `full`        | Enable all features                                                    |   ❌    |
+//!
 //! ## Examples
 //! The `examples` folder contains various examples of how to use `escpos`.
 //! The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.
@@ -14,9 +26,14 @@
 //!
 //! ```shell
 //! cargo run --example full --features "full"
+//! RUST_LOG=debug cargo run --example full --features "full"
 //! RUST_LOG=debug cargo run --example receipt -F full
 //! RUST_LOG=debug cargo run --example codes
 //! RUST_LOG=debug cargo run --example debug
+//! RUST_LOG=debug cargo run --example page_codes
+//! RUST_LOG=debug cargo run --example usb --features "usb"
+//! RUST_LOG=debug cargo run --example hidapi --features "hidapi"
+//! RUST_LOG=debug cargo run --example serial_port --features "serial_port"
 //! ```
 //!
 //! ### Simple text formatting
