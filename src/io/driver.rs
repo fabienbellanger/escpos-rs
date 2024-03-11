@@ -1,6 +1,8 @@
 //! Drivers used to send data to the printer (Network or USB)
 
-use crate::errors::{PrinterError, Result};
+#[cfg(any(feature = "usb", feature = "hidapi", feature = "serial_port"))]
+use crate::errors::PrinterError;
+use crate::errors::Result;
 #[cfg(feature = "hidapi")]
 use hidapi::{HidApi, HidDevice};
 #[cfg(feature = "usb")]
