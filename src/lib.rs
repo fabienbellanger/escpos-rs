@@ -6,18 +6,6 @@
 //! It allows you to generate and print documents with basic text formatting, cutting, barcodes,
 //! QR codes and raster images on a compatible printer.
 //!
-//! ## Features list
-//!
-//! | Name          | Description                                                            | Default |
-//! | ------------- | ---------------------------------------------------------------------- | :-----: |
-//! | `barcodes`    | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |   ✅    |
-//! | `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |   ✅    |
-//! | `graphics`    | Print raster images                                                    |   ❌    |
-//! | `usb`         | Enable USB feature                                                     |   ❌    |
-//! | `hidapi`      | Enable HidApi feature                                                  |   ❌    |
-//! | `serial_port` | Enable Serial port feature                                             |   ❌    |
-//! | `full`        | Enable all features                                                    |   ❌    |
-//!
 //! ## Examples
 //! The `examples` folder contains various examples of how to use `escpos`.
 //! The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.
@@ -156,12 +144,15 @@
 //!
 //! ## Features list
 //!
-//! | Name       | Description                                                        | Default |
-//! |------------|--------------------------------------------------------------------|:-------:|
-//! | `barcodes` | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR) |    ✅    |
-//! | `codes_2d` | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, etc.)    |    ✅    |
-//! | `graphics` | Print raster images                                                |    ❌    |
-//! | `full`     | Enable all features                                                |    ❌    |
+//! | Name          | Description                                                            | Default |
+//! | ------------- | ---------------------------------------------------------------------- | :-----: |
+//! | `barcodes`    | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |   ✅    |
+//! | `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |   ✅    |
+//! | `graphics`    | Print raster images                                                    |   ❌    |
+//! | `usb`         | Enable USB feature                                                     |   ❌    |
+//! | `hidapi`      | Enable HidApi feature                                                  |   ❌    |
+//! | `serial_port` | Enable Serial port feature                                             |   ❌    |
+//! | `full`        | Enable all features                                                    |   ❌    |
 //!
 //! ## Commands list
 //!
@@ -232,6 +223,49 @@
 //! - ✅ Done
 //! - 🚧 In progress
 //! - ❌ To do
+//!
+//! ## Page codes list
+//!
+//! | Code       | Implemented? |
+//! | :--------- | :----------: |
+//! | PC437      |      ✅      |
+//! | Katakana   |      ❌      |
+//! | PC850      |      ❌      |
+//! | PC860      |      ❌      |
+//! | PC863      |      ❌      |
+//! | PC865      |      ✅      |
+//! | Hiragana   |      ❌      |
+//! | PC851      |      ❌      |
+//! | PC853      |      ❌      |
+//! | PC857      |      ❌      |
+//! | PC737      |      ❌      |
+//! | ISO8859_7  |      ✅      |
+//! | WPC1252    |      ❌      |
+//! | PC866      |      ❌      |
+//! | PC852      |      ✅      |
+//! | PC858      |      ✅      |
+//! | PC720      |      ❌      |
+//! | WPC775     |      ❌      |
+//! | PC855      |      ❌      |
+//! | PC861      |      ❌      |
+//! | PC862      |      ❌      |
+//! | PC864      |      ❌      |
+//! | PC869      |      ❌      |
+//! | ISO8859_2  |      ✅      |
+//! | ISO8859_15 |      ✅      |
+//! | PC1098     |      ❌      |
+//! | PC1118     |      ❌      |
+//! | PC1119     |      ❌      |
+//! | PC1125     |      ❌      |
+//! | WPC1250    |      ❌      |
+//! | WPC1251    |      ❌      |
+//! | WPC1253    |      ❌      |
+//! | WPC1254    |      ❌      |
+//! | WPC1255    |      ❌      |
+//! | WPC1256    |      ❌      |
+//! | WPC1257    |      ❌      |
+//! | WPC1258    |      ❌      |
+//! | KZ1048     |      ❌      |
 //!
 //! ## External resources
 //!

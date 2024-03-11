@@ -200,20 +200,6 @@ impl UsbDriver {
 
         Err(PrinterError::Io("USB device not found".to_string()))
     }
-
-    pub fn list_devices() {
-        for device in rusb::devices().unwrap().iter() {
-            let device_desc = device.device_descriptor().unwrap();
-
-            println!(
-                "Bus: {:03} Device: {:03} VID: {:04x} PID: {:04x}",
-                device.bus_number(),
-                device.address(),
-                device_desc.vendor_id(),
-                device_desc.product_id()
-            );
-        }
-    }
 }
 
 #[cfg(feature = "usb")]

@@ -6,7 +6,18 @@ use escpos::utils::*;
 fn main() -> Result<()> {
     env_logger::init();
 
-    UsbDriver::list_devices();
+    // List USB devices
+    for device in rusb::devices().unwrap().iter() {
+        let device_desc = device.device_descriptor().unwrap();
+
+        println!(
+            "Bus: {:03} Device: {:03} VID: {:04x} PID: {:04x}",
+            device.bus_number(),
+            device.address(),
+            device_desc.vendor_id(),
+            device_desc.product_id()
+        );
+    }
 
     let driver = UsbDriver::open(0x05ac, 0x0221, None)?;
     Printer::new(driver, Protocol::default(), None)
