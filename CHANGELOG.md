@@ -18,7 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## `0.8.0` (2024-03-11) [CURRENT]
+## `0.8.1` (2024-03-12) [CURRENT]
+
+### Fixed
+
+- Fix unsupported `detach_kernel_driver` function on Windows
+
+## `0.8.0` (2024-03-11)
 
 ### Added
 

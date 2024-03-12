@@ -176,6 +176,7 @@ impl UsbDriver {
 
                 return match device.open() {
                     Ok(mut device_handle) => {
+                        #[cfg(not(target_os = "windows"))]
                         match device_handle.kernel_driver_active(0) {
                             Ok(active) => {
                                 if active {
