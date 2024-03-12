@@ -176,8 +176,9 @@ impl UsbDriver {
 
                 return match device.open() {
                     Ok(mut device_handle) => {
+                        // Claims device interface
                         device_handle
-                            .claim_interface(0)
+                            .claim_interface(endpoint)
                             .map_err(|e| PrinterError::Io(e.to_string()))?;
 
                         #[cfg(not(target_os = "windows"))]
