@@ -164,23 +164,24 @@ impl UsbDriver {
                     .active_config_descriptor()
                     .map_err(|e| PrinterError::Io(e.to_string()))?;
 
-                let endpoint = config_descriptor
+                let (endpoint, interface_number) = config_descriptor
                     .interfaces()
-                    .flat_map(|interface| interface.descriptors())
-                    .flat_map(|descriptor| descriptor.endpoint_descriptors())
-                    .find_map(|endpoint| match (endpoint.transfer_type(), endpoint.direction()) {
-                        (TransferType::Bulk, Direction::Out) => Some(endpoint.number()),
-                        _ => None,
+                    .flat_map(|interface| {
+                        interface.descriptors().flat_map(|descriptor| {
+                            let interface_number = descriptor.interface_number();
+                            descriptor.endpoint_descriptors().filter_map(move |endpoint| {
+                                match (endpoint.transfer_type(), endpoint.direction()) {
+                                    (TransferType::Bulk, Direction::Out) => Some((endpoint.number(), interface_number)),
+                                    _ => None,
+                                }
+                            })
+                        })
                     })
+                    .next()
                     .ok_or_else(|| PrinterError::Io("no suitable endpoint found for USB device".to_string()))?;
 
                 return match device.open() {
                     Ok(mut device_handle) => {
-                        // Claims device interface
-                        device_handle
-                            .claim_interface(endpoint)
-                            .map_err(|e| PrinterError::Io(e.to_string()))?;
-
                         #[cfg(not(target_os = "windows"))]
                         match device_handle.kernel_driver_active(0) {
                             Ok(active) => {
@@ -192,6 +193,11 @@ impl UsbDriver {
                             }
                             Err(e) => return Err(PrinterError::Io(e.to_string())),
                         }
+
+                        // Claims device interface
+                        device_handle
+                            .claim_interface(interface_number)
+                            .map_err(|e| PrinterError::Io(e.to_string()))?;
 
                         Ok(Self {
                             vendor_id,
