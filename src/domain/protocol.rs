@@ -864,6 +864,10 @@ mod tests {
             &[77, 121, 32, 116, 101, 120, 116, 32, 130, 32, 213]
         );
         assert_eq!(
+            protocol.text("My text é ã ç õ", Some(PageCode::PC860)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 130, 32, 132, 32, 135, 32, 148]
+        );
+        assert_eq!(
             protocol.text("My text ø ¤", Some(PageCode::PC865)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 155, 32, 175]
         );
@@ -882,6 +886,10 @@ mod tests {
         assert_eq!(
             protocol.text("My text Ž £ æ þ", Some(PageCode::ISO8859_15)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 180, 32, 163, 32, 230, 32, 254]
+        );
+        assert_eq!(
+            protocol.text("My text € Ç ÿ", Some(PageCode::WPC1252)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 128, 32, 199, 32, 255]
         );
 
         // With page code table not yet implemented
