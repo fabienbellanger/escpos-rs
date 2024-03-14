@@ -169,7 +169,7 @@ impl UsbDriver {
                     .flat_map(|interface| interface.descriptors())
                     .flat_map(|descriptor| {
                         let interface_number = descriptor.interface_number();
-                        
+
                         descriptor.endpoint_descriptors().filter_map(move |endpoint| {
                             match (endpoint.transfer_type(), endpoint.direction()) {
                                 (TransferType::Bulk, Direction::Out) => Some((endpoint.number(), interface_number)),
