@@ -17,6 +17,7 @@ pub(crate) enum PageCodeTable {
     ISO8859_2,
     ISO8859_7,
     ISO8859_15,
+    WPC1252,
 }
 
 impl PageCodeTable {
@@ -31,6 +32,7 @@ impl PageCodeTable {
             Self::ISO8859_2 => &ISO8859_2_TABLE,
             Self::ISO8859_7 => &ISO8859_7_TABLE,
             Self::ISO8859_15 => &ISO8859_15_TABLE,
+            Self::WPC1252 => &WPC1252_TABLE,
         }
     }
 }
@@ -48,6 +50,7 @@ impl TryFrom<PageCode> for PageCodeTable {
             PageCode::ISO8859_2 => Ok(Self::ISO8859_2),
             PageCode::ISO8859_7 => Ok(Self::ISO8859_7),
             PageCode::ISO8859_15 => Ok(Self::ISO8859_15),
+            PageCode::WPC1252 => Ok(Self::WPC1252),
             _ => Err(PrinterError::Input(format!("no table for this page code: {value}"))),
         }
     }
@@ -176,5 +179,22 @@ lazy_static! {
     ]
     .into_iter().enumerate()
     .map(|(i, c)| (c, (i + 0xA0) as u8))
+    .collect();
+
+    /// WPC1252 Page code table
+    /// Uses '\0' as placeholder for empty spots
+    static ref WPC1252_TABLE: HashMap<char, u8> = [
+        '€', '\0', '‚', 'ƒ', '„', '…', '†', '‡', 'ˆ', '‰', 'Š', '‹', 'Œ', '\0', 'Ž', '\0',
+        '\0', '‘', '’', '“', '”', '•', '–', '—', '˜', '™', 'š', '›', 'œ', '\0', 'ž', 'Ÿ',
+        '\u{00A0}', '¡', '¢', '£', '¤', '¥', '¦', '§', '¨', '©', 'ª', '«', '¬', '\u{00AD}', '®', '¯',
+        '°', '±', '²', '³', '´', 'µ', '¶', '·', '¸', '¹', 'º', '»', '¼', '½', '¾', '¿',
+        'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï',
+        'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', '×', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'Þ', 'ß',
+        'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï',
+        'ð', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', '÷', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'þ', 'ÿ',
+    ]
+    .into_iter().enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 128) as u8))
     .collect();
 }
