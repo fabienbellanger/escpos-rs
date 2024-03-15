@@ -15,7 +15,7 @@ fn main() -> Result<()> {
             device.bus_number(),
             device.address(),
             device_desc.vendor_id(),
-            device_desc.product_id()
+            device_desc.product_id(),
         );
     }
 

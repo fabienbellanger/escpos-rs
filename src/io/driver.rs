@@ -1,8 +1,10 @@
 //! Drivers used to send data to the printer (Network or USB)
 
-#[cfg(any(feature = "usb", feature = "hidapi", feature = "serial_port"))]
+#[cfg(any(feature = "usb", feature = "usb_native", feature = "hidapi", feature = "serial_port"))]
 use crate::errors::PrinterError;
 use crate::errors::Result;
+#[cfg(feature = "usb_native")]
+use futures_lite::future::block_on;
 #[cfg(feature = "hidapi")]
 use hidapi::{HidApi, HidDevice};
 #[cfg(feature = "usb")]
@@ -134,7 +136,7 @@ impl Driver for FileDriver {
     }
 }
 
-// ================ USB driver ================
+// ================ USB drivers ================
 
 /// Driver for USB printer
 #[cfg(feature = "usb")]
@@ -229,6 +231,57 @@ impl Driver for UsbDriver {
         self.device
             .try_borrow_mut()?
             .write_bulk(self.endpoint, data, self.timeout)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+        Ok(())
+    }
+
+    fn flush(&self) -> Result<()> {
+        Ok(())
+    }
+}
+
+/// Driver for USB printer
+#[cfg(feature = "usb_native")]
+#[derive(Clone)]
+pub struct UsbNativeDriver {
+    vendor_id: u16,
+    product_id: u16,
+    endpoint: u8,
+    device: Rc<RefCell<nusb::Interface>>,
+}
+
+#[cfg(feature = "usb_native")]
+impl UsbNativeDriver {
+    /// Open a new USB connection
+    pub fn open(vendor_id: u16, product_id: u16) -> Result<Self> {
+        let device_info = nusb::list_devices()
+            .map_err(|e| PrinterError::Io(e.to_string()))?
+            .find(|dev| dev.vendor_id() == vendor_id && dev.product_id() == product_id)
+            .ok_or(PrinterError::Io("USB device not found".to_string()))?;
+        let device = device_info.open().map_err(|e| PrinterError::Io(e.to_string()))?;
+        let interface = device.claim_interface(0).map_err(|e| PrinterError::Io(e.to_string()))?;
+
+        Ok(Self {
+            vendor_id,
+            product_id,
+            endpoint: 0x01, // TODO: find the correct endpoint
+            device: Rc::new(RefCell::new(interface)),
+        })
+    }
+}
+
+#[cfg(feature = "usb_native")]
+impl Driver for UsbNativeDriver {
+    fn name(&self) -> String {
+        format!(
+            "Native USB (VID: {}, PID: {}, endpoint: {})",
+            self.vendor_id, self.product_id, self.endpoint
+        )
+    }
+
+    fn write(&self, data: &[u8]) -> Result<()> {
+        block_on(self.device.try_borrow_mut()?.bulk_out(self.endpoint, data.to_vec()))
+            .into_result()
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(())
     }
