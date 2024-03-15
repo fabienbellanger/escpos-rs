@@ -20,7 +20,7 @@ fn main() -> Result<()> {
         );
     }
 
-    let driver = UsbNativeDriver::open(0x0525, 0xa700)?;
+    let driver = NativeUsbDriver::open(0x0525, 0xa700)?;
     Printer::new(driver, Protocol::default(), None)
         .debug_mode(Some(DebugMode::Dec))
         .init()?

@@ -245,7 +245,7 @@ impl Driver for UsbDriver {
 /// Driver for USB printer
 #[cfg(feature = "native_usb")]
 #[derive(Clone)]
-pub struct UsbNativeDriver {
+pub struct NativeUsbDriver {
     vendor_id: u16,
     product_id: u16,
     endpoint: u8,
@@ -253,7 +253,7 @@ pub struct UsbNativeDriver {
 }
 
 #[cfg(feature = "native_usb")]
-impl UsbNativeDriver {
+impl NativeUsbDriver {
     /// Open a new USB connection
     pub fn open(vendor_id: u16, product_id: u16) -> Result<Self> {
         let device_info = nusb::list_devices()
@@ -306,7 +306,7 @@ impl UsbNativeDriver {
 }
 
 #[cfg(feature = "native_usb")]
-impl Driver for UsbNativeDriver {
+impl Driver for NativeUsbDriver {
     fn name(&self) -> String {
         format!(
             "Native USB (VID: {}, PID: {}, endpoint: {})",

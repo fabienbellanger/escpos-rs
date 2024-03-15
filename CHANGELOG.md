@@ -18,6 +18,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
+## [Unreleased]
+
+### Added
+
+- Add native USB driver support with [nusb](https://crates.io/crates/nusb) (Only tested on MacOS)
+
+### Fixed
+
+- Fix `UsbDriver`: use interface number in `kernel_driver_active()` and `detach_kernel_driver()` functions instead of `0`
+
 ## `0.8.3` (2024-03-14) [CURRENT]
 
 ### Added
