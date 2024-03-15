@@ -6,7 +6,7 @@ use escpos::utils::*;
 fn main() -> Result<()> {
     env_logger::init();
 
-    // List USB devices
+    // List of USB devices
     for device in nusb::list_devices().unwrap() {
         println!(
             "Bus: {:03} address: {:03} VID: {:04x} PID: {:04x} Manufacturer: {} Product: {} S/N: {}",

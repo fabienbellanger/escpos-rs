@@ -1,9 +1,9 @@
 //! Drivers used to send data to the printer (Network or USB)
 
-#[cfg(any(feature = "usb", feature = "usb_native", feature = "hidapi", feature = "serial_port"))]
+#[cfg(any(feature = "usb", feature = "native_usb", feature = "hidapi", feature = "serial_port"))]
 use crate::errors::PrinterError;
 use crate::errors::Result;
-#[cfg(feature = "usb_native")]
+#[cfg(feature = "native_usb")]
 use futures_lite::future::block_on;
 #[cfg(feature = "hidapi")]
 use hidapi::{HidApi, HidDevice};
@@ -180,15 +180,17 @@ impl UsbDriver {
                         })
                     })
                     .next()
-                    .ok_or_else(|| PrinterError::Io("no suitable endpoint found for USB device".to_string()))?;
+                    .ok_or_else(|| {
+                        PrinterError::Io("no suitable endpoint or interface number found for USB device".to_string())
+                    })?;
 
                 return match device.open() {
                     Ok(mut device_handle) => {
                         #[cfg(not(target_os = "windows"))]
-                        match device_handle.kernel_driver_active(0) {
+                        match device_handle.kernel_driver_active(interface_number) {
                             Ok(active) => {
                                 if active {
-                                    if let Err(e) = device_handle.detach_kernel_driver(0) {
+                                    if let Err(e) = device_handle.detach_kernel_driver(interface_number) {
                                         return Err(PrinterError::Io(e.to_string()));
                                     }
                                 }
@@ -241,7 +243,7 @@ impl Driver for UsbDriver {
 }
 
 /// Driver for USB printer
-#[cfg(feature = "usb_native")]
+#[cfg(feature = "native_usb")]
 #[derive(Clone)]
 pub struct UsbNativeDriver {
     vendor_id: u16,
@@ -250,7 +252,7 @@ pub struct UsbNativeDriver {
     device: Rc<RefCell<nusb::Interface>>,
 }
 
-#[cfg(feature = "usb_native")]
+#[cfg(feature = "native_usb")]
 impl UsbNativeDriver {
     /// Open a new USB connection
     pub fn open(vendor_id: u16, product_id: u16) -> Result<Self> {
@@ -259,18 +261,51 @@ impl UsbNativeDriver {
             .find(|dev| dev.vendor_id() == vendor_id && dev.product_id() == product_id)
             .ok_or(PrinterError::Io("USB device not found".to_string()))?;
         let device = device_info.open().map_err(|e| PrinterError::Io(e.to_string()))?;
-        let interface = device.claim_interface(0).map_err(|e| PrinterError::Io(e.to_string()))?;
+
+        // Get endpoint
+        let configuration = device
+            .active_configuration()
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+        let endpoint = match configuration.interface_alt_settings().next() {
+            Some(settings) => settings
+                .endpoints()
+                .find(|endpoint| {
+                    endpoint.transfer_type() == nusb::transfer::EndpointType::Bulk
+                        && endpoint.direction() == nusb::transfer::Direction::Out
+                })
+                .map(|endpoint| endpoint.address()),
+            None => None,
+        }
+        .ok_or(PrinterError::Io(
+            "no suitable endpoint found for USB device".to_string(),
+        ))?;
+
+        // Get interface number
+        let interface_number = device_info
+            .interfaces()
+            .map(|interface| interface.interface_number())
+            .next()
+            .ok_or_else(|| PrinterError::Io("no suitable interface number found for USB device".to_string()))?;
+
+        #[cfg(not(target_os = "windows"))]
+        let interface = device
+            .detach_and_claim_interface(interface_number)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+        #[cfg(target_os = "windows")]
+        let interface = device
+            .claim_interface(interface_number)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
 
         Ok(Self {
             vendor_id,
             product_id,
-            endpoint: 0x01, // TODO: find the correct endpoint
+            endpoint,
             device: Rc::new(RefCell::new(interface)),
         })
     }
 }
 
-#[cfg(feature = "usb_native")]
+#[cfg(feature = "native_usb")]
 impl Driver for UsbNativeDriver {
     fn name(&self) -> String {
         format!(

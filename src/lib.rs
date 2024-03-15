@@ -20,6 +20,7 @@
 //! RUST_LOG=debug cargo run --example debug
 //! RUST_LOG=debug cargo run --example page_codes
 //! RUST_LOG=debug cargo run --example usb --features "usb"
+//! RUST_LOG=debug cargo run --example native_usb --features "native_usb"
 //! RUST_LOG=debug cargo run --example hidapi --features "hidapi"
 //! RUST_LOG=debug cargo run --example serial_port --features "serial_port"
 //! ```
@@ -150,6 +151,7 @@
 //! | `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |   ✅    |
 //! | `graphics`    | Print raster images                                                    |   ❌    |
 //! | `usb`         | Enable USB feature                                                     |   ❌    |
+//! | `native_usb`  | Enable native USB feature                                              |   ❌    |
 //! | `hidapi`      | Enable HidApi feature                                                  |   ❌    |
 //! | `serial_port` | Enable Serial port feature                                             |   ❌    |
 //! | `full`        | Enable all features                                                    |   ❌    |
