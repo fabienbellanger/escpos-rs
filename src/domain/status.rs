@@ -1,4 +1,5 @@
 //! Printer status
+//! https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/dle_eot.html
 
 /// Printer real-time status
 #[derive(Debug, Copy, Clone)]
