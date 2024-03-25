@@ -217,6 +217,14 @@ impl Protocol {
         cmd
     }
 
+    /// Transmit real-time status
+    // TODO: Add test
+    pub(crate) fn real_time_status(&self) -> Command {
+        let mut cmd = DLE_REAL_TIME_STATUS.to_vec();
+        cmd.push(1);
+        cmd
+    }
+
     #[cfg(feature = "barcodes")]
     /// Set barcode font
     fn barcode_font(&self, font: BarcodeFont) -> Command {
