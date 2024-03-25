@@ -2,11 +2,9 @@
 
 pub const _EOL: &str = "\n";
 pub const NUL: u8 = 0x00; // Null
-pub const EOT: u8 = 0x04; // End of transmission
 pub const LF: u8 = 0x0A; // Line feed
 pub const _VT: u8 = 0x0B; // Vertical tab
 pub const _CR: u8 = 0x0D; // Carriage return
-pub const DLE: u8 = 0x10; // Data link escape
 pub const ESC: u8 = 0x1B;
 pub const GS: u8 = 0x1D; // Group separator
 pub const CAN: u8 = 0x18; // Cancel
@@ -64,10 +62,6 @@ pub const GS_TEXT_SIZE_SELECT: &[u8] = &[GS, b'!'];
 
 pub const ESC_TEXT_UPSIDE_DOWN_OFF: &[u8] = &[ESC, b'{', 0];
 pub const ESC_TEXT_UPSIDE_DOWN_ON: &[u8] = &[ESC, b'{', 1];
-
-// Status
-pub const DLE_REAL_TIME_STATUS: &[u8] = &[DLE, EOT];
-pub const GS_STATUS: &[u8] = &[GS, b'r'];
 
 // Barcodes
 #[cfg(feature = "barcodes")]
@@ -142,6 +136,7 @@ pub const GS_2D_AZTEC_CODE_CORRECTION_LEVEL: &[u8] = &[GS, b'(', b'k', 4, 0, 53,
 pub const GS_2D_AZTEC_CODE_PRINT: &[u8] = &[GS, b'(', b'k', 3, 0, 53, 81, 48];
 
 // Image
+
 #[cfg(feature = "graphics")]
 pub const GS_IMAGE_BITMAP_PREFIX: &[u8] = &[GS, b'v', b'0'];
 #[cfg(feature = "graphics")]

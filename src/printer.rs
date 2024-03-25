@@ -325,11 +325,6 @@ impl<D: Driver> Printer<D> {
         self.command("set motion units", &[cmd])
     }
 
-    pub fn real_time_status(&mut self) -> Result<&mut Self> {
-        let cmd = self.protocol.real_time_status();
-        self.command("real-time status", &[cmd])
-    }
-
     #[cfg(feature = "barcodes")]
     /// Print barcode
     fn barcode(&mut self, barcode: Barcode) -> Result<&mut Self> {

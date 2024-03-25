@@ -9,6 +9,7 @@ use hidapi::{HidApi, HidDevice};
 use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
 #[cfg(feature = "serial_port")]
 use serialport::SerialPort;
+use std::rc::Rc;
 #[cfg(any(feature = "usb", feature = "serial_port"))]
 use std::time::Duration;
 use std::{
@@ -18,7 +19,6 @@ use std::{
     net::TcpStream,
     path::Path,
 };
-use std::{io::Read, rc::Rc};
 
 pub trait Driver {
     /// Driver name
@@ -81,11 +81,6 @@ impl NetworkDriver {
             port,
             stream: Rc::new(RefCell::new(TcpStream::connect((host, port))?)),
         })
-    }
-
-    /// Read data from the printer
-    pub fn read(&self, buf: &mut [u8]) -> Result<usize> {
-        Ok(self.stream.try_borrow_mut()?.read(buf)?)
     }
 }
 
