@@ -38,12 +38,11 @@ impl RealTimeStatus {
             .map(|c| c.to_digit(2).unwrap_or(0))
             .rev()
             .collect::<Vec<_>>();
+        dbg!(&binary);
 
         match self {
             &Self::Printer => todo!(),
             _ => todo!(),
         }
-
-        ""
     }
 }
