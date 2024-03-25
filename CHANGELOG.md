@@ -18,7 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## `0.8.2` (2024-03-14) [CURRENT]
+## `0.8.3` (2024-03-14) [CURRENT]
+
+### Added
+
+- Add tables for page codes `PC860` and `WPC1252`
+
+## `0.8.2` (2024-03-14)
 
 ### Fixed
 
