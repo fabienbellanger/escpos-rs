@@ -211,15 +211,17 @@ impl UsbDriver {
                         }
                     })
                     .next()
-                    .ok_or_else(|| PrinterError::Io("no suitable endpoints found for USB device".to_string()))?;
+                    .ok_or_else(|| {
+                        PrinterError::Io("no suitable endpoints or interface number found for USB device".to_string())
+                    })?;
 
                 return match device.open() {
                     Ok(mut device_handle) => {
                         #[cfg(not(target_os = "windows"))]
-                        match device_handle.kernel_driver_active(0) {
+                        match device_handle.kernel_driver_active(interface_number) {
                             Ok(active) => {
                                 if active {
-                                    if let Err(e) = device_handle.detach_kernel_driver(0) {
+                                    if let Err(e) = device_handle.detach_kernel_driver(interface_number) {
                                         return Err(PrinterError::Io(e.to_string()));
                                     }
                                 }

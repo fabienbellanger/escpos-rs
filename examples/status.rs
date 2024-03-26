@@ -33,7 +33,7 @@ fn main() -> Result<()> {
         // Roll paper near-end sensor status
         let status = RealTimeStatusResponse::parse(RealTimeStatusRequest::RollPaperSensor, buf[1])?;
         println!(
-            "Roll paper near-end sensor: {}",
+            "Roll paper near-end sensor => paper near-end:  {}",
             status
                 .get(&RealTimeStatusResponse::RollPaperNearEndSensorPaperNearEnd)
                 .unwrap_or(&false)
