@@ -57,7 +57,7 @@ pub enum RealTimeStatusResponse {
     AutoRecoverableErrorOccurred,
 
     // Roll paper sensor status
-    RollPaperNearEndSensorPaperNearEnd,
+    RollPaperNearEndSensorPaperAdequate,
     RollPaperEndSensorPaperPresent,
 
     // Inks (A and B) status
@@ -128,8 +128,8 @@ impl RealTimeStatusResponse {
             }
             RealTimeStatusRequest::RollPaperSensor => {
                 result.insert(
-                    Self::RollPaperNearEndSensorPaperNearEnd,
-                    binary[2] == 1 && binary[3] == 1,
+                    Self::RollPaperNearEndSensorPaperAdequate,
+                    binary[2] == 0 && binary[3] == 0,
                 );
                 result.insert(Self::RollPaperEndSensorPaperPresent, binary[5] == 0 && binary[6] == 0);
             }
@@ -228,8 +228,8 @@ mod tests {
 
         let response = RealTimeStatusResponse::parse(RealTimeStatusRequest::RollPaperSensor, 0b00010010).unwrap();
         assert_eq!(
-            response[&RealTimeStatusResponse::RollPaperNearEndSensorPaperNearEnd],
-            false
+            response[&RealTimeStatusResponse::RollPaperNearEndSensorPaperAdequate],
+            true
         );
         assert_eq!(response[&RealTimeStatusResponse::RollPaperEndSensorPaperPresent], true);
 
