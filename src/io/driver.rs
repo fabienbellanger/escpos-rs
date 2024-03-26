@@ -19,6 +19,8 @@ use std::{
 };
 use std::{io::Read, rc::Rc};
 
+const DEFAULT_TIMEOUT_SECONDS: u64 = 5;
+
 pub trait Driver {
     /// Driver name
     fn name(&self) -> String;
@@ -102,7 +104,7 @@ impl Driver for NetworkDriver {
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
         let mut stream = self.stream.try_borrow_mut()?;
-        stream.set_read_timeout(Some(Duration::from_secs(5)))?;
+        stream.set_read_timeout(Some(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS)))?;
 
         Ok(stream.read(buf)?)
     }
@@ -236,7 +238,7 @@ impl UsbDriver {
                             output_endpoint,
                             input_endpoint,
                             device: Rc::new(RefCell::new(device_handle)),
-                            timeout: timeout.unwrap_or(Duration::from_secs(5)),
+                            timeout: timeout.unwrap_or(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS)),
                         })
                     }
                     Err(_) => Err(PrinterError::Io("USB device busy".to_string())),
@@ -269,7 +271,7 @@ impl Driver for UsbDriver {
         Ok(self
             .device
             .try_borrow_mut()?
-            .read_bulk(self.input_endpoint, buf, Duration::from_secs(1))
+            .read_bulk(self.input_endpoint, buf, self.timeout)
             .map_err(|e| PrinterError::Io(e.to_string()))?)
     }
 
@@ -324,7 +326,7 @@ impl Driver for HidApiDriver {
         Ok(self
             .device
             .try_borrow_mut()?
-            .read_timeout(buf, 5_000)
+            .read_timeout(buf, (DEFAULT_TIMEOUT_SECONDS * 1_000) as i32) // TODO: Do better!
             .map_err(|e| PrinterError::Io(e.to_string()))?)
     }
 
@@ -374,7 +376,7 @@ impl Driver for SerialPortDriver {
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
         let mut port = self.port.try_borrow_mut()?;
-        port.set_timeout(Duration::from_secs(5))
+        port.set_timeout(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS))
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(port.read(buf)?)
     }
