@@ -66,6 +66,7 @@ RUST_LOG=debug cargo run --example page_codes
 RUST_LOG=debug cargo run --example usb --features "usb"
 RUST_LOG=debug cargo run --example hidapi --features "hidapi"
 RUST_LOG=debug cargo run --example serial_port --features "serial_port"
+RUST_LOG=debug cargo run --example status --all-features
 ```
 
 ### Simple text formatting
@@ -301,6 +302,7 @@ fn main() -> Result<()> {
 
 ## Todo
 
+- [ ] Customize drivers timeout read/write
 - [ ] Implement all pages codes
 - [ ] Add more commands:
   - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)

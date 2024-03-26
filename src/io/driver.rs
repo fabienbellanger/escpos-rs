@@ -9,7 +9,6 @@ use hidapi::{HidApi, HidDevice};
 use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
 #[cfg(feature = "serial_port")]
 use serialport::SerialPort;
-#[cfg(any(feature = "usb", feature = "serial_port"))]
 use std::time::Duration;
 use std::{
     cell::RefCell,
@@ -26,6 +25,9 @@ pub trait Driver {
 
     /// Write data
     fn write(&self, data: &[u8]) -> Result<()>;
+
+    /// Read data
+    fn read(&self, buf: &mut [u8]) -> Result<usize>;
 
     /// Flush data
     fn flush(&self) -> Result<()>;
@@ -58,6 +60,10 @@ impl Driver for ConsoleDriver {
         Ok(())
     }
 
+    fn read(&self, _buf: &mut [u8]) -> Result<usize> {
+        Ok(0)
+    }
+
     fn flush(&self) -> Result<()> {
         Ok(())
     }
@@ -82,11 +88,6 @@ impl NetworkDriver {
             stream: Rc::new(RefCell::new(TcpStream::connect((host, port))?)),
         })
     }
-
-    /// Read data from the printer
-    pub fn read(&self, buf: &mut [u8]) -> Result<usize> {
-        Ok(self.stream.try_borrow_mut()?.read(buf)?)
-    }
 }
 
 impl Driver for NetworkDriver {
@@ -97,6 +98,13 @@ impl Driver for NetworkDriver {
     fn write(&self, data: &[u8]) -> Result<()> {
         self.stream.try_borrow_mut()?.write_all(data)?;
         Ok(())
+    }
+
+    fn read(&self, buf: &mut [u8]) -> Result<usize> {
+        let mut stream = self.stream.try_borrow_mut()?;
+        stream.set_read_timeout(Some(Duration::from_secs(5)))?;
+
+        Ok(stream.read(buf)?)
     }
 
     fn flush(&self) -> Result<()> {
@@ -134,6 +142,10 @@ impl Driver for FileDriver {
         Ok(())
     }
 
+    fn read(&self, buf: &mut [u8]) -> Result<usize> {
+        Ok(self.file.try_borrow_mut()?.read(buf)?)
+    }
+
     fn flush(&self) -> Result<()> {
         Ok(self.file.try_borrow_mut()?.flush()?)
     }
@@ -147,7 +159,8 @@ impl Driver for FileDriver {
 pub struct UsbDriver {
     vendor_id: u16,
     product_id: u16,
-    endpoint: u8,
+    output_endpoint: u8,
+    input_endpoint: u8,
     device: Rc<RefCell<DeviceHandle<Context>>>,
     timeout: Duration,
 }
@@ -169,21 +182,34 @@ impl UsbDriver {
                     .active_config_descriptor()
                     .map_err(|e| PrinterError::Io(e.to_string()))?;
 
-                let (endpoint, interface_number) = config_descriptor
+                let (output_endpoint, input_endpoint, interface_number) = config_descriptor
                     .interfaces()
                     .flat_map(|interface| interface.descriptors())
                     .flat_map(|descriptor| {
                         let interface_number = descriptor.interface_number();
 
-                        descriptor.endpoint_descriptors().filter_map(move |endpoint| {
-                            match (endpoint.transfer_type(), endpoint.direction()) {
-                                (TransferType::Bulk, Direction::Out) => Some((endpoint.number(), interface_number)),
-                                _ => None,
+                        // Find input and output endpoints
+                        let mut input_endpoint = None;
+                        let mut output_endpoint = None;
+                        for endpoint in descriptor.endpoint_descriptors() {
+                            if endpoint.transfer_type() == TransferType::Bulk && endpoint.direction() == Direction::In {
+                                input_endpoint = Some(endpoint.address());
+                            } else if endpoint.transfer_type() == TransferType::Bulk
+                                && endpoint.direction() == Direction::Out
+                            {
+                                output_endpoint = Some(endpoint.address());
                             }
-                        })
+                        }
+
+                        match (output_endpoint, input_endpoint) {
+                            (Some(output_endpoint), Some(input_endpoint)) => {
+                                Some((output_endpoint, input_endpoint, interface_number))
+                            }
+                            _ => None,
+                        }
                     })
                     .next()
-                    .ok_or_else(|| PrinterError::Io("no suitable endpoint found for USB device".to_string()))?;
+                    .ok_or_else(|| PrinterError::Io("no suitable endpoints found for USB device".to_string()))?;
 
                 return match device.open() {
                     Ok(mut device_handle) => {
@@ -207,7 +233,8 @@ impl UsbDriver {
                         Ok(Self {
                             vendor_id,
                             product_id,
-                            endpoint,
+                            output_endpoint,
+                            input_endpoint,
                             device: Rc::new(RefCell::new(device_handle)),
                             timeout: timeout.unwrap_or(Duration::from_secs(5)),
                         })
@@ -225,17 +252,25 @@ impl UsbDriver {
 impl Driver for UsbDriver {
     fn name(&self) -> String {
         format!(
-            "USB (VID: {}, PID: {}, endpoint: {})",
-            self.vendor_id, self.product_id, self.endpoint
+            "USB (VID: {}, PID: {}, output endpoint: {})",
+            self.vendor_id, self.product_id, self.output_endpoint
         )
     }
 
     fn write(&self, data: &[u8]) -> Result<()> {
         self.device
             .try_borrow_mut()?
-            .write_bulk(self.endpoint, data, self.timeout)
+            .write_bulk(self.output_endpoint, data, self.timeout)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(())
+    }
+
+    fn read(&self, buf: &mut [u8]) -> Result<usize> {
+        Ok(self
+            .device
+            .try_borrow_mut()?
+            .read_bulk(self.input_endpoint, buf, Duration::from_secs(1))
+            .map_err(|e| PrinterError::Io(e.to_string()))?)
     }
 
     fn flush(&self) -> Result<()> {
@@ -285,6 +320,14 @@ impl Driver for HidApiDriver {
         Ok(())
     }
 
+    fn read(&self, buf: &mut [u8]) -> Result<usize> {
+        Ok(self
+            .device
+            .try_borrow_mut()?
+            .read_timeout(buf, 5_000)
+            .map_err(|e| PrinterError::Io(e.to_string()))?)
+    }
+
     fn flush(&self) -> Result<()> {
         Ok(())
     }
@@ -327,6 +370,13 @@ impl Driver for SerialPortDriver {
         self.port.try_borrow_mut()?.write_all(data)?;
 
         Ok(())
+    }
+
+    fn read(&self, buf: &mut [u8]) -> Result<usize> {
+        let mut port = self.port.try_borrow_mut()?;
+        port.set_timeout(Duration::from_secs(5))
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+        Ok(port.read(buf)?)
     }
 
     fn flush(&self) -> Result<()> {

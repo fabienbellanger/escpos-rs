@@ -65,9 +65,8 @@ pub const GS_TEXT_SIZE_SELECT: &[u8] = &[GS, b'!'];
 pub const ESC_TEXT_UPSIDE_DOWN_OFF: &[u8] = &[ESC, b'{', 0];
 pub const ESC_TEXT_UPSIDE_DOWN_ON: &[u8] = &[ESC, b'{', 1];
 
-// Status
+// Printer Status
 pub const DLE_REAL_TIME_STATUS: &[u8] = &[DLE, EOT];
-pub const GS_STATUS: &[u8] = &[GS, b'r'];
 
 // Barcodes
 #[cfg(feature = "barcodes")]

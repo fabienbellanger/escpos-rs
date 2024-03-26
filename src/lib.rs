@@ -10,20 +10,6 @@
 //! The `examples` folder contains various examples of how to use `escpos`.
 //! The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.
 //!
-//! To launch an example, use the following command:
-//!
-//! ```shell
-//! cargo run --example full --features "full"
-//! RUST_LOG=debug cargo run --example full --features "full"
-//! RUST_LOG=debug cargo run --example receipt -F full
-//! RUST_LOG=debug cargo run --example codes
-//! RUST_LOG=debug cargo run --example debug
-//! RUST_LOG=debug cargo run --example page_codes
-//! RUST_LOG=debug cargo run --example usb --features "usb"
-//! RUST_LOG=debug cargo run --example hidapi --features "hidapi"
-//! RUST_LOG=debug cargo run --example serial_port --features "serial_port"
-//! ```
-//!
 //! ### Simple text formatting
 //!
 //! ```rust
