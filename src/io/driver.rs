@@ -270,11 +270,10 @@ impl Driver for UsbDriver {
     }
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
-        Ok(self
-            .device
+        self.device
             .try_borrow_mut()?
             .read_bulk(self.input_endpoint, buf, self.timeout)
-            .map_err(|e| PrinterError::Io(e.to_string()))?)
+            .map_err(|e| PrinterError::Io(e.to_string()))
     }
 
     fn flush(&self) -> Result<()> {
@@ -325,11 +324,10 @@ impl Driver for HidApiDriver {
     }
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
-        Ok(self
-            .device
+        self.device
             .try_borrow_mut()?
             .read_timeout(buf, (DEFAULT_TIMEOUT_SECONDS * 1_000) as i32) // TODO: Do better!
-            .map_err(|e| PrinterError::Io(e.to_string()))?)
+            .map_err(|e| PrinterError::Io(e.to_string()))
     }
 
     fn flush(&self) -> Result<()> {
