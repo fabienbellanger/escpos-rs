@@ -14,7 +14,7 @@ use std::time::Duration;
 use std::{
     cell::RefCell,
     fs::File,
-    io::{self, Write},
+    io::{self, Read, Write},
     net::TcpStream,
     path::Path,
 };
