@@ -2,10 +2,9 @@
 
 #[cfg(feature = "graphics")]
 use super::bit_image::*;
-use super::{character::*, common::get_parameters_number_2, constants::*, types::*};
-use super::{codes::*, RealTimeStatusRequest};
-use crate::domain::page_codes::PageCodeTable;
+use super::{character::*, codes::*, common::get_parameters_number_2, constants::*, types::*, RealTimeStatusRequest};
 use crate::{
+    domain::page_codes::PageCodeTable,
     errors::{PrinterError, Result},
     io::encoder::Encoder,
 };

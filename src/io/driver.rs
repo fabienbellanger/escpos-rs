@@ -9,16 +9,17 @@ use hidapi::{HidApi, HidDevice};
 use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
 #[cfg(feature = "serial_port")]
 use serialport::SerialPort;
-use std::rc::Rc;
-use std::time::Duration;
 use std::{
     cell::RefCell,
     fs::File,
     io::{self, Read, Write},
     net::TcpStream,
     path::Path,
+    rc::Rc,
+    time::Duration,
 };
 
+/// Default timeout in seconds for read/write operations
 const DEFAULT_TIMEOUT_SECONDS: u64 = 5;
 
 pub trait Driver {
@@ -326,7 +327,7 @@ impl Driver for HidApiDriver {
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
         self.device
             .try_borrow_mut()?
-            .read_timeout(buf, (DEFAULT_TIMEOUT_SECONDS * 1_000) as i32) // TODO: Do better!
+            .read_timeout(buf, i32::try_from(DEFAULT_TIMEOUT_SECONDS * 1_000)?)
             .map_err(|e| PrinterError::Io(e.to_string()))
     }
 
