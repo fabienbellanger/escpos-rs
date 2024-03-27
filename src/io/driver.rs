@@ -9,6 +9,7 @@ use hidapi::{HidApi, HidDevice};
 use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
 #[cfg(feature = "serial_port")]
 use serialport::SerialPort;
+use std::rc::Rc;
 use std::time::Duration;
 use std::{
     cell::RefCell,
@@ -17,7 +18,6 @@ use std::{
     net::TcpStream,
     path::Path,
 };
-use std::{io::Read, rc::Rc};
 
 const DEFAULT_TIMEOUT_SECONDS: u64 = 5;
 
