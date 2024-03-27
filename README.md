@@ -8,7 +8,7 @@ This crate implements a subset of Epson's ESC/POS protocol for thermal receipt p
 It allows you to generate and print documents with basic text formatting, cutting, barcodes, QR codes and raster images
 on a compatible printer.
 
-![Ticket](resources/documentation/ticket.jpg) ![Receipt](resources/documentation/receipt.jpg)  
+![Ticket](resources/documentation/ticket.jpg) ![Receipt](resources/documentation/receipt.jpg)
 _Printed on Aures ODP 333_
 
 This project is strongly inspired by [recibo](https://github.com/jamhall/recibo/tree/main) _(Rust)_,
@@ -21,14 +21,14 @@ For standard functionalities (e.g. printing text), no additional dependencies ar
 
 ```toml
 [dependencies]
-escpos = "0.8.3"
+escpos = "0.9.0"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.8.3", features = ["full"] }
+escpos = { version = "0.9.0", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
@@ -183,6 +183,36 @@ fn main() -> Result<()> {
 }
 ```
 
+### Check printer status
+
+```rust
+use escpos::printer::Printer;
+use escpos::utils::*;
+use escpos::{driver::*, errors::Result};
+
+fn main() -> Result<()> {
+    env_logger::init();
+
+    let driver = ConsoleDriver::open(true);
+    Printer::new(driver.clone(), Protocol::default(), None)
+        .debug_mode(Some(DebugMode::Dec))
+        .real_time_status(RealTimeStatusRequest::Printer)?
+        .real_time_status(RealTimeStatusRequest::RollPaperSensor)?
+        .send_status()?;
+
+    let mut buf = [0; 1];
+    driver.read(&mut buf)?;
+
+    let status = RealTimeStatusResponse::parse(RealTimeStatusRequest::Printer, buf[0])?;
+    println!(
+        "Printer online: {}",
+        status.get(&RealTimeStatusResponse::Online).unwrap_or(&false)
+    );
+
+    Ok(())
+}
+```
+
 ## Commands list
 
 | Status | Command                         | Description                                           | Feature    |
@@ -298,7 +328,7 @@ fn main() -> Result<()> {
 
 ## External resources
 
-- [Epson documentation](https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/ref_escpos_en/introduction.html)
+- [Epson documentation](https://download4.epson.biz/sec_pubs/pos/reference_en/escpos)
 
 ## Todo
 
