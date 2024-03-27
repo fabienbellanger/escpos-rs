@@ -2,10 +2,9 @@
 
 #[cfg(feature = "graphics")]
 use super::bit_image::*;
-use super::codes::*;
-use super::{character::*, common::get_parameters_number_2, constants::*, types::*};
-use crate::domain::page_codes::PageCodeTable;
+use super::{character::*, codes::*, common::get_parameters_number_2, constants::*, types::*, RealTimeStatusRequest};
 use crate::{
+    domain::page_codes::PageCodeTable,
     errors::{PrinterError, Result},
     io::encoder::Encoder,
 };
@@ -214,6 +213,15 @@ impl Protocol {
         let mut cmd = GS_SET_MOTION_UNITS.to_vec();
         cmd.push(x);
         cmd.push(y);
+        cmd
+    }
+
+    /// Transmit real-time status
+    pub(crate) fn real_time_status(&self, status: RealTimeStatusRequest) -> Command {
+        let mut cmd = DLE_REAL_TIME_STATUS.to_vec();
+        let (n, a) = status.into();
+        cmd.push(n);
+        cmd.push(a);
         cmd
     }
 
@@ -901,6 +909,47 @@ mod tests {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.motion_units(0, 255), vec![29, 80, 0, 255]);
         assert_eq!(protocol.motion_units(4, 122), vec![29, 80, 4, 122]);
+    }
+
+    #[test]
+    fn test_real_time_status() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.real_time_status(RealTimeStatusRequest::Printer),
+            vec![16, 4, 1, 0]
+        );
+        assert_eq!(
+            protocol.real_time_status(RealTimeStatusRequest::OfflineCause),
+            vec![16, 4, 2, 0]
+        );
+        assert_eq!(
+            protocol.real_time_status(RealTimeStatusRequest::ErrorCause),
+            vec![16, 4, 3, 0]
+        );
+        assert_eq!(
+            protocol.real_time_status(RealTimeStatusRequest::RollPaperSensor),
+            vec![16, 4, 4, 0]
+        );
+        assert_eq!(
+            protocol.real_time_status(RealTimeStatusRequest::InkA),
+            vec![16, 4, 7, 1]
+        );
+        assert_eq!(
+            protocol.real_time_status(RealTimeStatusRequest::InkB),
+            vec![16, 4, 7, 2]
+        );
+        assert_eq!(
+            protocol.real_time_status(RealTimeStatusRequest::Peeler),
+            vec![16, 4, 8, 3]
+        );
+        assert_eq!(
+            protocol.real_time_status(RealTimeStatusRequest::Interface),
+            vec![16, 4, 18, 1]
+        );
+        assert_eq!(
+            protocol.real_time_status(RealTimeStatusRequest::DMD),
+            vec![16, 4, 18, 2]
+        );
     }
 
     #[cfg(feature = "barcodes")]

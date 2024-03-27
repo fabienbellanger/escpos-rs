@@ -12,6 +12,7 @@ pub type Result<T> = std::result::Result<T, PrinterError>;
 pub enum PrinterError {
     Io(String),
     Input(String),
+    InvalidResponse(String),
 }
 
 impl std::error::Error for PrinterError {}
@@ -21,6 +22,7 @@ impl fmt::Display for PrinterError {
         match *self {
             PrinterError::Io(ref err) => write!(f, "IO error: {err}"),
             PrinterError::Input(ref err) => write!(f, "Input error: {err}"),
+            PrinterError::InvalidResponse(ref err) => write!(f, "Invalid response: {err}"),
         }
     }
 }
