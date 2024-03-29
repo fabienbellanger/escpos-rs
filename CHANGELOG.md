@@ -22,13 +22,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add native USB driver support with [nusb](https://crates.io/crates/nusb) (Only tested on MacOS)
+- Add native USB driver support with [nusb](https://crates.io/crates/nusb)
+
+## `0.9.0` (2024-03-29) [CURRENT]
+
+### Added
+
+- Add printer status (`DLE EOT` command)
 
 ### Fixed
 
-- Fix `UsbDriver`: use interface number in `kernel_driver_active()` and `detach_kernel_driver()` functions instead of `0`
+- Fix USB driver interface number
 
-## `0.8.3` (2024-03-14) [CURRENT]
+## `0.8.3` (2024-03-14)
 
 ### Added
 
