@@ -18,7 +18,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## `0.8.3` (2024-03-14) [CURRENT]
+## `0.9.0` (2024-03-27) [CURRENT]
+
+### Added
+
+- Add printer status (`DLE EOT` command)
+
+### Fixed
+
+- Fix USB driver interface number
+
+## `0.8.3` (2024-03-14)
 
 ### Added
 

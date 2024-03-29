@@ -60,6 +60,17 @@ impl<D: Driver> Printer<D> {
         }
     }
 
+    /// Flush the buffer and clean the instructions
+    fn flush(&mut self) -> Result<&mut Self> {
+        for instruction in self.instructions.iter() {
+            self.driver.write(&instruction.flatten_commands())?
+        }
+        self.driver.flush()?;
+        self.instructions = vec![];
+
+        Ok(self)
+    }
+
     /// Set debug mode
     pub fn debug_mode(&mut self, mode: Option<DebugMode>) -> &mut Self {
         self.debug_mode = mode;
@@ -80,11 +91,7 @@ impl<D: Driver> Printer<D> {
     /// All the instructions are sent at the same time to avoid printing partial data
     /// if an error occurred before the `print` command.
     pub fn print(&mut self) -> Result<&mut Self> {
-        for instruction in self.instructions.iter() {
-            self.driver.write(&instruction.flatten_commands())?
-        }
-        self.driver.flush()?;
-        self.instructions = vec![];
+        self.flush()?;
 
         if self.debug_mode.is_some() {
             debug!("[print]");
@@ -323,6 +330,23 @@ impl<D: Driver> Printer<D> {
     pub fn motion_units(&mut self, x: u8, y: u8) -> Result<&mut Self> {
         let cmd = self.protocol.motion_units(x, y);
         self.command("set motion units", &[cmd])
+    }
+
+    /// Ask printer to send real-time status
+    pub fn real_time_status(&mut self, status: RealTimeStatusRequest) -> Result<&mut Self> {
+        let cmd = self.protocol.real_time_status(status);
+        self.command("real-time status", &[cmd])
+    }
+
+    /// Send printer status commands
+    pub fn send_status(&mut self) -> Result<&mut Self> {
+        self.flush()?;
+
+        if self.debug_mode.is_some() {
+            debug!("[send printer status]");
+        }
+
+        Ok(self)
     }
 
     #[cfg(feature = "barcodes")]
