@@ -384,21 +384,24 @@ impl Driver for NativeUsbDriver {
     }
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
-        let request = RequestBuffer::new(buf.len());
-
-        let result = block_on(self.device.try_borrow_mut()?.bulk_in(self.input_endpoint, request))
+        // Seens to read responses one by one
+        let mut size = 0;
+        for b in buf.iter_mut() {
+            let result = block_on(
+                self.device
+                    .try_borrow_mut()?
+                    .bulk_in(self.input_endpoint, RequestBuffer::new(1)),
+            )
             .into_result()
             .map_err(|e| PrinterError::Io(e.to_string()))?;
 
-        // TODO: Check why result has a length of one!
-
-        if buf.len() >= result.len() {
-            for (i, byte) in result.iter().enumerate() {
-                buf[i] = *byte;
+            if !result.is_empty() {
+                *b = result[0];
+                size += 1;
             }
         }
 
-        Ok(result.len())
+        Ok(size)
     }
 
     fn flush(&self) -> Result<()> {

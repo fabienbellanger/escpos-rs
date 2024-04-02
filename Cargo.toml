@@ -36,7 +36,7 @@ full = [
 encoding_rs = "0.8.33"
 futures-lite = { version = "2.3.0", optional = true }
 hidapi = { version = "2.6.1", optional = true }
-image = { version = "0.25.0", optional = true }
+image = { version = "0.25.1", optional = true }
 lazy_static = "1.4.0"
 log = "0.4.21"
 nusb = { version = "0.1.7", optional = true }
