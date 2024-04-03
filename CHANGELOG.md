@@ -24,6 +24,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add native USB driver support with [nusb](https://crates.io/crates/nusb)
 
+### Changed
+
+- [Breaking] Rename `GraphicDensity::Hight` to `GraphicDensity::High`
+
+### Fixed
+
+- Fix typo
+
 ## `0.9.0` (2024-03-29) [CURRENT]
 
 ### Added

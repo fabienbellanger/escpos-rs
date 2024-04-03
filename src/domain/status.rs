@@ -78,7 +78,7 @@ pub enum RealTimeStatusResponse {
 }
 
 impl RealTimeStatusResponse {
-    /// Check if the pattern is valid, ie. 0xx1xx10b ([0, 1, x, x, 1, x, x, 0])
+    /// Check if the pattern is valid, i.e. 0xx1xx10b ([0, 1, x, x, 1, x, x, 0])
     fn is_pattern_valid(data: &[u8]) -> bool {
         if data.len() != 8 {
             return false;

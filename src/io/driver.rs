@@ -7,6 +7,7 @@ use crate::errors::Result;
 use futures_lite::future::block_on;
 #[cfg(feature = "hidapi")]
 use hidapi::{HidApi, HidDevice};
+#[cfg(feature = "native_usb")]
 use nusb::transfer::RequestBuffer;
 #[cfg(feature = "usb")]
 use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
@@ -384,7 +385,7 @@ impl Driver for NativeUsbDriver {
     }
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
-        // Seens to read responses one by one
+        // Seems to read responses one by one
         let mut size = 0;
         for b in buf.iter_mut() {
             let result = block_on(
