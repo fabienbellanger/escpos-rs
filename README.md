@@ -290,10 +290,10 @@ fn main() -> Result<()> {
 | Code       | Implemented? |
 |:-----------|:------------:|
 | PC437      |      ✅       |
-| Katakana   |      ❌       |
-| PC850      |      ❌       |
+| Katakana   |      ✅       |
+| PC850      |      ✅       |
 | PC860      |      ✅       |
-| PC863      |      ❌       |
+| PC863      |      ✅       |
 | PC865      |      ✅       |
 | Hiragana   |      ❌       |
 | PC851      |      ❌       |
