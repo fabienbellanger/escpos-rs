@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## [Unreleased]
+## `0.10.0` (2024-04-09) [CURRENT]
 
 ### Added
 
@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix typo
 
-## `0.9.0` (2024-03-29) [CURRENT]
+## `0.9.0` (2024-03-29)
 
 ### Added
 

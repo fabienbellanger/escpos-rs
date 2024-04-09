@@ -21,14 +21,14 @@ For standard functionalities (e.g. printing text), no additional dependencies ar
 
 ```toml
 [dependencies]
-escpos = "0.9.0"
+escpos = "0.10.0"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.9.0", features = ["full"] }
+escpos = { version = "0.10.0", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
@@ -59,15 +59,15 @@ The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and
 To launch an example, use the following command:
 
 ```shell
-RUST_LOG=debug cargo run --example full --features "full"
+RUST_LOG=debug cargo run --example full --features full
 RUST_LOG=debug cargo run --example receipt -F full
 RUST_LOG=debug cargo run --example codes
 RUST_LOG=debug cargo run --example debug
 RUST_LOG=debug cargo run --example page_codes
-RUST_LOG=debug cargo run --example usb --features "usb"
-RUST_LOG=debug cargo run --example native_usb --features "native_usb"
-RUST_LOG=debug cargo run --example hidapi --features "hidapi"
-RUST_LOG=debug cargo run --example serial_port --features "serial_port"
+RUST_LOG=debug cargo run --example usb --features usb
+RUST_LOG=debug cargo run --example native_usb --features native_usb
+RUST_LOG=debug cargo run --example hidapi --features hidapi
+RUST_LOG=debug cargo run --example serial_port --features serial_port
 RUST_LOG=debug cargo run --example status --all-features
 ```
 
