@@ -311,31 +311,33 @@ impl NativeUsbDriver {
         let configuration = device
             .active_configuration()
             .map_err(|e| PrinterError::Io(e.to_string()))?;
-        let output_endpoint = match configuration.interface_alt_settings().next() {
-            Some(settings) => settings
-                .endpoints()
-                .find(|endpoint| {
-                    endpoint.transfer_type() == nusb::transfer::EndpointType::Bulk
+
+        let (output_endpoint, input_endpoint) = match configuration.interface_alt_settings().next() {
+            Some(settings) => {
+                let endpoints = settings.endpoints();
+                let (mut output, mut input) = (None, None);
+
+                for endpoint in endpoints {
+                    if endpoint.transfer_type() == nusb::transfer::EndpointType::Bulk
                         && endpoint.direction() == nusb::transfer::Direction::Out
-                })
-                .map(|endpoint| endpoint.address()),
-            None => None,
-        }
-        .ok_or(PrinterError::Io(
-            "no suitable output endpoint found for USB device".to_string(),
-        ))?;
-        let input_endpoint = match configuration.interface_alt_settings().next() {
-            Some(settings) => settings
-                .endpoints()
-                .find(|endpoint| {
-                    endpoint.transfer_type() == nusb::transfer::EndpointType::Bulk
+                    {
+                        output = Some(endpoint.address())
+                    } else if endpoint.transfer_type() == nusb::transfer::EndpointType::Bulk
                         && endpoint.direction() == nusb::transfer::Direction::In
-                })
-                .map(|endpoint| endpoint.address()),
+                    {
+                        input = Some(endpoint.address())
+                    }
+                }
+
+                match (output, input) {
+                    (Some(output), Some(input)) => Some((output, input)),
+                    _ => None,
+                }
+            }
             None => None,
         }
         .ok_or(PrinterError::Io(
-            "no suitable input endpoint found for USB device".to_string(),
+            "no suitable input or output endpoints found for USB device".to_string(),
         ))?;
 
         // Get interface number

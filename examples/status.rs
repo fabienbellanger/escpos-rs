@@ -7,10 +7,10 @@ use std::time::Duration;
 fn main() -> Result<()> {
     env_logger::init();
 
-    // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
+    let driver = NetworkDriver::open("192.168.1.248", 9100)?;
     // let driver = ConsoleDriver::open(true);
     // let driver = UsbDriver::open(0x0525, 0xa700, None)?;
-    let driver = NativeUsbDriver::open(0x0525, 0xa700)?;
+    // let driver = NativeUsbDriver::open(0x0525, 0xa700)?;
 
     loop {
         Printer::new(driver.clone(), Protocol::default(), None)
