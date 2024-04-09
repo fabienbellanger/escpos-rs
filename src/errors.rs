@@ -28,7 +28,7 @@ impl fmt::Display for PrinterError {
 }
 
 impl From<io::Error> for PrinterError {
-    fn from(err: std::io::Error) -> PrinterError {
+    fn from(err: io::Error) -> PrinterError {
         PrinterError::Io(err.to_string())
     }
 }

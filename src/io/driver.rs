@@ -1,10 +1,14 @@
 //! Drivers used to send data to the printer (Network or USB)
 
-#[cfg(any(feature = "usb", feature = "hidapi", feature = "serial_port"))]
+#[cfg(any(feature = "usb", feature = "native_usb", feature = "hidapi", feature = "serial_port"))]
 use crate::errors::PrinterError;
 use crate::errors::Result;
+#[cfg(feature = "native_usb")]
+use futures_lite::future::block_on;
 #[cfg(feature = "hidapi")]
 use hidapi::{HidApi, HidDevice};
+#[cfg(feature = "native_usb")]
+use nusb::transfer::RequestBuffer;
 #[cfg(feature = "usb")]
 use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
 #[cfg(feature = "serial_port")]
@@ -154,7 +158,7 @@ impl Driver for FileDriver {
     }
 }
 
-// ================ USB driver ================
+// ================ USB drivers ================
 
 /// Driver for USB printer
 #[cfg(feature = "usb")]
@@ -275,6 +279,132 @@ impl Driver for UsbDriver {
             .try_borrow_mut()?
             .read_bulk(self.input_endpoint, buf, self.timeout)
             .map_err(|e| PrinterError::Io(e.to_string()))
+    }
+
+    fn flush(&self) -> Result<()> {
+        Ok(())
+    }
+}
+
+/// Driver for USB printer
+#[cfg(feature = "native_usb")]
+#[derive(Clone)]
+pub struct NativeUsbDriver {
+    vendor_id: u16,
+    product_id: u16,
+    output_endpoint: u8,
+    input_endpoint: u8,
+    device: Rc<RefCell<nusb::Interface>>,
+}
+
+#[cfg(feature = "native_usb")]
+impl NativeUsbDriver {
+    /// Open a new USB connection
+    pub fn open(vendor_id: u16, product_id: u16) -> Result<Self> {
+        let device_info = nusb::list_devices()
+            .map_err(|e| PrinterError::Io(e.to_string()))?
+            .find(|dev| dev.vendor_id() == vendor_id && dev.product_id() == product_id)
+            .ok_or(PrinterError::Io("USB device not found".to_string()))?;
+        let device = device_info.open().map_err(|e| PrinterError::Io(e.to_string()))?;
+
+        // Get endpoints
+        let configuration = device
+            .active_configuration()
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+
+        let (output_endpoint, input_endpoint) = match configuration.interface_alt_settings().next() {
+            Some(settings) => {
+                let endpoints = settings.endpoints();
+                let (mut output, mut input) = (None, None);
+
+                for endpoint in endpoints {
+                    if endpoint.transfer_type() == nusb::transfer::EndpointType::Bulk
+                        && endpoint.direction() == nusb::transfer::Direction::Out
+                    {
+                        output = Some(endpoint.address())
+                    } else if endpoint.transfer_type() == nusb::transfer::EndpointType::Bulk
+                        && endpoint.direction() == nusb::transfer::Direction::In
+                    {
+                        input = Some(endpoint.address())
+                    }
+                }
+
+                match (output, input) {
+                    (Some(output), Some(input)) => Some((output, input)),
+                    _ => None,
+                }
+            }
+            None => None,
+        }
+        .ok_or(PrinterError::Io(
+            "no suitable input or output endpoints found for USB device".to_string(),
+        ))?;
+
+        // Get interface number
+        let interface_number = device_info
+            .interfaces()
+            .map(|interface| interface.interface_number())
+            .next()
+            .ok_or_else(|| PrinterError::Io("no suitable interface number found for USB device".to_string()))?;
+
+        #[cfg(not(target_os = "windows"))]
+        let interface = device
+            .detach_and_claim_interface(interface_number)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+        #[cfg(target_os = "windows")]
+        let interface = device
+            .claim_interface(interface_number)
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+
+        Ok(Self {
+            vendor_id,
+            product_id,
+            output_endpoint,
+            input_endpoint,
+            device: Rc::new(RefCell::new(interface)),
+        })
+    }
+}
+
+#[cfg(feature = "native_usb")]
+impl Driver for NativeUsbDriver {
+    fn name(&self) -> String {
+        format!(
+            "Native USB (VID: {}, PID: {}, output endpoint: {})",
+            self.vendor_id, self.product_id, self.output_endpoint
+        )
+    }
+
+    fn write(&self, data: &[u8]) -> Result<()> {
+        block_on(
+            self.device
+                .try_borrow_mut()?
+                .bulk_out(self.output_endpoint, data.to_vec()),
+        )
+        .into_result()
+        .map_err(|e| PrinterError::Io(e.to_string()))?;
+        Ok(())
+    }
+
+    fn read(&self, buf: &mut [u8]) -> Result<usize> {
+        // Seems to read responses one by one
+        let mut size = 0;
+        for b in buf.iter_mut() {
+            let result = block_on(
+                self.device
+                    .try_borrow_mut()?
+                    .bulk_in(self.input_endpoint, RequestBuffer::new(1)),
+            )
+            .into_result()
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
+
+            if !result.is_empty() {
+                *b = result[0];
+                size += 1;
+            }
+        }
+
+        Ok(size)
     }
 
     fn flush(&self) -> Result<()> {

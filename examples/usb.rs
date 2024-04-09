@@ -6,7 +6,7 @@ use escpos::utils::*;
 fn main() -> Result<()> {
     env_logger::init();
 
-    // List USB devices
+    // List of USB devices
     for device in rusb::devices().unwrap().iter() {
         let device_desc = device.device_descriptor().unwrap();
 
@@ -15,7 +15,7 @@ fn main() -> Result<()> {
             device.bus_number(),
             device.address(),
             device_desc.vendor_id(),
-            device_desc.product_id()
+            device_desc.product_id(),
         );
     }
 

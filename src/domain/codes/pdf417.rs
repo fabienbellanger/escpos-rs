@@ -111,13 +111,13 @@ impl Pdf417Option {
         correction_level: Pdf417CorrectionLevel,
     ) -> Result<Self> {
         if !(0..=30).contains(&columns) {
-            return Err(crate::errors::PrinterError::Input(format!(
+            return Err(PrinterError::Input(format!(
                 "number of PDF417 columns is not valid(0-30): {columns}"
             )));
         }
 
         if rows != 0 && !(3..=90).contains(&rows) {
-            return Err(crate::errors::PrinterError::Input(format!(
+            return Err(PrinterError::Input(format!(
                 "number of PDF417 rows is not valid(0, 3-90): {rows}"
             )));
         }

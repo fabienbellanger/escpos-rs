@@ -178,7 +178,7 @@ impl BitImage {
     /// Get image width in bytes
     pub fn width_bytes(&self) -> Result<u16> {
         // TODO: Do better
-        Ok(u16::try_from(((f32::from(self.width()?) / 8.0).ceil()) as usize)?)
+        Ok(u16::try_from((f32::from(self.width()?) / 8.0).ceil() as usize)?)
     }
 
     /// Get image
