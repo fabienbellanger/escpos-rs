@@ -22,7 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add table for page codes `Katakana`, `PC850` and `PC863`
+- Add table for page codes `Katakana`, `PC850`, `PC851`, `PC853` and `PC863`
+
+### Changed
+
+- Bump `encoding_rs` to `0.8.34`
 
 ## `0.10.0` (2024-04-09) [CURRENT]
 

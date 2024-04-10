@@ -864,10 +864,6 @@ mod tests {
     fn test_text_with_page_code() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(
-            protocol.text("My text", Some(PageCode::PC858)).unwrap(),
-            "My text".as_bytes()
-        );
-        assert_eq!(
             protocol.text("My text é €", Some(PageCode::PC858)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 130, 32, 213]
         );
@@ -910,6 +906,14 @@ mod tests {
         assert_eq!(
             protocol.text("My text ¶ ¦ ¾", Some(PageCode::PC863)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 134, 32, 160, 32, 173]
+        );
+        assert_eq!(
+            protocol.text("My text ψ Ώ Φ", Some(PageCode::PC851)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xF6, 32, 0x98, 32, 0xD2]
+        );
+        assert_eq!(
+            protocol.text("My text ℓ Ħ ş", Some(PageCode::PC853)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xF2, 32, 0xE7, 32, 0xAD]
         );
 
         // With page code table not yet implemented
