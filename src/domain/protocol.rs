@@ -947,6 +947,18 @@ mod tests {
             protocol.text("My text ώ © Λ", Some(PageCode::PC869)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 0xFD, 32, 0x97, 32, 0xB6]
         );
+        assert_eq!(
+            protocol.text("My text Š ž “", Some(PageCode::PC1118)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xBE, 32, 0xD8, 32, 0xF5]
+        );
+        assert_eq!(
+            protocol.text("My text Ą Ū ž", Some(PageCode::PC1119)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xB5, 32, 0xC7, 32, 0xD8]
+        );
+        assert_eq!(
+            protocol.text("My text Ґ Є №", Some(PageCode::PC1125)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xF2, 32, 0xF4, 32, 0xFC]
+        );
 
         // With page code table not yet implemented
         assert!(protocol.text("My text", Some(PageCode::Hiragana)).is_err());

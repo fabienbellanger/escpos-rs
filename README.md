@@ -6,7 +6,7 @@
 
 This crate implements a subset of Epson's ESC/POS protocol for thermal receipt printers.
 It allows you to generate and print documents with basic text formatting, cutting, barcodes, QR codes and raster images
-on a compatible printer.
+on a compatible printer. It also provides a way to check the printer status.
 
 ![Ticket](resources/documentation/ticket.jpg) ![Receipt](resources/documentation/receipt.jpg)
 _Printed on Aures ODP 333_
@@ -315,9 +315,9 @@ fn main() -> Result<()> {
 | ISO8859_2  |      ✅       |
 | ISO8859_15 |      ✅       |
 | PC1098     |      ❌       |
-| PC1118     |      ❌       |
-| PC1119     |      ❌       |
-| PC1125     |      ❌       |
+| PC1118     |      ✅       |
+| PC1119     |      ✅       |
+| PC1125     |      ✅       |
 | WPC1250    |      ❌       |
 | WPC1251    |      ❌       |
 | WPC1253    |      ❌       |

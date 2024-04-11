@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add table for page
-  codes `Katakana`, `PC850`, `PC851`, `PC853`, `PC857`, `PC737`, `PC863`, `PC866`, `WPC775`, `PC855`, `PC861`, `PC862`, `PC869`
+  codes `Katakana`, `PC850`, `PC851`, `PC853`, `PC857`, `PC737`, `PC863`, `PC866`, `WPC775`, `PC855`, `PC861`, `PC862`, `PC869`, `PC1118`, `PC1119`, `PC1125`
 
 ### Changed
 
