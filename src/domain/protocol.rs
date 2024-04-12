@@ -976,6 +976,10 @@ mod tests {
             &[77, 121, 32, 116, 101, 120, 116, 32, 0xD0, 32, 0xDE, 32, 0xFE]
         );
         assert_eq!(
+            protocol.text("My text Æ Ģ ų", Some(PageCode::WPC1257)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xAF, 32, 0xCC, 32, 0xF8]
+        );
+        assert_eq!(
             protocol.text("My text Ђ Ә ғ", Some(PageCode::KZ1048)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 0x80, 32, 0xA3, 32, 0xBA]
         );
