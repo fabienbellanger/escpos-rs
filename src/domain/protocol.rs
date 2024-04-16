@@ -864,10 +864,6 @@ mod tests {
     fn test_text_with_page_code() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(
-            protocol.text("My text", Some(PageCode::PC858)).unwrap(),
-            "My text".as_bytes()
-        );
-        assert_eq!(
             protocol.text("My text é €", Some(PageCode::PC858)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 130, 32, 213]
         );
@@ -899,9 +895,97 @@ mod tests {
             protocol.text("My text € Ç ÿ", Some(PageCode::WPC1252)).unwrap(),
             &[77, 121, 32, 116, 101, 120, 116, 32, 128, 32, 199, 32, 255]
         );
+        assert_eq!(
+            protocol.text("My text ｦ ﾎ ﾟ", Some(PageCode::Katakana)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 166, 32, 206, 32, 223]
+        );
+        assert_eq!(
+            protocol.text("My text × § Ð", Some(PageCode::PC850)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 158, 32, 245, 32, 209]
+        );
+        assert_eq!(
+            protocol.text("My text ¶ ¦ ¾", Some(PageCode::PC863)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 134, 32, 160, 32, 173]
+        );
+        assert_eq!(
+            protocol.text("My text ψ Ώ Φ", Some(PageCode::PC851)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xF6, 32, 0x98, 32, 0xD2]
+        );
+        assert_eq!(
+            protocol.text("My text ℓ Ħ ş", Some(PageCode::PC853)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xF2, 32, 0xE7, 32, 0xAD]
+        );
+        assert_eq!(
+            protocol.text("My text Ğ ª ÿ", Some(PageCode::PC857)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xA6, 32, 0xD1, 32, 0xED]
+        );
+        assert_eq!(
+            protocol.text("My text Ή ς Λ", Some(PageCode::PC737)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xEC, 32, 0xAA, 32, 0x8A]
+        );
+        assert_eq!(
+            protocol.text("My text ю Щ Є", Some(PageCode::PC866)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xEE, 32, 0x99, 32, 0xF2]
+        );
+        assert_eq!(
+            protocol.text("My text Ķ č Ł", Some(PageCode::WPC775)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xE8, 32, 0xD1, 32, 0xAD]
+        );
+        assert_eq!(
+            protocol.text("My text Њ Ж Й", Some(PageCode::PC855)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0x93, 32, 0xEA, 32, 0xBE]
+        );
+        assert_eq!(
+            protocol.text("My text þ Þ Σ", Some(PageCode::PC861)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0x95, 32, 0x8D, 32, 0xE4]
+        );
+        assert_eq!(
+            protocol.text("My text א ש √", Some(PageCode::PC862)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0x80, 32, 0x99, 32, 0xFB]
+        );
+        assert_eq!(
+            protocol.text("My text ώ © Λ", Some(PageCode::PC869)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xFD, 32, 0x97, 32, 0xB6]
+        );
+        assert_eq!(
+            protocol.text("My text Š ž “", Some(PageCode::PC1118)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xBE, 32, 0xD8, 32, 0xF5]
+        );
+        assert_eq!(
+            protocol.text("My text Ą Ū ž", Some(PageCode::PC1119)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xB5, 32, 0xC7, 32, 0xD8]
+        );
+        assert_eq!(
+            protocol.text("My text Ґ Є №", Some(PageCode::PC1125)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xF2, 32, 0xF4, 32, 0xFC]
+        );
+        assert_eq!(
+            protocol.text("My text ‡ ť ¶", Some(PageCode::WPC1250)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0x87, 32, 0x9D, 32, 0xB6]
+        );
+        assert_eq!(
+            protocol.text("My text Ђ џ Ъ", Some(PageCode::WPC1251)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0x80, 32, 0x9F, 32, 0xDA]
+        );
+        assert_eq!(
+            protocol.text("My text ƒ ‰ ¥", Some(PageCode::WPC1253)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0x83, 32, 0x89, 32, 0xA5]
+        );
+        assert_eq!(
+            protocol.text("My text Ğ Ş ş", Some(PageCode::WPC1254)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xD0, 32, 0xDE, 32, 0xFE]
+        );
+        assert_eq!(
+            protocol.text("My text Æ Ģ ų", Some(PageCode::WPC1257)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0xAF, 32, 0xCC, 32, 0xF8]
+        );
+        assert_eq!(
+            protocol.text("My text Ђ Ә ғ", Some(PageCode::KZ1048)).unwrap(),
+            &[77, 121, 32, 116, 101, 120, 116, 32, 0x80, 32, 0xA3, 32, 0xBA]
+        );
 
         // With page code table not yet implemented
-        assert!(protocol.text("My text", Some(PageCode::Katakana)).is_err());
+        assert!(protocol.text("My text", Some(PageCode::Hiragana)).is_err());
     }
 
     #[test]
