@@ -8,7 +8,7 @@ This crate implements a subset of Epson's ESC/POS protocol for thermal receipt p
 It allows you to generate and print documents with basic text formatting, cutting, barcodes, QR codes and raster images
 on a compatible printer. It also provides a way to check the printer status.
 
-![Ticket](resources/documentation/ticket.jpg) ![Receipt](resources/documentation/receipt.jpg)
+![Ticket](resources/documentation/ticket.jpg) ![Receipt](resources/documentation/receipt.jpg)  
 _Printed on Aures ODP 333_
 
 This project is strongly inspired by [recibo](https://github.com/jamhall/recibo/tree/main) _(Rust)_,
@@ -335,6 +335,5 @@ fn main() -> Result<()> {
 ## Todo
 
 - [ ] Customize drivers timeout read/write
-- [ ] Implement all pages codes
 - [ ] Add more commands:
   - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)
