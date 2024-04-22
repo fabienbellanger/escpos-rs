@@ -176,8 +176,8 @@ pub struct UsbDriver {
 impl UsbDriver {
     /// Open a new USB connection
     pub fn open(vendor_id: u16, product_id: u16, timeout: Option<Duration>) -> Result<Self> {
-        let context = Context::new().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-        let devices = context.devices().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+        let context = Context::new().map_err(|e| PrinterError::Io(e.to_string()))?;
+        let devices = context.devices().map_err(|e| PrinterError::Io(e.to_string()))?;
 
         for device in devices.iter() {
             let device_descriptor = device
@@ -248,7 +248,7 @@ impl UsbDriver {
                             timeout: timeout.unwrap_or(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS)),
                         })
                     }
-                    Err(_) => Err(PrinterError::Io("USB device busy".to_string())),
+                    Err(e) => Err(PrinterError::Io(e.to_string())),
                 };
             }
         }

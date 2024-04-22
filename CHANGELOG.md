@@ -18,33 +18,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
+## [Unreleased]
+
+### Changed
+
+- Improve errors in `UsbDriver`
+- Bump `nusb` to `0.1.8`
+
 ## `0.11.0` (2024-04-16) [CURRENT]
 
 ### Added
 
 - Add table for page codes:
-  - `Katakana`
-  - `PC850`
-  - `PC851`
-  - `PC853`
-  - `PC857`
-  - `PC737`
-  - `PC863`
-  - `PC866`
-  - `WPC775`
-  - `PC855`
-  - `PC861`
-  - `PC862`
-  - `PC869`
-  - `PC1118`
-  - `PC1119`
-  - `PC1125`
-  - `WPC1250`
-  - `WPC1251`
-  - `WPC1253`
-  - `WPC1254`
-  - `WPC1257`
-  - `KZ1048`
+    - `Katakana`
+    - `PC850`
+    - `PC851`
+    - `PC853`
+    - `PC857`
+    - `PC737`
+    - `PC863`
+    - `PC866`
+    - `WPC775`
+    - `PC855`
+    - `PC861`
+    - `PC862`
+    - `PC869`
+    - `PC1118`
+    - `PC1119`
+    - `PC1125`
+    - `WPC1250`
+    - `WPC1251`
+    - `WPC1253`
+    - `WPC1254`
+    - `WPC1257`
+    - `KZ1048`
 
 ### Changed
 
