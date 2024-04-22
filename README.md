@@ -81,7 +81,7 @@ use escpos::{driver::*, errors::Result};
 fn main() -> Result<()> {
     env_logger::init();
 
-    let driver = NetworkDriver::open("192.168.1.248", 9100)?;
+    let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
     Printer::new(driver, Protocol::default(), None)
         .debug_mode(Some(DebugMode::Dec))
         .init()?

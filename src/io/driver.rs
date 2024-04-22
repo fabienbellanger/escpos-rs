@@ -17,7 +17,7 @@ use std::{
     cell::RefCell,
     fs::File,
     io::{self, Read, Write},
-    net::TcpStream,
+    net::{IpAddr, SocketAddr, TcpStream},
     path::Path,
     rc::Rc,
     time::Duration,
@@ -84,15 +84,29 @@ pub struct NetworkDriver {
     host: String,
     port: u16,
     stream: Rc<RefCell<TcpStream>>,
+    timeout: Duration,
 }
 
 impl NetworkDriver {
     /// Open the network driver
-    pub fn open(host: &str, port: u16) -> Result<Self> {
+    pub fn open(host: &str, port: u16, timeout: Option<Duration>) -> Result<Self> {
+        let stream = match timeout {
+            Some(timeout) => {
+                let addr = SocketAddr::new(
+                    host.parse::<IpAddr>().map_err(|e| PrinterError::Io(e.to_string()))?,
+                    port,
+                );
+                TcpStream::connect_timeout(&addr, timeout)?
+            }
+            None => TcpStream::connect((host, port))?,
+        };
+        let timeout = timeout.unwrap_or(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS));
+
         Ok(Self {
             host: host.to_string(),
             port,
-            stream: Rc::new(RefCell::new(TcpStream::connect((host, port))?)),
+            stream: Rc::new(RefCell::new(stream)),
+            timeout,
         })
     }
 }
@@ -103,13 +117,17 @@ impl Driver for NetworkDriver {
     }
 
     fn write(&self, data: &[u8]) -> Result<()> {
-        self.stream.try_borrow_mut()?.write_all(data)?;
+        let mut stream = self.stream.try_borrow_mut()?;
+        stream.set_write_timeout(Some(self.timeout))?;
+
+        stream.write_all(data)?;
+
         Ok(())
     }
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
         let mut stream = self.stream.try_borrow_mut()?;
-        stream.set_read_timeout(Some(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS)))?;
+        stream.set_read_timeout(Some(self.timeout))?;
 
         Ok(stream.read(buf)?)
     }

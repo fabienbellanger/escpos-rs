@@ -28,7 +28,7 @@ fn main() -> Result<()> {
     let tax = Item::new("Tax (20%)", None, subtotal.price * 0.20, true);
     let total = Item::new("Total", None, subtotal.price + tax.price, true);
 
-    // let driver = NetworkDriver::open("192.168.1.248", 9100)?;
+    // let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
     let driver = ConsoleDriver::open(true);
     let mut printer = Printer::new(driver, Protocol::default(), None);
     printer.init()?.justify(JustifyMode::CENTER)?;
