@@ -2,7 +2,6 @@
 
 #![cfg(feature = "barcodes")]
 #![cfg_attr(docsrs, feature(doc_cfg))]
-#![cfg_attr(docsrs, doc(cfg(feature = "barcodes")))]
 
 use crate::errors::{PrinterError, Result};
 use std::fmt;
