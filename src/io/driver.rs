@@ -1,8 +1,6 @@
 //! Drivers used to send data to the printer (Network or USB)
 
-#[cfg(any(feature = "usb", feature = "native_usb", feature = "hidapi", feature = "serial_port"))]
-use crate::errors::PrinterError;
-use crate::errors::Result;
+use crate::errors::{PrinterError, Result};
 #[cfg(feature = "native_usb")]
 use futures_lite::future::block_on;
 #[cfg(feature = "hidapi")]
