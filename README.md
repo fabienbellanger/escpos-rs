@@ -21,14 +21,14 @@ For standard functionalities (e.g. printing text), no additional dependencies ar
 
 ```toml
 [dependencies]
-escpos = "0.11.0"
+escpos = "0.12.0"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.11.0", features = ["full"] }
+escpos = { version = "0.12.0", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
@@ -331,9 +331,3 @@ fn main() -> Result<()> {
 ## External resources
 
 - [Epson documentation](https://download4.epson.biz/sec_pubs/pos/reference_en/escpos)
-
-## Todo
-
-- [ ] Customize drivers timeout read/write
-- [ ] Add more commands:
-  - [ ] Graphic (Ex.: `GS 8 L` or `GS ( L`)

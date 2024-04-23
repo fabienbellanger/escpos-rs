@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## [Unreleased]
+## `0.12.0` (2024-04-23) [CURRENT]
 
 ### Added
 
@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve errors in `UsbDriver`
 - Bump `nusb` to `0.1.8`
 
-## `0.11.0` (2024-04-16) [CURRENT]
+## `0.11.0` (2024-04-16)
 
 ### Added
 

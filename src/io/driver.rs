@@ -50,6 +50,17 @@ pub struct ConsoleDriver {
 
 impl ConsoleDriver {
     /// Open the Console driver
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    ///
+    /// let driver = ConsoleDriver::open(true);
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    /// ```
     pub fn open(show_output: bool) -> Self {
         Self { show_output }
     }
@@ -89,6 +100,18 @@ pub struct NetworkDriver {
 
 impl NetworkDriver {
     /// Open the network driver
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    /// use std::time::Duration;
+    ///
+    /// let driver = NetworkDriver::open("192.168.1.248", 9100, Some(Duration::from_secs(1))).unwrap();
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    /// ```
     pub fn open(host: &str, port: u16, timeout: Option<Duration>) -> Result<Self> {
         let stream = match timeout {
             Some(timeout) => {
@@ -120,9 +143,7 @@ impl Driver for NetworkDriver {
         let mut stream = self.stream.try_borrow_mut()?;
         stream.set_write_timeout(Some(self.timeout))?;
 
-        stream.write_all(data)?;
-
-        Ok(())
+        Ok(stream.write_all(data)?)
     }
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
@@ -148,6 +169,19 @@ pub struct FileDriver {
 
 impl FileDriver {
     /// Open the file driver
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    /// use std::path::Path;
+    ///
+    /// let path = Path::new("./foo/bar.txt");
+    /// let driver = FileDriver::open(&path).unwrap();
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    /// ```
     pub fn open(path: &Path) -> Result<Self> {
         let file = File::options().read(true).append(true).open(path)?;
         Ok(Self {
@@ -193,6 +227,17 @@ pub struct UsbDriver {
 #[cfg(feature = "usb")]
 impl UsbDriver {
     /// Open a new USB connection
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    ///
+    /// let driver = UsbDriver::open(0x0525, 0xa700, None).unwrap();
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    /// ```
     pub fn open(vendor_id: u16, product_id: u16, timeout: Option<Duration>) -> Result<Self> {
         let context = Context::new().map_err(|e| PrinterError::Io(e.to_string()))?;
         let devices = context.devices().map_err(|e| PrinterError::Io(e.to_string()))?;
@@ -279,8 +324,8 @@ impl UsbDriver {
 impl Driver for UsbDriver {
     fn name(&self) -> String {
         format!(
-            "USB (VID: {}, PID: {}, output endpoint: {})",
-            self.vendor_id, self.product_id, self.output_endpoint
+            "USB (VID: {}, PID: {}, output endpoint: {}, input endpoint: {})",
+            self.vendor_id, self.product_id, self.output_endpoint, self.input_endpoint
         )
     }
 
@@ -318,6 +363,17 @@ pub struct NativeUsbDriver {
 #[cfg(feature = "native_usb")]
 impl NativeUsbDriver {
     /// Open a new USB connection
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    ///
+    /// let driver = NativeUsbDriver::open(0x0525, 0xa700).unwrap();
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    /// ```
     pub fn open(vendor_id: u16, product_id: u16) -> Result<Self> {
         let device_info = nusb::list_devices()
             .map_err(|e| PrinterError::Io(e.to_string()))?
@@ -388,8 +444,8 @@ impl NativeUsbDriver {
 impl Driver for NativeUsbDriver {
     fn name(&self) -> String {
         format!(
-            "Native USB (VID: {}, PID: {}, output endpoint: {})",
-            self.vendor_id, self.product_id, self.output_endpoint
+            "USB (VID: {}, PID: {}, output endpoint: {}, input endpoint: {})",
+            self.vendor_id, self.product_id, self.output_endpoint, self.input_endpoint
         )
     }
 
@@ -444,6 +500,17 @@ pub struct HidApiDriver {
 #[cfg(feature = "hidapi")]
 impl HidApiDriver {
     /// Open a new USB connection
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    ///
+    /// let driver = HidApiDriver::open(0x0525, 0xa700).unwrap();
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    /// ```
     pub fn open(vendor_id: u16, product_id: u16) -> Result<Self> {
         let api = HidApi::new().map_err(|e| PrinterError::Io(e.to_string()))?;
         let device = api
@@ -497,6 +564,18 @@ pub struct SerialPortDriver {
 #[cfg(feature = "serial_port")]
 impl SerialPortDriver {
     /// Open a new Serial port connection
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    /// use std::time::Duration;
+    ///
+    /// let driver = SerialPortDriver::open("/dev/ttyUSB0", 115_200, Some(Duration::from_secs(5))).unwrap();
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    /// ```
     pub fn open(path: &str, baud_rate: u32, timeout: Option<Duration>) -> Result<Self> {
         let mut port = serialport::new(path, baud_rate);
         if let Some(timeout) = timeout {
