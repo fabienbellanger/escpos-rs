@@ -1,6 +1,7 @@
 //! Printer
 
 use super::errors::Result;
+use crate::printer_options::PrinterOptions;
 use crate::{domain::*, driver::Driver, utils::Protocol};
 use log::debug;
 
@@ -30,9 +31,8 @@ use log::debug;
 pub struct Printer<D: Driver> {
     driver: D,
     protocol: Protocol,
-    page_code: Option<PageCode>,
     instructions: Vec<Instruction>,
-    debug_mode: Option<DebugMode>,
+    options: PrinterOptions,
 }
 
 impl<D: Driver> Printer<D> {
@@ -50,13 +50,12 @@ impl<D: Driver> Printer<D> {
     ///     Ok(())
     /// }
     /// ```
-    pub fn new(driver: D, protocol: Protocol, page_code: Option<PageCode>) -> Self {
+    pub fn new(driver: D, protocol: Protocol, options: Option<PrinterOptions>) -> Self {
         Self {
             driver,
             protocol,
-            page_code,
             instructions: vec![],
-            debug_mode: None,
+            options: options.unwrap_or_default(),
         }
     }
 
@@ -73,13 +72,13 @@ impl<D: Driver> Printer<D> {
 
     /// Set debug mode
     pub fn debug_mode(&mut self, mode: Option<DebugMode>) -> &mut Self {
-        self.debug_mode = mode;
+        self.options.debug_mode(mode);
         self
     }
 
     /// Display logs of instructions if debug mode is enabled
     pub fn debug(&mut self) -> Result<&mut Self> {
-        if self.debug_mode.is_some() {
+        if self.options.get_debug_mode().is_some() {
             debug!("instructions = {:#?}", self.instructions);
         }
 
@@ -93,7 +92,7 @@ impl<D: Driver> Printer<D> {
     pub fn print(&mut self) -> Result<&mut Self> {
         self.flush()?;
 
-        if self.debug_mode.is_some() {
+        if self.options.get_debug_mode().is_some() {
             debug!("[print]");
         }
 
@@ -102,9 +101,9 @@ impl<D: Driver> Printer<D> {
 
     /// Add command to instructions, write data and display debug information
     fn command(&mut self, label: &str, cmd: &[Command]) -> Result<&mut Self> {
-        let instruction = Instruction::new(label, cmd, self.debug_mode);
+        let instruction = Instruction::new(label, cmd, self.options.get_debug_mode());
 
-        if !label.is_empty() && self.debug_mode.is_some() {
+        if !label.is_empty() && self.options.get_debug_mode().is_some() {
             debug!("{:?}", instruction.clone());
         }
 
@@ -119,7 +118,7 @@ impl<D: Driver> Printer<D> {
         self.command("initialization", &[cmd])?;
 
         // Set page code
-        if let Some(page_code) = self.page_code {
+        if let Some(page_code) = self.options.get_page_code() {
             let cmd = self.protocol.page_code(page_code);
             self.command("character page code", &[cmd])?;
         }
@@ -153,7 +152,7 @@ impl<D: Driver> Printer<D> {
 
     /// Character page code
     pub fn page_code(&mut self, code: PageCode) -> Result<&mut Self> {
-        self.page_code = Some(code);
+        self.options.page_code(Some(code));
 
         let cmd = self.protocol.page_code(code);
         self.command("character page code", &[cmd])
@@ -263,7 +262,7 @@ impl<D: Driver> Printer<D> {
 
     /// Text
     pub fn write(&mut self, text: &str) -> Result<&mut Self> {
-        let cmd = self.protocol.text(text, self.page_code)?;
+        let cmd = self.protocol.text(text, self.options.get_page_code())?;
         self.command("text", &[cmd])
     }
 
@@ -342,7 +341,7 @@ impl<D: Driver> Printer<D> {
     pub fn send_status(&mut self) -> Result<&mut Self> {
         self.flush()?;
 
-        if self.debug_mode.is_some() {
+        if self.options.get_debug_mode().is_some() {
             debug!("[send printer status]");
         }
 
