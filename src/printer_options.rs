@@ -8,11 +8,11 @@ pub struct PrinterOptions {
     /// Select the code page
     page_code: Option<PageCode>,
 
-    /// Number of characters per line (default: 42)
-    characters_per_line: u8,
-
     /// Enable or disable the debug mode
     debug_mode: Option<DebugMode>,
+
+    /// Number of characters per line (default: 42)
+    characters_per_line: u8,
 }
 
 impl Default for PrinterOptions {
@@ -25,14 +25,14 @@ impl Default for PrinterOptions {
     /// let options = PrinterOptions::default();
     ///
     /// assert_eq!(options.get_page_code(), None);
-    /// assert_eq!(options.get_characters_per_line(), 42);
     /// assert_eq!(options.get_debug_mode(), None);
+    /// assert_eq!(options.get_characters_per_line(), 42);
     /// ```
     fn default() -> Self {
         Self {
             page_code: None,
-            characters_per_line: 42,
             debug_mode: None,
+            characters_per_line: 42,
         }
     }
 }
@@ -44,13 +44,13 @@ impl PrinterOptions {
     /// use escpos::printer_options::PrinterOptions;
     /// use escpos::utils::{DebugMode, PageCode};
     ///
-    /// let options = PrinterOptions::new(Some(PageCode::PC437), 44, Some(DebugMode::Hex));
+    /// let options = PrinterOptions::new(Some(PageCode::PC437), Some(DebugMode::Hex), 44);
     ///
     /// assert_eq!(options.get_page_code().unwrap(), PageCode::PC437);
-    /// assert_eq!(options.get_characters_per_line(), 44);
     /// assert_eq!(options.get_debug_mode().unwrap(), DebugMode::Hex);
+    /// assert_eq!(options.get_characters_per_line(), 44);
     /// ```
-    pub fn new(page_code: Option<PageCode>, characters_per_line: u8, debug_mode: Option<DebugMode>) -> Self {
+    pub fn new(page_code: Option<PageCode>, debug_mode: Option<DebugMode>, characters_per_line: u8) -> Self {
         Self {
             page_code,
             characters_per_line,

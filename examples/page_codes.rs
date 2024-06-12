@@ -10,7 +10,7 @@ fn main() -> Result<()> {
 
     // let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
     let driver = ConsoleDriver::open(true);
-    let printer_options = PrinterOptions::new(Some(PageCode::PC858), 42, None);
+    let printer_options = PrinterOptions::new(Some(PageCode::PC858), None, 42);
     Printer::new(driver, Protocol::default(), Some(printer_options))
         .debug_mode(Some(DebugMode::Dec))
         .init()?
