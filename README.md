@@ -38,6 +38,21 @@ cargo add escpos
 cargo add escpos -F full
 ```
 
+## Code coverage
+
+Tool used: [tarpaulin](https://github.com/xd009642/tarpaulin)
+
+```shell
+cargo install cargo-tarpaulin
+```
+
+```shell
+cargo tarpaulin --features full
+
+```
+
+*Results:* `50.37% coverage, 822/1632 lines covered`
+
 ## Features list
 
 | Name          | Description                                                            | Default |

@@ -183,12 +183,7 @@ impl Graphic {
     /// Create a new image
     pub fn new(path: &str, option: Option<GraphicOption>) -> Result<Self> {
         let img = image::open(path)?;
-
-        let option = if let Some(option) = option {
-            option
-        } else {
-            GraphicOption::default()
-        };
+        let option = option.unwrap_or_default();
 
         // Resize image with max width and max height constraints and convert to grayscale
         let img = match (option.max_width, option.max_height) {
