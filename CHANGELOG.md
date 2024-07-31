@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed (for changes in existing functionality)
 
 - [Breaking] Add `PrinterOptions` to `Printer`
+- Bump `image` to `0.25.2`
+- Bump `nusb` to `0.1.10`
+- Bump `env_logger` to `0.11.5`
 
 ## `0.12.2` (2024-04-23) [CURRENT]
 
