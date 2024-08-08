@@ -5,10 +5,10 @@ use crate::domain::{DebugMode, PageCode};
 /// Printer options
 #[derive(Debug, Clone)]
 pub struct PrinterOptions {
-    /// Select the code page
+    /// Select the [code page](PageCode)
     page_code: Option<PageCode>,
 
-    /// Enable or disable the debug mode
+    /// Enable or disable the [debug mode](DebugMode)
     debug_mode: Option<DebugMode>,
 
     /// Number of characters per line (default: 42)
@@ -58,12 +58,12 @@ impl PrinterOptions {
         }
     }
 
-    /// Get the number of characters per line
+    /// Get the [code page](PageCode)
     pub fn get_page_code(&self) -> Option<PageCode> {
         self.page_code
     }
 
-    /// Set the code page
+    /// Set the [code page](PageCode)
     ///
     /// ```
     /// use escpos::printer_options::PrinterOptions;
@@ -97,12 +97,12 @@ impl PrinterOptions {
         self.characters_per_line = characters_per_line;
     }
 
-    /// Get the debug mode
+    /// Get the [debug mode](DebugMode)
     pub fn get_debug_mode(&self) -> Option<DebugMode> {
         self.debug_mode
     }
 
-    /// Set the debug mode
+    /// Set the [debug mode](DebugMode)
     ///
     /// ```
     /// use escpos::printer_options::PrinterOptions;

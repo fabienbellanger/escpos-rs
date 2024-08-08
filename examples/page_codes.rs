@@ -8,8 +8,8 @@ const EURO: &[u8] = &[0xD5]; // '€' in code page PC858
 fn main() -> Result<()> {
     env_logger::init();
 
-    let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
-    // let driver = ConsoleDriver::open(true);
+    // let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
+    let driver = ConsoleDriver::open(true);
     let printer_options = PrinterOptions::new(Some(PageCode::PC858), None, 42);
     Printer::new(driver, Protocol::default(), Some(printer_options))
         .debug_mode(Some(DebugMode::Dec))

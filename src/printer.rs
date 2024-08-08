@@ -9,7 +9,7 @@ use log::debug;
 ///
 /// Print a document
 ///
-/// # Examples
+/// # Example
 ///
 /// ```rust
 /// use escpos::printer::Printer;
@@ -31,12 +31,16 @@ use log::debug;
 pub struct Printer<D: Driver> {
     driver: D,
     protocol: Protocol,
-    instructions: Vec<Instruction>,
     options: PrinterOptions,
+    instructions: Vec<Instruction>,
 }
 
 impl<D: Driver> Printer<D> {
     /// Create a new `Printer`
+    ///
+    /// If no printer options are provided, the default options are used.
+    ///
+    /// # Example
     ///
     /// ```rust
     /// use escpos::printer::Printer;
@@ -54,8 +58,8 @@ impl<D: Driver> Printer<D> {
         Self {
             driver,
             protocol,
-            instructions: vec![],
             options: options.unwrap_or_default(),
+            instructions: vec![],
         }
     }
 
