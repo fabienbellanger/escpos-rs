@@ -122,15 +122,9 @@ impl QRCode {
     pub fn new(data: &str, option: Option<QRCodeOption>) -> Result<Self> {
         Self::check_data(data)?;
 
-        let option = if let Some(option) = option {
-            option
-        } else {
-            QRCodeOption::default()
-        };
-
         Ok(Self {
             data: data.to_string(),
-            option,
+            option: option.unwrap_or_default(),
         })
     }
 

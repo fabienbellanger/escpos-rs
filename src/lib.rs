@@ -14,6 +14,7 @@
 //!
 //! ```rust
 //! use escpos::printer::Printer;
+//! use escpos::printer_options::PrinterOptions;
 //! use escpos::utils::*;
 //! use escpos::{driver::*, errors::Result};
 //!
@@ -22,7 +23,7 @@
 //!
 //!     // let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
 //!     let driver = ConsoleDriver::open(true);
-//!     Printer::new(driver, Protocol::default(), None)
+//!     Printer::new(driver, Protocol::default(), Some(PrinterOptions::default()))
 //!         .debug_mode(Some(DebugMode::Dec))
 //!         .init()?
 //!         .smoothing(true)?
@@ -184,6 +185,9 @@ pub(crate) mod io;
 
 /// Print document
 pub mod printer;
+
+/// Printer options
+pub mod printer_options;
 
 /// Utils module contains protocol and all needed constants and enums
 pub mod utils {

@@ -35,16 +35,15 @@ full = [
 [dependencies]
 encoding_rs = "0.8.34"
 futures-lite = { version = "2.3.0", optional = true }
-hidapi = { version = "2.6.1", optional = true }
-image = { version = "0.25.1", optional = true }
-lazy_static = "1.4.0"
-log = "0.4.21"
-nusb = { version = "0.1.8", optional = true }
-rusb = { version = "0.9.3", optional = true }
-serialport = { version = "4.3.0", optional = true }
+hidapi = { version = "2.6.3", optional = true }
+image = { version = "0.25.2", optional = true }
+log = "0.4.22"
+nusb = { version = "0.1.10", optional = true }
+rusb = { version = "0.9.4", optional = true }
+serialport = { version = "4.5.0", optional = true }
 
 [dev-dependencies]
-env_logger = "0.11.3"
+env_logger = "0.11.5"
 
 [package.metadata.docs.rs]
 all-features = true

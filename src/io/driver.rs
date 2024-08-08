@@ -24,6 +24,9 @@ use std::{
 /// Default timeout in seconds for read/write operations
 const DEFAULT_TIMEOUT_SECONDS: u64 = 5;
 
+/// Printer driver trait
+///
+/// A custom driver can be implemented by implementing this trait.
 pub trait Driver {
     /// Driver name
     fn name(&self) -> String;
@@ -282,7 +285,7 @@ impl UsbDriver {
                     })?;
 
                 return match device.open() {
-                    Ok(mut device_handle) => {
+                    Ok(device_handle) => {
                         #[cfg(not(target_os = "windows"))]
                         match device_handle.kernel_driver_active(interface_number) {
                             Ok(active) => {

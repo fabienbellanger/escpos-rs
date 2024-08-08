@@ -1,4 +1,5 @@
 use escpos::printer::Printer;
+use escpos::printer_options::PrinterOptions;
 use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
@@ -9,7 +10,8 @@ fn main() -> Result<()> {
 
     // let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
     let driver = ConsoleDriver::open(true);
-    Printer::new(driver, Protocol::default(), Some(PageCode::PC858))
+    let printer_options = PrinterOptions::new(Some(PageCode::PC858), None, 42);
+    Printer::new(driver, Protocol::default(), Some(printer_options))
         .debug_mode(Some(DebugMode::Dec))
         .init()?
         .writeln("Test with page code PC858:")?

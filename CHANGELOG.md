@@ -18,6 +18,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
+## [Unreleased]
+
+### Changed
+
+- [BREAKING] Add `PrinterOptions` to `Printer` instead of `PageCode`  
+  Before:
+  ```rust
+  let mut printer = Printer::new(driver, Protocol::default(), Some(PageCode::PC858));
+  ```
+  Now:
+  ```rust
+  let printer_options = PrinterOptions::new(Some(PageCode::PC858), None, 42);
+  let mut printer = Printer::new(driver, Protocol::default(), Some(printer_options));
+  ```
+  Or with default options values:
+  ```rust
+  let mut printer = Printer::new(driver, Protocol::default(), None);
+  ```
+- Remove `lazy_static` and use standard library `LazyLock` instead
+- Bump `image` to `0.25.2`
+- Bump `nusb` to `0.1.10`
+- Bump `env_logger` to `0.11.5`
+- Bump `hidapi` to `2.6.3`
+- Bump `serialport` to `1.5.0`
+
+### Fixed
+
+- Fix documentation
+-
+
 ## `0.12.2` (2024-04-23) [CURRENT]
 
 ### Fixed
@@ -34,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [Breaking] Add timeout to `NetworkDriver`
+- [BREAKING] Add timeout to `NetworkDriver`
 
 ### Changed
 
@@ -46,28 +76,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add table for page codes:
-  - `Katakana`
-  - `PC850`
-  - `PC851`
-  - `PC853`
-  - `PC857`
-  - `PC737`
-  - `PC863`
-  - `PC866`
-  - `WPC775`
-  - `PC855`
-  - `PC861`
-  - `PC862`
-  - `PC869`
-  - `PC1118`
-  - `PC1119`
-  - `PC1125`
-  - `WPC1250`
-  - `WPC1251`
-  - `WPC1253`
-  - `WPC1254`
-  - `WPC1257`
-  - `KZ1048`
+    - `Katakana`
+    - `PC850`
+    - `PC851`
+    - `PC853`
+    - `PC857`
+    - `PC737`
+    - `PC863`
+    - `PC866`
+    - `WPC775`
+    - `PC855`
+    - `PC861`
+    - `PC862`
+    - `PC869`
+    - `PC1118`
+    - `PC1119`
+    - `PC1125`
+    - `WPC1250`
+    - `WPC1251`
+    - `WPC1253`
+    - `WPC1254`
+    - `WPC1257`
+    - `KZ1048`
 
 ### Changed
 
@@ -81,7 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [Breaking] Rename `GraphicDensity::Hight` to `GraphicDensity::High`
+- [BREAKING] Rename `GraphicDensity::Hight` to `GraphicDensity::High`
 
 ### Fixed
 
@@ -158,7 +188,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [Breaking] Manage special characters by using Page Code tables (only `PC437`, `PC865` and `PC858` are currently
+- [BREAKING] Manage special characters by using Page Code tables (only `PC437`, `PC865` and `PC858` are currently
   implemented).  
   The `new` method for `Printer` has a third parameter to specify the Page Code to use.  
   Before:
@@ -199,7 +229,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [Breaking] Change barcodes and 2D codes option signature
+- [BREAKING] Change barcodes and 2D codes option signature
 
 ### Fixed
 
@@ -215,7 +245,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [Breaking] Merge `qrcode`, `gs1_databar` and `pdf417` into `codes_2d` feature
+- [BREAKING] Merge `qrcode`, `gs1_databar` and `pdf417` into `codes_2d` feature
 - Improve `receipt.rs` and `codes.rs` examples
 
 ## `0.4.0` (2023-11-13)
@@ -260,6 +290,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve documentation and `README.md`
 - Add "option" to all barcodes
 - `barcode` and `qrcode` features are now enabled by default
-- [Breaking] Remove unused `PrinterError::Network item`
-- [Breaking] Change `Printer` functions signature from `fn(self) -> Result<Self>`
+- [BREAKING] Remove unused `PrinterError::Network item`
+- [BREAKING] Change `Printer` functions signature from `fn(self) -> Result<Self>`
   to `fn(&mut self) -> Result<&mut Self>`
