@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump `image` to `0.25.2`
 - Bump `nusb` to `0.1.10`
 - Bump `env_logger` to `0.11.5`
+- Bump `hidapi` to `2.6.3`
+- Bump `serialport` to `1.5.0`
+- Remove `lazy_static` and use standard library
 
 ## `0.12.2` (2024-04-23) [CURRENT]
 
