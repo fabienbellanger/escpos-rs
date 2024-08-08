@@ -132,10 +132,10 @@ static PC437_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'α', 'ß', 'Γ', 'π', 'Σ', 'σ', 'µ', 'τ', 'Φ', 'Θ', 'Ω', 'δ', '∞', 'φ',
         'ε', '∩', '≡', '±', '≥', '≤', '⌠', '⌡', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// Katakana Page code table (CP932 or IBM-932)
@@ -145,10 +145,10 @@ static KATAKANA_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'ｷ', 'ｸ', 'ｹ', 'ｺ', 'ｻ', 'ｼ', 'ｽ', 'ｾ', 'ｿ', 'ﾀ', 'ﾁ', 'ﾂ', 'ﾃ', 'ﾄ', 'ﾅ', 'ﾆ', 'ﾇ', 'ﾈ', 'ﾉ', 'ﾊ', 'ﾋ', 'ﾌ',
         'ﾍ', 'ﾎ', 'ﾏ', 'ﾐ', 'ﾑ', 'ﾒ', 'ﾓ', 'ﾔ', 'ﾕ', 'ﾖ', 'ﾗ', 'ﾘ', 'ﾙ', 'ﾚ', 'ﾛ', 'ﾜ', 'ﾝ', 'ﾞ', 'ﾟ',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0xA1) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0xA1) as u8))
+    .collect()
 });
 
 /// PC850 Page code table
@@ -161,10 +161,10 @@ static PC850_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ï', '┘', '┌', '█', '▄', '¦', 'Ì', '▀', 'Ó', 'ß', 'Ô', 'Ò', 'õ', 'Õ', 'µ', 'þ', 'Þ', 'Ú', 'Û', 'Ù', 'ý', 'Ý',
         '¯', '´', '-', '±', '‗', '¾', '¶', '§', '÷', '¸', '°', '¨', '·', '¹', '³', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC863 Page code table
@@ -177,10 +177,10 @@ static PC863_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'α', 'ß', 'Γ', 'π', 'Σ', 'σ', 'µ', 'τ', 'Φ', 'Θ', 'Ω', 'δ', '∞', 'φ',
         'ε', '∩', '≡', '±', '≥', '≤', '⌠', '⌡', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC852 Page code table
@@ -193,10 +193,10 @@ static PC852_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'ě', '┘', '┌', '█', '▄', 'Ţ', 'Ů', '▀', 'Ó', 'ß', 'Ô', 'Ń', 'ń', 'ň', 'Š', 'š', 'Ŕ', 'Ú', 'ŕ', 'Ű', 'ý', 'Ý',
         'ţ', '´', '\u{AD}', '˝', '˛', 'ˇ', '˘', '§', '÷', '¸', '°', '¨', '˙', 'ű', 'Ř', 'ř', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC858 Page code table
@@ -209,10 +209,10 @@ static PC858_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ï', '┘', '┌', '█', '▄', '¦', 'Ì', '▀', 'Ó', 'ß', 'Ô', 'Ô', 'õ', 'Õ', 'µ', 'þ', 'Þ', 'Ú', 'Û', 'Ù', 'ý', 'Ý',
         '¯', '´', '-', '±', '‗', '¾', '¶', '§', '÷', '¸', '°', '¨', '·', '¹', '³', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC860 Page code table
@@ -225,10 +225,10 @@ static PC860_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'α', 'ß', 'Γ', 'π', 'Σ', 'σ', 'µ', 'τ', 'Φ', 'Θ', 'Ω', 'δ', '∞', 'φ',
         'ε', '∩', '≡', '±', '≥', '≤', '⌠', '⌡', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC865 Page code table
@@ -241,10 +241,10 @@ static PC865_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'α', 'ß', 'Γ', 'π', 'Σ', 'σ', 'µ', 'τ', 'Φ', 'Θ', 'Ω', 'δ', '∞', 'φ',
         'ε', '∩', '≡', '±', '≥', '≤', '⌠', '⌡', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC851 Page code table
@@ -258,11 +258,11 @@ static PC851_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'γ', '┘', '┌', '█', '▄', 'δ', 'ε', '▀', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'ς',
         'τ', '´', '-', '±', 'υ', 'φ', 'χ', '§', 'ψ', '¸', '°', '¨', 'ω', 'ϋ', 'ΰ', 'ώ', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC853 Page code table
@@ -276,11 +276,11 @@ static PC853_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ï', '┘', '┌', '█', '▄', '\0', 'Ì', '▀', 'Ó', 'ß', 'Ô', 'Ò', 'Ġ', 'ġ', 'µ', 'Ħ', 'ħ', 'Ú', 'Û', 'Ù', 'Ŭ', 'ŭ',
         '·', '´', '-', '\0', 'ℓ', 'ŉ', '˘', '§', '÷', '¸', '°', '¨', '˙', '\0', '³', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC857 Page code table
@@ -294,11 +294,11 @@ static PC857_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ï', '┘', '┌', '█', '▄', '¦', 'Ì', '▀', 'Ó', 'ß', 'Ô', 'Ò', 'õ', 'Õ', 'µ', '.', '×', 'Ú', 'Û', 'Ù', 'ì', 'ÿ',
         '¯', '´', '-', '±', '\0', '¾', '¶', '§', '÷', '¸', '°', '¨', '·', '¹', '³', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC737 Page code table
@@ -311,10 +311,10 @@ static PC737_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'ω', 'ά', 'έ', 'ή', 'ϊ', 'ί', 'ό', 'ύ', 'ϋ', 'ώ', 'Ά', 'Έ', 'Ή', 'Ί',
         'Ό', 'Ύ', 'Ώ', '±', '≥', '≤', 'Ϊ', 'Ϋ', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// ISO8859_2 Page code table
@@ -327,10 +327,10 @@ static ISO8859_2_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ú', 'Ű', 'Ü', 'Ý', 'Ţ', 'ß', 'ŕ', 'á', 'â', 'ă', 'ä', 'ĺ', 'ć', 'ç', 'č', 'é', 'ę', 'ë', 'ě', 'í', 'î', 'ď',
         'đ', 'ń', 'ň', 'ó', 'ô', 'ő', 'ö', '÷', 'ř', 'ů', 'ú', 'ű', 'ü', 'ý', 'ţ', '˙',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0xA0) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0xA0) as u8))
+    .collect()
 });
 
 /// ISO8859_7 Page code table
@@ -344,11 +344,11 @@ static ISO8859_7_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ϊ', 'Ϋ', 'ά', 'έ', 'ή', 'ί', 'ΰ', 'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο',
         'π', 'ρ', 'ς', 'σ', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω', 'ϊ', 'ϋ', 'ό', 'ύ', 'ώ',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0xA0) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0xA0) as u8))
+    .collect()
 });
 
 /// ISO8859_15 Page code table
@@ -361,10 +361,10 @@ static ISO8859_15_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ú', 'Û', 'Ü', 'Ý', 'Þ', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï',
         'ð', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', '÷', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'þ', 'ÿ',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0xA0) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0xA0) as u8))
+    .collect()
 });
 
 /// WPC1252 Page code table
@@ -378,11 +378,11 @@ static WPC1252_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ô', 'Õ', 'Ö', '×', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'Þ', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é',
         'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', '÷', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'þ', 'ÿ',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC866 Page code table
@@ -395,10 +395,10 @@ static PC866_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э',
         'ю', 'я', 'Ё', 'ё', 'Є', 'є', 'Ї', 'ї', 'Ў', 'ў', '°', '∙', '·', '√', '№', '¤', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// WPC775 Page code table
@@ -411,10 +411,10 @@ static WPC775_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'ž', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'Ó', 'ß', 'Ō', 'Ń', 'õ', 'Õ', 'µ', 'ń', 'Ķ', 'ķ', 'Ļ', 'ļ', 'ņ', 'Ē',
         'Ņ', '’', '-', '±', '“', '¾', '¶', '§', '÷', '„', '°', '∙', '·', '¹', '³', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC855 Page code table
@@ -427,10 +427,10 @@ static PC855_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'п', '┘', '┌', '█', '▄', 'П', 'я', '▀', 'Я', 'р', 'Р', 'с', 'С', 'т', 'Т', 'у', 'У', 'ж', 'Ж', 'в', 'В', 'ь',
         'Ь', '№', '-', 'ы', 'Ы', 'з', 'З', 'ш', 'Ш', 'э', 'Э', 'щ', 'Щ', 'ч', 'Ч', '§', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC861 Page code table
@@ -443,10 +443,10 @@ static PC861_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'α', 'ß', 'Γ', 'π', 'Σ', 'σ', 'µ', 'τ', 'Φ', 'Θ', 'Ω', 'δ', '∞', 'φ',
         'ε', '∩', '≡', '±', '≥', '≤', '⌠', '⌡', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC862 Page code table
@@ -459,10 +459,10 @@ static PC862_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'α', 'ß', 'Γ', 'π', 'Σ', 'σ', 'µ', 'τ', 'Φ', 'Θ', 'Ω', 'δ', '∞', 'φ',
         'ε', '∩', '≡', '±', '≥', '≤', '⌠', '⌡', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC869 Page code table
@@ -476,11 +476,11 @@ static PC869_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'ε', '▀', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'ς', 'τ', '΄', '-', '±', 'υ', 'φ',
         'χ', '§', 'ψ', '΅', '°', '¨', 'ω', 'ϋ', 'ΰ', 'ώ', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x86) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x86) as u8))
+    .collect()
 });
 
 /// PC1118 Page code table
@@ -493,10 +493,10 @@ static PC1118_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'ž', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'α', 'ß', 'Γ', 'π', 'Σ', 'σ', 'µ', 'τ', 'Φ', 'Θ', 'Ω', 'δ', '∞', 'φ',
         'ε', '∩', '≡', '±', '≥', '≤', '„', '“', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC1119 Page code table
@@ -509,10 +509,10 @@ static PC1119_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'ž', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э',
         'ю', 'я', 'Ё', 'ё', '≥', '≤', '„', '“', '÷', '≈', '°', '∙', '·', '√', 'ⁿ', '²', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// PC1125 Page code table
@@ -525,10 +525,10 @@ static PC1125_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         '╪', '┘', '┌', '█', '▄', '▌', '▐', '▀', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э',
         'ю', 'я', 'Ё', 'ё', 'Ґ', 'ґ', 'Є', 'є', 'І', 'і', 'Ї', 'ї', '÷', '±', '№', '¤', '■', '\u{00A0}',
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// WPC1250 Page code table
@@ -542,11 +542,11 @@ static WPC1250_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ő', 'Ö', '×', 'Ř', 'Ů', 'Ú', 'Ű', 'Ü', 'Ý', 'Ţ', 'ß', 'ŕ', 'á', 'â', 'ă', 'ä', 'ĺ', 'ć', 'ç', 'č', 'é', 'ę',
         'ë', 'ě', 'í', 'î', 'ď', 'đ', 'ń', 'ň', 'ó', 'ô', 'ő', 'ö', '÷', 'ř', 'ů', 'ú', 'ű', 'ü', 'ý', 'ţ', '˙',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// WPC1251 Page code table
@@ -560,11 +560,11 @@ static WPC1251_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'й', 'к', 'л',
         'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// WPC1253 Page code table
@@ -579,11 +579,11 @@ static WPC1253_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'ς', 'σ', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω', 'ϊ', 'ϋ', 'ό', 'ύ', 'ώ',
         '\0',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// WPC1254 Page code table
@@ -597,11 +597,11 @@ static WPC1254_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Õ', 'Ö', '×', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'İ', 'Ş', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê',
         'ë', 'ì', 'í', 'î', 'ï', 'ğ', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', '÷', 'ø', 'ù', 'ú', 'û', 'ü', 'ı', 'ş', 'ÿ',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// WPC1257 Page code table
@@ -615,11 +615,11 @@ static WPC1257_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ō', 'Õ', 'Ö', '×', 'Ų', 'Ł', 'Ś', 'Ū', 'Ü', 'Ż', 'Ž', 'ß', 'ą', 'į', 'ā', 'ć', 'ä', 'å', 'ę', 'ē', 'č', 'é',
         'ź', 'ė', 'ģ', 'ķ', 'ī', 'ļ', 'š', 'ń', 'ņ', 'ó', 'ō', 'õ', 'ö', '÷', 'ų', 'ł', 'ś', 'ū', 'ü', 'ż', 'ž', '˙',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
 
 /// KZ1048 Page code table
@@ -633,9 +633,9 @@ static KZ1048_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
         'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'й', 'к', 'л',
         'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я',
     ]
-        .into_iter()
-        .enumerate()
-        .filter(|(_, c)| *c != '\0')
-        .map(|(i, c)| (c, (i + 0x80) as u8))
-        .collect()
+    .into_iter()
+    .enumerate()
+    .filter(|(_, c)| *c != '\0')
+    .map(|(i, c)| (c, (i + 0x80) as u8))
+    .collect()
 });
