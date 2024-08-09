@@ -2,6 +2,9 @@
 
 use std::fmt;
 
+/// Default characters per line
+pub const DEFAULT_CHARACTERS_PER_LINE: u8 = 42;
+
 /// Cash drawer pin
 #[derive(Debug, Clone, Copy)]
 pub enum CashDrawer {
@@ -19,8 +22,9 @@ impl fmt::Display for CashDrawer {
 }
 
 /// Justify mode
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub enum JustifyMode {
+    #[default]
     LEFT,
     CENTER,
     RIGHT,
@@ -35,6 +39,9 @@ impl fmt::Display for JustifyMode {
         }
     }
 }
+
+/// Text size (width, height)
+pub type TextSize = (u8, u8);
 
 /// Debug mode (decimal or hexadecimal)
 #[derive(Debug, Clone, Copy, PartialEq)]

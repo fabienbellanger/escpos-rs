@@ -20,13 +20,13 @@ impl Default for PrinterOptions {
     ///
     /// ```
     /// use escpos::printer_options::PrinterOptions;
-    /// use escpos::utils::{DebugMode, PageCode};
+    /// use escpos::utils::{DebugMode, PageCode, DEFAULT_CHARACTERS_PER_LINE};
     ///
     /// let options = PrinterOptions::default();
     ///
     /// assert_eq!(options.get_page_code(), None);
     /// assert_eq!(options.get_debug_mode(), None);
-    /// assert_eq!(options.get_characters_per_line(), 42);
+    /// assert_eq!(options.get_characters_per_line(), DEFAULT_CHARACTERS_PER_LINE);
     /// ```
     fn default() -> Self {
         Self {

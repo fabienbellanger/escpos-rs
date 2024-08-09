@@ -16,6 +16,26 @@ pub(crate) fn get_parameters_number_2(data: &str, padding: u8) -> Result<(u8, u8
     Ok((u8::try_from(pl)?, u8::try_from(ph)?))
 }
 
+/// Get the number of characters
+///
+/// # Examples
+/// ```
+/// use escpos::utils::chars_number;
+///
+/// assert!(chars_number(42, 0).is_err());
+/// assert_eq!(chars_number(42, 1).unwrap(), 42);
+/// assert_eq!(chars_number(42, 2).unwrap(), 21);
+/// assert_eq!(chars_number(42, 5).unwrap(), 8);
+/// assert_eq!(chars_number(44, 3).unwrap(), 14);
+/// ```
+pub fn chars_number(width: u8, size: u8) -> Result<u8> {
+    if !(1..=8).contains(&size) {
+        return Err(PrinterError::Input(format!("invalid text_size width: {size}")));
+    }
+
+    Ok(width / size)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

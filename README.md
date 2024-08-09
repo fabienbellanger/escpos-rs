@@ -66,6 +66,7 @@ _Results:_
 | `native_usb`  | Enable native USB feature                                              |    ❌    |
 | `hidapi`      | Enable HidApi feature                                                  |    ❌    |
 | `serial_port` | Enable Serial port feature                                             |    ❌    |
+| `ui`          | Enable ui feature (UI components)                                      |    ❌    |
 | `full`        | Enable all features                                                    |    ❌    |
 
 ## Examples
@@ -85,6 +86,7 @@ RUST_LOG=debug cargo run --example usb --features usb
 RUST_LOG=debug cargo run --example native_usb --features native_usb
 RUST_LOG=debug cargo run --example hidapi --features hidapi
 RUST_LOG=debug cargo run --example serial_port --features serial_port
+RUST_LOG=debug cargo run --example ui --features u
 RUST_LOG=debug cargo run --example status --all-features
 ```
 

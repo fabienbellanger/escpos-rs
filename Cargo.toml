@@ -21,6 +21,7 @@ hidapi = ["dep:hidapi"]
 serial_port = ["dep:serialport"]
 usb = ["dep:rusb"]
 native_usb = ["dep:nusb", "dep:futures-lite"]
+ui = []
 default = ["barcodes", "codes_2d"]
 full = [
     "barcodes",
@@ -30,6 +31,7 @@ full = [
     "native_usb",
     "hidapi",
     "serial_port",
+    "ui",
 ]
 
 [dependencies]

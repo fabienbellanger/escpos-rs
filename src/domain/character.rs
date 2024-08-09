@@ -3,8 +3,9 @@
 use std::fmt;
 
 /// Underline mode
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub enum UnderlineMode {
+    #[default]
     None,
     Single,
     Double,
@@ -21,8 +22,9 @@ impl fmt::Display for UnderlineMode {
 }
 
 /// Text font
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub enum Font {
+    #[default]
     A,
     B,
     C,

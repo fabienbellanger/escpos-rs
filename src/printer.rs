@@ -33,6 +33,7 @@ pub struct Printer<D: Driver> {
     protocol: Protocol,
     options: PrinterOptions,
     instructions: Vec<Instruction>,
+    style_state: PrinterStyleState,
 }
 
 impl<D: Driver> Printer<D> {
@@ -60,16 +61,62 @@ impl<D: Driver> Printer<D> {
             protocol,
             options: options.unwrap_or_default(),
             instructions: vec![],
+            style_state: PrinterStyleState::default(),
         }
     }
 
-    /// Flush the buffer and clean the instructions
+    /// Get the printer style state
+    ///
+    /// # Examples
+    /// ```
+    /// use escpos::printer::{Printer, PrinterStyleState};
+    /// use escpos::utils::*;
+    /// use escpos::{driver::*, errors::Result};
+    ///
+    /// fn main() -> Result<()> {
+    /// let driver = ConsoleDriver::open(false);
+    ///     let mut printer = Printer::new(driver, Protocol::default(), None);
+    ///     printer.bold(true)?
+    ///         .flip(true)?
+    ///         .font(Font::B)?;
+    ///
+    ///     let style_state = printer.style_state();
+    ///
+    ///     assert!(style_state.bold);
+    ///     assert!(style_state.flip);
+    ///     assert!(!style_state.reverse);
+    ///     assert!(!style_state.double_strike);
+    ///     assert_eq!(style_state.font, Font::B);
+    ///     assert_eq!(style_state.justify_mode, JustifyMode::default());
+    ///     assert_eq!(style_state.underline_mode, UnderlineMode::default());
+    ///     assert_eq!(style_state.text_size, (1, 1));
+    ///
+    ///     printer.print()?;
+    ///
+    ///     // Style state is reset after flushing the buffer
+    ///     assert_eq!(printer.style_state(), PrinterStyleState::default());
+    ///
+    ///     Ok(())
+    /// }
+    /// ```
+    pub fn style_state(&self) -> PrinterStyleState {
+        self.style_state.clone()
+    }
+
+    /// Reset the printer style state
+    pub fn reset_style_state(&mut self) -> &mut Self {
+        self.style_state = PrinterStyleState::default();
+        self
+    }
+
+    /// Flush the buffer, reset the style state and clean the instructions
     fn flush(&mut self) -> Result<&mut Self> {
         for instruction in self.instructions.iter() {
             self.driver.write(&instruction.flatten_commands())?
         }
         self.driver.flush()?;
         self.instructions = vec![];
+        self.reset_style_state();
 
         Ok(self)
     }
@@ -171,54 +218,63 @@ impl<D: Driver> Printer<D> {
     /// Text bold
     pub fn bold(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.bold(enabled);
+        self.style_state.bold = enabled;
         self.command("text bold", &[cmd])
     }
 
     /// Text underline
     pub fn underline(&mut self, mode: UnderlineMode) -> Result<&mut Self> {
         let cmd = self.protocol.underline(mode);
+        self.style_state.underline_mode = mode;
         self.command("text underline", &[cmd])
     }
 
     /// Text double strike
     pub fn double_strike(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.double_strike(enabled);
+        self.style_state.double_strike = enabled;
         self.command("text double strike", &[cmd])
     }
 
     /// Text font
     pub fn font(&mut self, font: Font) -> Result<&mut Self> {
         let cmd = self.protocol.font(font);
+        self.style_state.font = font;
         self.command("text font", &[cmd])
     }
 
     /// Text flip
     pub fn flip(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.flip(enabled);
+        self.style_state.flip = enabled;
         self.command("text flip", &[cmd])
     }
 
     /// Text justify
     pub fn justify(&mut self, mode: JustifyMode) -> Result<&mut Self> {
         let cmd = self.protocol.justify(mode);
+        self.style_state.justify_mode = mode;
         self.command("text justify", &[cmd])
     }
 
     /// Text reverse colour
     pub fn reverse(&mut self, enabled: bool) -> Result<&mut Self> {
         let cmd = self.protocol.reverse_colours(enabled);
+        self.style_state.reverse = enabled;
         self.command("text reverse colour", &[cmd])
     }
 
     /// Text size
     pub fn size(&mut self, width: u8, height: u8) -> Result<&mut Self> {
         let cmd = self.protocol.text_size(width, height)?;
+        self.style_state.text_size = (width, height);
         self.command("text size", &[cmd])
     }
 
     /// Reset text size
     pub fn reset_size(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.text_size(1, 1)?;
+        self.style_state.text_size = (1, 1);
         self.command("text size", &[cmd])
     }
 
@@ -583,6 +639,35 @@ impl<D: Driver> Printer<D> {
     //     self.command("print graphic", cmd)
     // }
 }
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct PrinterStyleState {
+    pub text_size: (u8, u8),
+    pub justify_mode: JustifyMode,
+    pub font: Font,
+    pub underline_mode: UnderlineMode,
+    pub bold: bool,
+    pub double_strike: bool,
+    pub reverse: bool,
+    pub flip: bool,
+}
+
+impl Default for PrinterStyleState {
+    fn default() -> Self {
+        Self {
+            text_size: (1, 1),
+            justify_mode: JustifyMode::default(),
+            font: Font::default(),
+            underline_mode: UnderlineMode::default(),
+            bold: false,
+            double_strike: false,
+            reverse: false,
+            flip: false,
+        }
+    }
+}
+
+impl PrinterStyleState {}
 
 #[cfg(test)]
 mod tests {

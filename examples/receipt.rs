@@ -2,7 +2,7 @@ use escpos::printer::Printer;
 use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
-const CHARS_BY_LINE: usize = 42;
+// const CHARS_BY_LINE: usize = 42;
 const EURO: &[u8] = &[0xD5]; // €
 const NUM: &[u8] = &[0xF8]; // °
 
@@ -106,7 +106,7 @@ impl Item {
         characters_length *= size as usize;
 
         // Number of spaces between name and price
-        let spaces = " ".repeat((CHARS_BY_LINE - characters_length) / size as usize);
+        let spaces = " ".repeat((DEFAULT_CHARACTERS_PER_LINE as usize - characters_length) / size as usize);
 
         // Print item
         if let Some(quantity) = self.quantity {
