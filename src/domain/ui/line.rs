@@ -4,8 +4,9 @@
 // - la taille du text influence la taille de la ligne
 
 use crate::domain::ui::UIComponent;
-use crate::domain::{Font, JustifyMode, TextSize, DEFAULT_CHARACTERS_PER_LINE};
+use crate::domain::{Command, Font, JustifyMode, TextSize, DEFAULT_CHARACTERS_PER_LINE};
 use crate::driver::Driver;
+use crate::errors::Result;
 use crate::printer::Printer;
 
 /// Line style
@@ -150,11 +151,28 @@ pub struct Line {
 }
 
 impl UIComponent for Line {
-    fn render<D: Driver>(&self, printer: &mut Printer<D>) {
-        let _saved_style_state = printer.style_state().clone();
+    fn render<D: Driver>(&self, printer: Printer<D>) -> Result<Vec<Command>> {
+        let protocol = printer.protocol();
+        let options = printer.options();
+        let chars_per_line = options.get_characters_per_line();
 
-        // Render line
+        let mut commands = vec![];
+
+        // Set global styles
+        if let Some(font) = self.font {
+            commands.push(protocol.font(font));
+        }
+        if let Some(size) = self.size {
+            commands.push(protocol.text_size(size.0, size.1)?);
+        }
+        if let Some(align) = self.align {
+            commands.push(protocol.justify(align));
+        }
+
+        // Draw line
 
         // Restore initial style state
+
+        Ok(commands)
     }
 }

@@ -65,6 +65,16 @@ impl<D: Driver> Printer<D> {
         }
     }
 
+    /// Get the printer protocol
+    pub fn protocol(&self) -> &Protocol {
+        &self.protocol
+    }
+
+    /// Get the printer options
+    pub fn options(&self) -> &PrinterOptions {
+        &self.options
+    }
+
     /// Get the printer style state
     ///
     /// # Examples
