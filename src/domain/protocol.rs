@@ -180,6 +180,8 @@ impl Protocol {
     }
 
     /// Print text
+    // TODO: Add a max length for text
+    // TODO: Maybe simplify this method by calling cmd.append on each char
     pub(crate) fn text(&self, text: &str, page_code: Option<PageCode>) -> Result<Command> {
         match page_code {
             Some(page_code) => {

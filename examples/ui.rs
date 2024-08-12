@@ -21,11 +21,11 @@ fn main() -> Result<()> {
         .size((2, 1))
         .width(8)
         .build();
-    let line_custom = LineBuilder::new().style(LineStyle::Custom("=-")).build();
+    let line_custom = LineBuilder::new().style(LineStyle::Custom("┼")).build();
 
-    // let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
-    let driver = ConsoleDriver::open(true);
-    let printer_options = PrinterOptions::new(Some(PageCode::PC858), Some(DebugMode::Dec), 42);
+    let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
+    // let driver = ConsoleDriver::open(true);
+    let printer_options = PrinterOptions::new(Some(PageCode::PC437), Some(DebugMode::Dec), 42);
     let mut printer = Printer::new(driver, Protocol::default(), Some(printer_options));
     printer
         .init()?
@@ -33,11 +33,11 @@ fn main() -> Result<()> {
         .writeln("UI Components")?
         .feed()?
         .writeln("Lines")?
-        .draw_line(line_double)?
-        .draw_line(line_simple)?
-        .draw_line(line_dashed)?
+        // .draw_line(line_double)?
+        // .draw_line(line_simple)?
+        // .draw_line(line_dashed)?
         .draw_line(line_custom)?
-        .draw_line(line_dotted)?
+        // .draw_line(line_dotted)?
         .print_cut()?;
 
     Ok(())

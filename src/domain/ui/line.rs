@@ -33,7 +33,7 @@
 //! ```
 
 use crate::domain::ui::UIComponent;
-use crate::domain::{chars_number, Command, Font, JustifyMode, TextSize};
+use crate::domain::{chars_number, Command, Font, JustifyMode, PageCode, TextSize};
 use crate::errors::Result;
 use crate::printer::PrinterStyleState;
 use crate::printer_options::PrinterOptions;
@@ -187,6 +187,7 @@ impl<'a> Line<'a> {
         &self,
         protocol: Protocol,
         chars_per_line: u8,
+        page_code: Option<PageCode>,
         text_size: u8,
         justify_mode: JustifyMode,
         commands: &mut Vec<Command>,
@@ -215,7 +216,7 @@ impl<'a> Line<'a> {
         }
 
         if !line.is_empty() {
-            commands.push(protocol.text(line.as_str(), None)?);
+            commands.push(protocol.text(line.as_str(), page_code)?);
             commands.push(protocol.feed(1));
         }
 
@@ -262,6 +263,7 @@ impl<'a> UIComponent for Line<'a> {
         self.draw(
             protocol.clone(),
             chars_per_line,
+            options.get_page_code(),
             text_size.0,
             justify_mode,
             &mut commands,
@@ -282,7 +284,14 @@ mod tests {
     fn test_line_draw_one_char_pattern() {
         let mut commands = vec![];
         let line = LineBuilder::new().style(LineStyle::Simple).build();
-        line.draw(Protocol::default(), 42, 1, JustifyMode::LEFT, &mut commands)
+        line.draw(
+            Protocol::default(),
+            42,
+            Some(PageCode::PC437),
+            1,
+            JustifyMode::LEFT,
+            &mut commands,
+        )
             .unwrap();
         let expected = "-".repeat(42).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
@@ -291,7 +300,14 @@ mod tests {
 
         let mut commands = vec![];
         let line = LineBuilder::new().style(LineStyle::Double).offset(4).width(10).build();
-        line.draw(Protocol::default(), 44, 1, JustifyMode::RIGHT, &mut commands)
+        line.draw(
+            Protocol::default(),
+            44,
+            Some(PageCode::PC437),
+            1,
+            JustifyMode::RIGHT,
+            &mut commands,
+        )
             .unwrap();
         let expected = format!("{}{}", "=".repeat(10), " ".repeat(4))
             .chars()
@@ -305,7 +321,14 @@ mod tests {
     fn test_line_draw_two_chars_pattern() {
         let mut commands = vec![];
         let line = LineBuilder::new().style(LineStyle::Dashed).build();
-        line.draw(Protocol::default(), 42, 1, JustifyMode::LEFT, &mut commands)
+        line.draw(
+            Protocol::default(),
+            42,
+            Some(PageCode::PC437),
+            1,
+            JustifyMode::LEFT,
+            &mut commands,
+        )
             .unwrap();
         let expected = "- ".repeat(21).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
@@ -314,7 +337,14 @@ mod tests {
 
         let mut commands = vec![];
         let line = LineBuilder::new().style(LineStyle::Dashed).offset(3).build();
-        line.draw(Protocol::default(), 44, 1, JustifyMode::LEFT, &mut commands)
+        line.draw(
+            Protocol::default(),
+            44,
+            Some(PageCode::PC437),
+            1,
+            JustifyMode::LEFT,
+            &mut commands,
+        )
             .unwrap();
         let expected = format!("{}{}-", " ".repeat(3), "- ".repeat(20))
             .chars()
@@ -329,7 +359,14 @@ mod tests {
     fn test_line_draw_with_size() {
         let mut commands = vec![];
         let line = LineBuilder::new().style(LineStyle::Dotted).size((3, 1)).build();
-        line.draw(Protocol::default(), 42, 3, JustifyMode::LEFT, &mut commands)
+        line.draw(
+            Protocol::default(),
+            42,
+            Some(PageCode::PC437),
+            3,
+            JustifyMode::LEFT,
+            &mut commands,
+        )
             .unwrap();
         let expected = ".".repeat(14).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
@@ -341,10 +378,36 @@ mod tests {
     fn test_line_draw_with_empty_pattern() {
         let mut commands = vec![];
         let line = LineBuilder::new().style(LineStyle::Custom("")).size((3, 1)).build();
-        line.draw(Protocol::default(), 42, 3, JustifyMode::LEFT, &mut commands)
+        line.draw(
+            Protocol::default(),
+            42,
+            Some(PageCode::PC437),
+            3,
+            JustifyMode::LEFT,
+            &mut commands,
+        )
             .unwrap();
 
         assert!(commands.is_empty());
+    }
+
+    #[test]
+    fn test_line_draw_with_custom_style() {
+        let mut commands = vec![];
+        let line = LineBuilder::new().style(LineStyle::Custom("┼")).build();
+        line.draw(
+            Protocol::default(),
+            42,
+            Some(PageCode::PC437),
+            1,
+            JustifyMode::LEFT,
+            &mut commands,
+        )
+            .unwrap();
+        let expected = "┼".repeat(42).chars().map(|c| c as u8).collect::<Vec<u8>>();
+
+        assert_eq!(commands.len(), 2);
+        assert_eq!(commands[0], expected);
     }
 
     #[test]
