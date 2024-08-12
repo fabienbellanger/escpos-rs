@@ -2,6 +2,8 @@
 
 #[cfg(feature = "graphics")]
 use image::ImageError;
+#[cfg(feature = "ui")]
+use std::string::FromUtf8Error;
 use std::{borrow::Cow, cell::BorrowMutError, fmt, io, num::TryFromIntError};
 
 /// Custom Result for `PrinterError`
@@ -54,6 +56,13 @@ impl From<TryFromIntError> for PrinterError {
 #[cfg(feature = "graphics")]
 impl From<ImageError> for PrinterError {
     fn from(err: ImageError) -> Self {
+        PrinterError::Io(err.to_string())
+    }
+}
+
+#[cfg(feature = "ui")]
+impl From<FromUtf8Error> for PrinterError {
+    fn from(err: FromUtf8Error) -> Self {
         PrinterError::Io(err.to_string())
     }
 }

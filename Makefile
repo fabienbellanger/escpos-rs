@@ -4,6 +4,7 @@
 	lint-audit \
 	audit-fix \
 	test \
+	coverage \
 	check \
 	clean \
 	build \
@@ -47,6 +48,10 @@ audit-fix:
 ## test: Launch unit tests in a single thread
 test:
 	$(CARGO) test --all-features -- --nocapture
+
+## coverage: Launch coverage tests
+coverage:
+	$(CARGO) tarpaulin --all-features
 
 ## check: Clippy, audit and test
 check: lint-audit test

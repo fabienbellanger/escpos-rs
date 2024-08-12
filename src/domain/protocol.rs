@@ -3,6 +3,10 @@
 #[cfg(feature = "graphics")]
 use super::bit_image::*;
 use super::{character::*, codes::*, common::get_parameters_number_2, constants::*, types::*, RealTimeStatusRequest};
+#[cfg(feature = "ui")]
+use crate::domain::ui::{line::Line, UIComponent};
+use crate::printer::PrinterStyleState;
+use crate::printer_options::PrinterOptions;
 use crate::{
     domain::page_codes::PageCodeTable,
     errors::{PrinterError, Result},
@@ -643,6 +647,17 @@ impl Protocol {
         cmd.append(&mut bit_image.raster_data()?);
 
         Ok(cmd)
+    }
+
+    #[cfg(feature = "ui")]
+    pub(crate) fn draw_line(
+        &self,
+        line: Line,
+        options: PrinterOptions,
+        style_state: PrinterStyleState,
+    ) -> Result<Vec<Command>> {
+        let commands = line.render(self.clone(), options, style_state)?;
+        Ok(commands)
     }
 
     // #[cfg(feature = "graphics")]

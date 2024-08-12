@@ -1,6 +1,7 @@
 //! Printer
 
 use super::errors::Result;
+use crate::domain::ui::line::Line;
 use crate::printer_options::PrinterOptions;
 use crate::{domain::*, driver::Driver, utils::Protocol};
 use log::debug;
@@ -633,6 +634,15 @@ impl<D: Driver> Printer<D> {
     /// Print image
     pub fn bit_image_from_bytes(&mut self, bytes: &[u8]) -> Result<&mut Self> {
         self.bit_image_from_bytes_option(bytes, BitImageOption::default())
+    }
+
+    #[cfg(feature = "ui")]
+    /// Print image
+    pub fn draw_line(&mut self, line: Line) -> Result<&mut Self> {
+        let commands = self
+            .protocol
+            .draw_line(line, self.options.clone(), self.style_state.clone())?;
+        self.command("draw line", commands.as_slice())
     }
 
     // #[cfg(feature = "graphics")]
