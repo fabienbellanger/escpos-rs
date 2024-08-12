@@ -171,6 +171,7 @@
 //! | `native_usb`  | Enable native USB feature                                              |   ❌    |
 //! | `hidapi`      | Enable HidApi feature                                                  |   ❌    |
 //! | `serial_port` | Enable Serial port feature                                             |   ❌    |
+//! | `ui`          | Enable ui feature (UI components)                                      |    ❌   |
 //! | `full`        | Enable all features                                                    |   ❌    |
 //!
 //! ## External resources
@@ -193,6 +194,12 @@ pub mod printer_options;
 pub mod utils {
     pub use super::domain::*;
     pub use super::io::encoder::*;
+}
+
+/// UI components like lines, tables, etc.
+#[cfg(feature = "ui")]
+pub mod ui {
+    pub use super::domain::ui::*;
 }
 
 /// Drivers used to send data to the printer (Network or USB)

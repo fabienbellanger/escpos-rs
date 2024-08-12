@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
+## [Unreleased]
+
+### Added
+
+- Add a new UI `Line` component
+- Add a state for printer styles
+
 ## `0.13.0` (2024-08-08) [CURRENT]
 
 ### Changed

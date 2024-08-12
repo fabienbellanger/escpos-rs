@@ -10,7 +10,7 @@ mod status;
 mod types;
 
 #[cfg(feature = "ui")]
-pub mod ui;
+pub(crate) mod ui;
 
 pub use character::*;
 pub use codes::*;

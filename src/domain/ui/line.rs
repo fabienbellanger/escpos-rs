@@ -1,5 +1,36 @@
 //! Line component
-// TODO: Add doc + examples
+//!
+//! # Examples
+//! ```
+//! use escpos::driver::ConsoleDriver;
+//! use escpos::printer::Printer;
+//! use escpos::printer_options::PrinterOptions;
+//! use escpos::utils::{JustifyMode, Protocol};
+//! use escpos::ui::line::{LineBuilder, LineStyle};
+//! use escpos::errors::Result;
+//!
+//! fn main() -> Result<()> {
+//!     let line_simple = LineBuilder::new().style(LineStyle::Simple).offset(4).build();
+//!     let line_dotted = LineBuilder::new()
+//!         .style(LineStyle::Dotted)
+//!         .offset(8)
+//!         .justify(JustifyMode::RIGHT)
+//!         .build();
+//!     let line_custom = LineBuilder::new().style(LineStyle::Custom("=-")).build();
+//!
+//!     let driver = ConsoleDriver::open(true);
+//!     let printer_options = PrinterOptions::new(None, None, 42);
+//!     Printer::new(driver, Protocol::default(), Some(printer_options))
+//!         .init()?
+//!         .debug()?
+//!         .draw_line(line_simple)?
+//!         .draw_line(line_custom)?
+//!         .draw_line(line_dotted)?
+//!         .print_cut()?;
+//!
+//!     Ok(())
+//! }
+//! ```
 
 use crate::domain::ui::UIComponent;
 use crate::domain::{chars_number, Command, Font, JustifyMode, TextSize};
@@ -35,7 +66,7 @@ pub enum LineStyle<'a> {
 /// # Example
 /// ```
 /// use escpos::utils::{Font, JustifyMode};
-/// use escpos::utils::ui::line::{Line, LineBuilder, LineStyle};
+/// use escpos::ui::line::{Line, LineBuilder, LineStyle};
 ///
 /// let line = LineBuilder::new()
 ///     .font(Font::A)
