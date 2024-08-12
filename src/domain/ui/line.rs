@@ -292,7 +292,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-            .unwrap();
+        .unwrap();
         let expected = "-".repeat(42).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
         assert_eq!(commands.len(), 2);
@@ -308,7 +308,7 @@ mod tests {
             JustifyMode::RIGHT,
             &mut commands,
         )
-            .unwrap();
+        .unwrap();
         let expected = format!("{}{}", "=".repeat(10), " ".repeat(4))
             .chars()
             .map(|c| c as u8)
@@ -329,7 +329,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-            .unwrap();
+        .unwrap();
         let expected = "- ".repeat(21).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
         assert_eq!(commands.len(), 2);
@@ -345,7 +345,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-            .unwrap();
+        .unwrap();
         let expected = format!("{}{}-", " ".repeat(3), "- ".repeat(20))
             .chars()
             .map(|c| c as u8)
@@ -367,7 +367,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-            .unwrap();
+        .unwrap();
         let expected = ".".repeat(14).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
         assert_eq!(commands.len(), 2);
@@ -386,7 +386,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-            .unwrap();
+        .unwrap();
 
         assert!(commands.is_empty());
     }
@@ -403,7 +403,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-            .unwrap();
+        .unwrap();
         let expected = "┼".repeat(42).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
         assert_eq!(commands.len(), 2);
