@@ -722,6 +722,7 @@ impl Protocol {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::domain::ui::line::{LineBuilder, LineStyle};
 
     #[test]
     fn test_init() {
@@ -1650,6 +1651,31 @@ mod tests {
             vec![
                 29, 118, 48, 0, 2, 0, 16, 0, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 255, 255, 255,
                 255, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128, 1, 128
+            ]
+        );
+    }
+
+    #[cfg(feature = "ui")]
+    #[test]
+    fn test_draw_line() {
+        let protocol = Protocol::new(Encoder::default());
+        let line = LineBuilder::new()
+            .style(LineStyle::Simple)
+            .offset(4)
+            .size((2, 2))
+            .justify(JustifyMode::LEFT)
+            .build();
+        let options = PrinterOptions::default();
+        let style_state = PrinterStyleState::default();
+        assert_eq!(
+            protocol.draw_line(line, options, style_state).unwrap(),
+            vec![
+                vec![29, 33, 17],
+                vec![27, 97, 0],
+                vec![32, 32, 32, 32, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45],
+                vec![27, 100, 1],
+                vec![29, 33, 0],
+                vec![27, 97, 0],
             ]
         );
     }

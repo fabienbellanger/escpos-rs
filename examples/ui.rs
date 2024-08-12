@@ -10,10 +10,14 @@ fn main() -> Result<()> {
     // Line
     let line_double = LineBuilder::new().style(LineStyle::Double).build();
     let line_simple = LineBuilder::new().style(LineStyle::Simple).offset(4).build();
-    let line_dotted = LineBuilder::new().style(LineStyle::Dotted).offset(8).build();
+    let line_dotted = LineBuilder::new()
+        .style(LineStyle::Dotted)
+        .offset(8)
+        .justify(JustifyMode::RIGHT)
+        .build();
     let line_dashed = LineBuilder::new()
         .style(LineStyle::Dashed)
-        .align(JustifyMode::CENTER)
+        .justify(JustifyMode::CENTER)
         .size((2, 1))
         .width(8)
         .build();

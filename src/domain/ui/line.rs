@@ -40,7 +40,7 @@ pub enum LineStyle<'a> {
 /// let line = LineBuilder::new()
 ///     .font(Font::A)
 ///     .size((1, 1))
-///     .align(JustifyMode::CENTER)
+///     .justify(JustifyMode::CENTER)
 ///     .style(LineStyle::Double)
 ///     .width(16)
 ///     .offset(8)
@@ -50,24 +50,11 @@ pub enum LineStyle<'a> {
 pub struct LineBuilder<'a> {
     font: Option<Font>,
     size: Option<TextSize>,
-    align: Option<JustifyMode>,
+    justify: Option<JustifyMode>,
     style: LineStyle<'a>,
     width: Option<u8>,
     offset: u8,
 }
-
-// impl<'a> Default for LineBuilder<'a> {
-//     fn default() -> Self {
-//         Self {
-//             font: None,
-//             size: None,
-//             align: None,
-//             style: LineStyle::default(),
-//             width: None,
-//             offset: 0,
-//         }
-//     }
-// }
 
 impl<'a> LineBuilder<'a> {
     /// Initialize a new `LineBuilder`
@@ -75,7 +62,7 @@ impl<'a> LineBuilder<'a> {
         Self {
             font: None,
             size: None,
-            align: None,
+            justify: None,
             style: LineStyle::default(),
             width: None,
             offset: 0,
@@ -95,8 +82,8 @@ impl<'a> LineBuilder<'a> {
     }
 
     /// Set horizontal alignment
-    pub fn align(mut self, align: JustifyMode) -> Self {
-        self.align = Some(align);
+    pub fn justify(mut self, align: JustifyMode) -> Self {
+        self.justify = Some(align);
         self
     }
 
@@ -123,7 +110,7 @@ impl<'a> LineBuilder<'a> {
         Line {
             font: self.font,
             size: self.size,
-            align: self.align,
+            justify: self.justify,
             style: self.style,
             width: self.width,
             offset: self.offset,
@@ -135,7 +122,7 @@ impl<'a> LineBuilder<'a> {
 pub struct Line<'a> {
     font: Option<Font>,
     size: Option<TextSize>,
-    align: Option<JustifyMode>,
+    justify: Option<JustifyMode>,
     style: LineStyle<'a>,
     width: Option<u8>,
     offset: u8,
@@ -157,9 +144,9 @@ impl<'a> Line<'a> {
             *text_size = size;
             commands.push(protocol.text_size(size.0, size.1)?);
         }
-        if let Some(align) = self.align {
-            *justify_mode = align;
-            commands.push(protocol.justify(align));
+        if let Some(justify) = self.justify {
+            *justify_mode = justify;
+            commands.push(protocol.justify(justify));
         }
 
         Ok(())
@@ -217,7 +204,7 @@ impl<'a> Line<'a> {
         if self.size.is_some() {
             commands.push(protocol.text_size(style_state.text_size.0, style_state.text_size.1)?);
         }
-        if self.align.is_some() {
+        if self.justify.is_some() {
             commands.push(protocol.justify(style_state.justify_mode));
         }
 
@@ -337,7 +324,7 @@ mod tests {
         let line = LineBuilder::new()
             .style(LineStyle::Simple)
             .size((1, 1))
-            .align(JustifyMode::CENTER)
+            .justify(JustifyMode::CENTER)
             .build();
         line.set_style(Protocol::default(), &mut size, &mut justify_mode, &mut commands)
             .unwrap();
