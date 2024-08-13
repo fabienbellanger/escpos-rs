@@ -333,7 +333,7 @@ impl<D: Driver> Printer<D> {
 
     /// Text
     pub fn write(&mut self, text: &str) -> Result<&mut Self> {
-        let cmd = self.protocol.text(text, self.options.get_page_code())?;
+        let cmd = self.protocol.text(text, self.options.get_page_code(), None)?;
         self.command("text", &[cmd])
     }
 
