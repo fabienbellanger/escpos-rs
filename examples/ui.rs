@@ -32,6 +32,7 @@ fn main() -> Result<()> {
         .debug()?
         .writeln("UI Components")?
         .feed()?
+        .writeln("My text with ώ characters")?
         .writeln("Lines")?
         // .draw_line(line_double)?
         // .draw_line(line_simple)?

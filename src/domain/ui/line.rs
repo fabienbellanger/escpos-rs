@@ -211,12 +211,8 @@ impl<'a> Line<'a> {
             }
         }
 
-        if line.as_bytes().len() > line_max_width as usize {
-            line = String::from_utf8(line.as_bytes()[..line_max_width as usize].to_vec())?;
-        }
-
         if !line.is_empty() {
-            commands.push(protocol.text(line.as_str(), page_code)?);
+            commands.push(protocol.text(line.as_str(), page_code, Some(line_max_width as usize))?);
             commands.push(protocol.feed(1));
         }
 
@@ -292,7 +288,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-        .unwrap();
+            .unwrap();
         let expected = "-".repeat(42).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
         assert_eq!(commands.len(), 2);
@@ -308,7 +304,7 @@ mod tests {
             JustifyMode::RIGHT,
             &mut commands,
         )
-        .unwrap();
+            .unwrap();
         let expected = format!("{}{}", "=".repeat(10), " ".repeat(4))
             .chars()
             .map(|c| c as u8)
@@ -329,7 +325,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-        .unwrap();
+            .unwrap();
         let expected = "- ".repeat(21).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
         assert_eq!(commands.len(), 2);
@@ -345,7 +341,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-        .unwrap();
+            .unwrap();
         let expected = format!("{}{}-", " ".repeat(3), "- ".repeat(20))
             .chars()
             .map(|c| c as u8)
@@ -367,7 +363,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-        .unwrap();
+            .unwrap();
         let expected = ".".repeat(14).chars().map(|c| c as u8).collect::<Vec<u8>>();
 
         assert_eq!(commands.len(), 2);
@@ -386,7 +382,7 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-        .unwrap();
+            .unwrap();
 
         assert!(commands.is_empty());
     }
@@ -403,8 +399,8 @@ mod tests {
             JustifyMode::LEFT,
             &mut commands,
         )
-        .unwrap();
-        let expected = "┼".repeat(42).chars().map(|c| c as u8).collect::<Vec<u8>>();
+            .unwrap();
+        let expected = [197; 42].to_vec(); // 197 in PC437 is "┼"
 
         assert_eq!(commands.len(), 2);
         assert_eq!(commands[0], expected);
