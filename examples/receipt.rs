@@ -2,7 +2,7 @@ use escpos::printer::Printer;
 use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
-// const CHARS_BY_LINE: usize = 42;
+const CHARS_BY_LINE: usize = 42;
 const EURO: &[u8] = &[0xD5]; // €
 const NUM: &[u8] = &[0xF8]; // °
 
@@ -37,6 +37,8 @@ fn main() -> Result<()> {
     #[cfg(feature = "graphics")]
     printer.bit_image("./resources/images/rust-logo-small.png")?;
 
+    let line = "-".repeat(CHARS_BY_LINE);
+
     // Name + address
     printer
         .bold(true)?
@@ -49,13 +51,13 @@ fn main() -> Result<()> {
         .feed()?
         .justify(JustifyMode::LEFT)?
         .writeln("2023-11-13 13:22")?
-        .writeln("-".repeat(42).as_str())?
+        .writeln(&line)?
         .write("Ticket n")?
         .custom_with_page_code(NUM, PageCode::PC858)?
         .size(2, 2)?
         .writeln("23")?
         .reset_size()?
-        .writeln("-".repeat(42).as_str())?;
+        .writeln(&line)?;
 
     // Items
     for item in items {
@@ -63,7 +65,7 @@ fn main() -> Result<()> {
     }
 
     // Total
-    printer.writeln("-".repeat(42).as_str())?;
+    printer.writeln(&line)?;
     subtotal.print(&mut printer, 1)?;
     tax.print(&mut printer, 1)?;
     printer.size(2, 2)?;
@@ -106,7 +108,7 @@ impl Item {
         characters_length *= size as usize;
 
         // Number of spaces between name and price
-        let spaces = " ".repeat((DEFAULT_CHARACTERS_PER_LINE as usize - characters_length) / size as usize);
+        let spaces = " ".repeat((CHARS_BY_LINE - characters_length) / size as usize);
 
         // Print item
         if let Some(quantity) = self.quantity {
