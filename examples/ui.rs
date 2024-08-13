@@ -23,8 +23,8 @@ fn main() -> Result<()> {
         .build();
     let line_custom = LineBuilder::new().style(LineStyle::Custom("┼")).build();
 
-    let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
-    // let driver = ConsoleDriver::open(true);
+    // let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
+    let driver = ConsoleDriver::open(true);
     let printer_options = PrinterOptions::new(Some(PageCode::PC437), Some(DebugMode::Dec), 42);
     let mut printer = Printer::new(driver, Protocol::default(), Some(printer_options));
     printer
@@ -32,13 +32,12 @@ fn main() -> Result<()> {
         .debug()?
         .writeln("UI Components")?
         .feed()?
-        .writeln("My text with ώ characters")?
         .writeln("Lines")?
-        // .draw_line(line_double)?
-        // .draw_line(line_simple)?
-        // .draw_line(line_dashed)?
+        .draw_line(line_double)?
+        .draw_line(line_simple)?
+        .draw_line(line_dashed)?
         .draw_line(line_custom)?
-        // .draw_line(line_dotted)?
+        .draw_line(line_dotted)?
         .print_cut()?;
 
     Ok(())
