@@ -1,4 +1,5 @@
 use escpos::printer::Printer;
+use escpos::ui::line::{LineBuilder, LineStyle};
 use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
@@ -37,7 +38,9 @@ fn main() -> Result<()> {
     #[cfg(feature = "graphics")]
     printer.bit_image("./resources/images/rust-logo-small.png")?;
 
-    let line = "-".repeat(CHARS_BY_LINE);
+    // Line
+    let simple_line = LineBuilder::new().style(LineStyle::Simple).build();
+    let double_line = LineBuilder::new().style(LineStyle::Double).build();
 
     // Name + address
     printer
@@ -46,18 +49,18 @@ fn main() -> Result<()> {
         .writeln("My Shop")?
         .reset_size()?
         .bold(false)?
-        .writeln("1, rue des gloutons")?
+        .writeln("1, rue des Gloutons")?
         .writeln("75000 Paris")?
         .feed()?
         .justify(JustifyMode::LEFT)?
         .writeln("2023-11-13 13:22")?
-        .writeln(&line)?
+        .draw_line(simple_line.clone())?
         .write("Ticket n")?
         .custom_with_page_code(NUM, PageCode::PC858)?
         .size(2, 2)?
         .writeln("23")?
         .reset_size()?
-        .writeln(&line)?;
+        .draw_line(simple_line)?;
 
     // Items
     for item in items {
@@ -65,7 +68,7 @@ fn main() -> Result<()> {
     }
 
     // Total
-    printer.writeln(&line)?;
+    printer.draw_line(double_line)?;
     subtotal.print(&mut printer, 1)?;
     tax.print(&mut printer, 1)?;
     printer.size(2, 2)?;
