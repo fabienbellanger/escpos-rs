@@ -29,7 +29,6 @@ fn main() -> Result<()> {
     let mut printer = Printer::new(driver, Protocol::default(), Some(printer_options));
     printer
         .init()?
-        .debug()?
         .writeln("UI Components")?
         .feed()?
         .writeln("Lines")?

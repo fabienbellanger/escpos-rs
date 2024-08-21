@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update examples
+- [BREAKING] Remove `debug()` in `Printer` and `debug.rs` example
 
 ## `0.13.0` (2024-08-08) [CURRENT]
 

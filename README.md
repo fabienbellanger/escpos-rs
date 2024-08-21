@@ -80,7 +80,6 @@ To launch an example, use the following command:
 RUST_LOG=debug cargo run --example full --features full
 RUST_LOG=debug cargo run --example receipt -F full
 RUST_LOG=debug cargo run --example codes
-RUST_LOG=debug cargo run --example debug
 RUST_LOG=debug cargo run --example page_codes
 RUST_LOG=debug cargo run --example usb --features usb
 RUST_LOG=debug cargo run --example native_usb --features native_usb

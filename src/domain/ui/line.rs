@@ -22,7 +22,6 @@
 //!     let printer_options = PrinterOptions::new(None, None, 42);
 //!     Printer::new(driver, Protocol::default(), Some(printer_options))
 //!         .init()?
-//!         .debug()?
 //!         .draw_line(line_simple)?
 //!         .draw_line(line_custom)?
 //!         .draw_line(line_dotted)?

@@ -5,7 +5,9 @@ use super::bit_image::*;
 use super::{character::*, codes::*, common::get_parameters_number_2, constants::*, types::*, RealTimeStatusRequest};
 #[cfg(feature = "ui")]
 use crate::domain::ui::{line::Line, UIComponent};
+#[cfg(feature = "ui")]
 use crate::printer::PrinterStyleState;
+#[cfg(feature = "ui")]
 use crate::printer_options::PrinterOptions;
 use crate::{
     domain::page_codes::PageCodeTable,

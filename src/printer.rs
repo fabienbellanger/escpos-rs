@@ -1,6 +1,7 @@
 //! Printer
 
 use super::errors::Result;
+#[cfg(feature = "ui")]
 use crate::domain::ui::line::Line;
 use crate::printer_options::PrinterOptions;
 use crate::{domain::*, driver::Driver, utils::Protocol};
@@ -136,15 +137,6 @@ impl<D: Driver> Printer<D> {
     pub fn debug_mode(&mut self, mode: Option<DebugMode>) -> &mut Self {
         self.options.debug_mode(mode);
         self
-    }
-
-    /// Display logs of instructions if debug mode is enabled
-    pub fn debug(&mut self) -> Result<&mut Self> {
-        if self.options.get_debug_mode().is_some() {
-            debug!("instructions = {:#?}", self.instructions);
-        }
-
-        Ok(self)
     }
 
     /// Print the data
