@@ -81,6 +81,7 @@ RUST_LOG=debug cargo run --example full --features full
 RUST_LOG=debug cargo run --example receipt -F full
 RUST_LOG=debug cargo run --example codes
 RUST_LOG=debug cargo run --example page_codes
+RUST_LOG=debug cargo run --example pictures --features graphics
 RUST_LOG=debug cargo run --example usb --features usb
 RUST_LOG=debug cargo run --example native_usb --features native_usb
 RUST_LOG=debug cargo run --example hidapi --features hidapi
