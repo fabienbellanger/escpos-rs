@@ -296,6 +296,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve documentation and `README.md`
 - Add "option" to all barcodes
 - `barcode` and `qrcode` features are now enabled by default
-- [BREAKING] Remove unused `PrinterError::Network item`
+- [BREAKING] Remove unused `PrinterError::Network` item
 - [BREAKING] Change `Printer` functions signature from `fn(self) -> Result<Self>`
   to `fn(&mut self) -> Result<&mut Self>`
