@@ -31,7 +31,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update examples
 - [BREAKING] Remove `debug()` in `Printer` and `debug.rs` example
 
-## `0.13.0` (2024-08-08) [CURRENT]
+## `0.13.1` (2024-10-14) [CURRENT]
+
+### Changed
+
+- Add `Clone` and `Copy` traits on `UnderlineMode` and `Font` ([#33](https://github.com/fabienbellanger/escpos-rs/pull/33))
+- Bump `serialport` to `4.5.1`
+
+## `0.13.0` (2024-08-08)
 
 ### Changed
 
@@ -54,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump `nusb` to `0.1.10`
 - Bump `env_logger` to `0.11.5`
 - Bump `hidapi` to `2.6.3`
-- Bump `serialport` to `1.5.0`
+- Bump `serialport` to `4.5.0`
 
 ### Fixed
 
@@ -88,28 +95,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add table for page codes:
-    - `Katakana`
-    - `PC850`
-    - `PC851`
-    - `PC853`
-    - `PC857`
-    - `PC737`
-    - `PC863`
-    - `PC866`
-    - `WPC775`
-    - `PC855`
-    - `PC861`
-    - `PC862`
-    - `PC869`
-    - `PC1118`
-    - `PC1119`
-    - `PC1125`
-    - `WPC1250`
-    - `WPC1251`
-    - `WPC1253`
-    - `WPC1254`
-    - `WPC1257`
-    - `KZ1048`
+  - `Katakana`
+  - `PC850`
+  - `PC851`
+  - `PC853`
+  - `PC857`
+  - `PC737`
+  - `PC863`
+  - `PC866`
+  - `WPC775`
+  - `PC855`
+  - `PC861`
+  - `PC862`
+  - `PC869`
+  - `PC1118`
+  - `PC1119`
+  - `PC1125`
+  - `WPC1250`
+  - `WPC1251`
+  - `WPC1253`
+  - `WPC1254`
+  - `WPC1257`
+  - `KZ1048`
 
 ### Changed
 
@@ -302,6 +309,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve documentation and `README.md`
 - Add "option" to all barcodes
 - `barcode` and `qrcode` features are now enabled by default
-- [BREAKING] Remove unused `PrinterError::Network item`
+- [BREAKING] Remove unused `PrinterError::Network` item
 - [BREAKING] Change `Printer` functions signature from `fn(self) -> Result<Self>`
   to `fn(&mut self) -> Result<&mut Self>`
