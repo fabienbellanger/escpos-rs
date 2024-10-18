@@ -6,7 +6,10 @@
 	test \
 	coverage \
 	check \
+	find-msrv \
+	verify-msrv \
 	clean \
+	prepare \
 	build \
 	build-no-audit \
 	doc \
@@ -56,9 +59,20 @@ coverage:
 ## check: Clippy, audit and test
 check: lint-audit test
 
+## find-msrv: Find minimum supported Rust version
+find-msrv:
+	$(CARGO) msrv find
+
+## verify-msrv: Verify minimum supported Rust version
+verify-msrv:
+	$(CARGO) msrv verify
+
 ## clean: Remove target directory
 clean:
 	$(CARGO) clean
+
+## prepare: Run lint, test and verify-msrv
+prepare: lint test verify-msrv
 
 ## build: Build application in release mode
 build: lint-audit test

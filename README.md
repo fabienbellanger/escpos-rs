@@ -55,6 +55,20 @@ _Results:_
 
 - [2024-10-14] `57.75% coverage, 1121/1941 lines covered`
 
+## MSRV
+
+Tool used: [cargo-msrv](https://github.com/foresterre/cargo-msrv)
+
+```shell
+cargo install cargo-msrv
+```
+
+```shell
+cargo msrv find
+cargo msrv verify
+
+```
+
 ## Features list
 
 | Name          | Description                                                            | Default |

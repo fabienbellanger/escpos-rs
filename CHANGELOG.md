@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add a new UI `Line` component
 - Add a state for printer styles
 - Add a new example for using pictures (`examples/pictures.rs`)
+- Set `rust_version` to `1.80` in `Cargo.toml`
 
 ### Changed
 
