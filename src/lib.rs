@@ -7,8 +7,9 @@
 //! QR codes and raster images on a compatible printer.
 //!
 //! ## Examples
-//! The `examples` folder contains various examples of how to use `escpos`.
-//! The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.
+//! The `examples` folder contains various examples of how to use `escpos`.  
+//! The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.  
+//! The list of all the examples can be found [here](examples/EXAMPLES.md).
 //!
 //! ### Simple text formatting
 //!
@@ -171,7 +172,7 @@
 //! | `native_usb`  | Enable native USB feature                                              |   ❌    |
 //! | `hidapi`      | Enable HidApi feature                                                  |   ❌    |
 //! | `serial_port` | Enable Serial port feature                                             |   ❌    |
-//! | `ui`          | Enable ui feature (UI components)                                      |    ❌   |
+//! | `ui`          | Enable ui feature (UI components)                                      |   ❌    |
 //! | `full`        | Enable all features                                                    |   ❌    |
 //!
 //! ## External resources

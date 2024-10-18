@@ -47,7 +47,7 @@ cargo install cargo-tarpaulin
 ```
 
 ```shell
-cargo tarpaulin --all-features
+cargo tarpaulin --all-features --tests
 
 ```
 
@@ -66,7 +66,6 @@ cargo install cargo-msrv
 ```shell
 cargo msrv find
 cargo msrv verify
-
 ```
 
 ## Features list
@@ -85,24 +84,16 @@ cargo msrv verify
 
 ## Examples
 
-The `examples` folder contains various examples of how to use `escpos`.
-The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.
+The `examples` folder contains various examples of how to use `escpos`.  
+The [docs](https://docs.rs/escpos) also provide code snippets and examples.
 
 To launch an example, use the following command:
 
 ```shell
 RUST_LOG=debug cargo run --example full --features full
-RUST_LOG=debug cargo run --example receipt -F full
-RUST_LOG=debug cargo run --example codes
-RUST_LOG=debug cargo run --example page_codes
-RUST_LOG=debug cargo run --example pictures --features graphics
-RUST_LOG=debug cargo run --example usb --features usb
-RUST_LOG=debug cargo run --example native_usb --features native_usb
-RUST_LOG=debug cargo run --example hidapi --features hidapi
-RUST_LOG=debug cargo run --example serial_port --features serial_port
-RUST_LOG=debug cargo run --example ui --features ui
-RUST_LOG=debug cargo run --example status --all-features
 ```
+
+The list of all the examples can be found [here](examples/EXAMPLES.md).
 
 ### Simple text formatting
 

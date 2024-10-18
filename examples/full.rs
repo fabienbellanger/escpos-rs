@@ -1,4 +1,5 @@
 use escpos::printer::Printer;
+use escpos::ui::line::{LineBuilder, LineStyle};
 use escpos::utils::*;
 use escpos::{driver::*, errors::Result};
 
@@ -24,6 +25,8 @@ fn main() -> Result<()> {
         .justify(JustifyMode::RIGHT)?
         .reverse(false)?
         .underline(UnderlineMode::None)?
+        .draw_line(LineBuilder::new().style(LineStyle::Double).build())?
+        .feed()?
         .size(2, 3)?
         .writeln("Bigger right")?
         .writeln("")?
