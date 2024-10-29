@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add a state for printer styles
 - Add a new example for using pictures (`examples/pictures.rs`)
 - Set `rust_version` to `1.80` in `Cargo.toml`
+- Bump `serialport` to `4.6.0`
+- Bump `encoding_rs` to `0.8.35`
+- Bump `reqwest` to `0.12.9`
 
 ### Changed
 
