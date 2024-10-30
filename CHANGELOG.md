@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump `serialport` to `4.6.0`
 - Bump `encoding_rs` to `0.8.35`
 - Bump `reqwest` to `0.12.9`
+- Bump `futures-lite` to `2.4.0`
 
 ### Changed
 
