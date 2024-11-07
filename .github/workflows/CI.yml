@@ -25,10 +25,9 @@ jobs:
           echo "MSRV=$MSRV" >> $GITHUB_ENV
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable # actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: ${{ env.MSRV }}
-          override: true
 
       - name: Install and run rustfmt
         run: |
