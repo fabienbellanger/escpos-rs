@@ -30,11 +30,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump `encoding_rs` to `0.8.35`
 - Bump `reqwest` to `0.12.9`
 - Bump `futures-lite` to `2.4.0`
+- Bump `image` to `0.25.5`
+- Bump `nusb` to `0.1.11`
 
 ### Changed
 
 - Update examples
 - [BREAKING] Remove `debug()` in `Printer` and `debug.rs` example
+- Update `CI.yml` to use MSRV Rust toolchain
 
 ## `0.13.1` (2024-10-14) [CURRENT]
 
