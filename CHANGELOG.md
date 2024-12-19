@@ -26,12 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add a state for printer styles
 - Add a new example for using pictures (`examples/pictures.rs`)
 - Set `rust_version` to `1.80` in `Cargo.toml`
-- Bump `serialport` to `4.6.0`
+- Bump `serialport` to `4.6.1`
 - Bump `encoding_rs` to `0.8.35`
 - Bump `reqwest` to `0.12.9`
-- Bump `futures-lite` to `2.4.0`
+- Bump `futures-lite` to `2.5.0`
 - Bump `image` to `0.25.5`
-- Bump `nusb` to `0.1.11`
+- Bump `nusb` to `0.1.12`
 
 ### Changed
 
@@ -43,7 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Add `Clone` and `Copy` traits on `UnderlineMode` and `Font` ([#33](https://github.com/fabienbellanger/escpos-rs/pull/33))
+- Add `Clone` and `Copy` traits on `UnderlineMode` and
+  `Font` ([#33](https://github.com/fabienbellanger/escpos-rs/pull/33))
 - Bump `serialport` to `4.5.1`
 
 ## `0.13.0` (2024-08-08)
@@ -103,28 +104,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add table for page codes:
-  - `Katakana`
-  - `PC850`
-  - `PC851`
-  - `PC853`
-  - `PC857`
-  - `PC737`
-  - `PC863`
-  - `PC866`
-  - `WPC775`
-  - `PC855`
-  - `PC861`
-  - `PC862`
-  - `PC869`
-  - `PC1118`
-  - `PC1119`
-  - `PC1125`
-  - `WPC1250`
-  - `WPC1251`
-  - `WPC1253`
-  - `WPC1254`
-  - `WPC1257`
-  - `KZ1048`
+    - `Katakana`
+    - `PC850`
+    - `PC851`
+    - `PC853`
+    - `PC857`
+    - `PC737`
+    - `PC863`
+    - `PC866`
+    - `WPC775`
+    - `PC855`
+    - `PC861`
+    - `PC862`
+    - `PC869`
+    - `PC1118`
+    - `PC1119`
+    - `PC1125`
+    - `WPC1250`
+    - `WPC1251`
+    - `WPC1253`
+    - `WPC1254`
+    - `WPC1257`
+    - `KZ1048`
 
 ### Changed
 
