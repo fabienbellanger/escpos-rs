@@ -4,6 +4,7 @@
 use image::ImageError;
 #[cfg(feature = "ui")]
 use std::string::FromUtf8Error;
+use std::sync::PoisonError;
 use std::{borrow::Cow, cell::BorrowMutError, fmt, io, num::TryFromIntError};
 
 /// Custom Result for `PrinterError`
@@ -49,6 +50,12 @@ impl From<BorrowMutError> for PrinterError {
 
 impl From<TryFromIntError> for PrinterError {
     fn from(err: TryFromIntError) -> Self {
+        PrinterError::Io(err.to_string())
+    }
+}
+
+impl<T> From<PoisonError<T>> for PrinterError {
+    fn from(err: PoisonError<T>) -> Self {
         PrinterError::Io(err.to_string())
     }
 }

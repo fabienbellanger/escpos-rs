@@ -50,3 +50,8 @@ RUST_LOG=debug cargo run --example ui --features ui
 ```shell
 RUST_LOG=debug cargo run --example status --all-features
 ```
+
+## Tauri example
+
+```shell
+```

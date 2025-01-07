@@ -158,7 +158,7 @@ pub struct Line<'a> {
     offset: u8,
 }
 
-impl<'a> Line<'a> {
+impl Line<'_> {
     /// Set the style for the line
     fn set_style(
         &self,
@@ -239,7 +239,7 @@ impl<'a> Line<'a> {
     }
 }
 
-impl<'a> UIComponent for Line<'a> {
+impl UIComponent for Line<'_> {
     fn render(
         &self,
         protocol: Protocol,

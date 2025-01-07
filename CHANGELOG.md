@@ -28,10 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set `rust_version` to `1.80` in `Cargo.toml`
 - Bump `serialport` to `4.6.1`
 - Bump `encoding_rs` to `0.8.35`
-- Bump `reqwest` to `0.12.9`
+- Bump `reqwest` to `0.12.12`
 - Bump `futures-lite` to `2.5.0`
 - Bump `image` to `0.25.5`
 - Bump `nusb` to `0.1.12`
+- Bump `env_logger` to `0.11.6`
 
 ### Changed
 

@@ -11,13 +11,12 @@ use nusb::transfer::RequestBuffer;
 use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
 #[cfg(feature = "serial_port")]
 use serialport::SerialPort;
+use std::sync::{Arc, Mutex};
 use std::{
-    cell::RefCell,
     fs::File,
     io::{self, Read, Write},
     net::{IpAddr, SocketAddr, TcpStream},
     path::Path,
-    rc::Rc,
     time::Duration,
 };
 
@@ -95,7 +94,7 @@ impl Driver for ConsoleDriver {
 pub struct NetworkDriver {
     host: String,
     port: u16,
-    stream: Rc<RefCell<TcpStream>>,
+    stream: Arc<Mutex<TcpStream>>,
     timeout: Duration,
 }
 
@@ -129,7 +128,7 @@ impl NetworkDriver {
         Ok(Self {
             host: host.to_string(),
             port,
-            stream: Rc::new(RefCell::new(stream)),
+            stream: Arc::new(Mutex::new(stream)),
             timeout,
         })
     }
@@ -141,21 +140,21 @@ impl Driver for NetworkDriver {
     }
 
     fn write(&self, data: &[u8]) -> Result<()> {
-        let mut stream = self.stream.try_borrow_mut()?;
+        let mut stream = self.stream.lock()?;
         stream.set_write_timeout(Some(self.timeout))?;
 
         Ok(stream.write_all(data)?)
     }
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
-        let mut stream = self.stream.try_borrow_mut()?;
+        let mut stream = self.stream.lock()?;
         stream.set_read_timeout(Some(self.timeout))?;
 
         Ok(stream.read(buf)?)
     }
 
     fn flush(&self) -> Result<()> {
-        Ok(self.stream.try_borrow_mut()?.flush()?)
+        Ok(self.stream.lock()?.flush()?)
     }
 }
 
@@ -165,7 +164,7 @@ impl Driver for NetworkDriver {
 #[derive(Clone)]
 pub struct FileDriver {
     path: String,
-    file: Rc<RefCell<File>>,
+    file: Arc<Mutex<File>>,
 }
 
 impl FileDriver {
@@ -187,7 +186,7 @@ impl FileDriver {
         let file = File::options().read(true).append(true).open(path)?;
         Ok(Self {
             path: path.to_string_lossy().to_string(),
-            file: Rc::new(RefCell::new(file)),
+            file: Arc::new(Mutex::new(file)),
         })
     }
 }
@@ -198,16 +197,16 @@ impl Driver for FileDriver {
     }
 
     fn write(&self, data: &[u8]) -> Result<()> {
-        self.file.try_borrow_mut()?.write_all(data)?;
+        self.file.lock()?.write_all(data)?;
         Ok(())
     }
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
-        Ok(self.file.try_borrow_mut()?.read(buf)?)
+        Ok(self.file.lock()?.read(buf)?)
     }
 
     fn flush(&self) -> Result<()> {
-        Ok(self.file.try_borrow_mut()?.flush()?)
+        Ok(self.file.lock()?.flush()?)
     }
 }
 
@@ -221,7 +220,7 @@ pub struct UsbDriver {
     product_id: u16,
     output_endpoint: u8,
     input_endpoint: u8,
-    device: Rc<RefCell<DeviceHandle<Context>>>,
+    device: Arc<Mutex<DeviceHandle<Context>>>,
     timeout: Duration,
 }
 
@@ -308,7 +307,7 @@ impl UsbDriver {
                             product_id,
                             output_endpoint,
                             input_endpoint,
-                            device: Rc::new(RefCell::new(device_handle)),
+                            device: Arc::new(Mutex::new(device_handle)),
                             timeout: timeout.unwrap_or(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS)),
                         })
                     }
@@ -332,7 +331,7 @@ impl Driver for UsbDriver {
 
     fn write(&self, data: &[u8]) -> Result<()> {
         self.device
-            .try_borrow_mut()?
+            .lock()?
             .write_bulk(self.output_endpoint, data, self.timeout)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(())
@@ -340,7 +339,7 @@ impl Driver for UsbDriver {
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
         self.device
-            .try_borrow_mut()?
+            .lock()?
             .read_bulk(self.input_endpoint, buf, self.timeout)
             .map_err(|e| PrinterError::Io(e.to_string()))
     }
@@ -358,7 +357,7 @@ pub struct NativeUsbDriver {
     product_id: u16,
     output_endpoint: u8,
     input_endpoint: u8,
-    device: Rc<RefCell<nusb::Interface>>,
+    device: Arc<Mutex<nusb::Interface>>,
 }
 
 #[cfg(feature = "native_usb")]
@@ -436,7 +435,7 @@ impl NativeUsbDriver {
             product_id,
             output_endpoint,
             input_endpoint,
-            device: Rc::new(RefCell::new(interface)),
+            device: Arc::new(Mutex::new(interface)),
         })
     }
 }
@@ -451,13 +450,9 @@ impl Driver for NativeUsbDriver {
     }
 
     fn write(&self, data: &[u8]) -> Result<()> {
-        block_on(
-            self.device
-                .try_borrow_mut()?
-                .bulk_out(self.output_endpoint, data.to_vec()),
-        )
-        .into_result()
-        .map_err(|e| PrinterError::Io(e.to_string()))?;
+        block_on(self.device.lock()?.bulk_out(self.output_endpoint, data.to_vec()))
+            .into_result()
+            .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(())
     }
 
@@ -465,13 +460,9 @@ impl Driver for NativeUsbDriver {
         // Seems to read responses one by one
         let mut size = 0;
         for b in buf.iter_mut() {
-            let result = block_on(
-                self.device
-                    .try_borrow_mut()?
-                    .bulk_in(self.input_endpoint, RequestBuffer::new(1)),
-            )
-            .into_result()
-            .map_err(|e| PrinterError::Io(e.to_string()))?;
+            let result = block_on(self.device.lock()?.bulk_in(self.input_endpoint, RequestBuffer::new(1)))
+                .into_result()
+                .map_err(|e| PrinterError::Io(e.to_string()))?;
 
             if !result.is_empty() {
                 *b = result[0];
@@ -495,7 +486,7 @@ impl Driver for NativeUsbDriver {
 pub struct HidApiDriver {
     vendor_id: u16,
     product_id: u16,
-    device: Rc<RefCell<HidDevice>>,
+    device: Arc<Mutex<HidDevice>>,
 }
 
 #[cfg(feature = "hidapi")]
@@ -521,7 +512,7 @@ impl HidApiDriver {
         Ok(Self {
             vendor_id,
             product_id,
-            device: Rc::new(RefCell::new(device)),
+            device: Arc::new(Mutex::new(device)),
         })
     }
 }
@@ -534,7 +525,7 @@ impl Driver for HidApiDriver {
 
     fn write(&self, data: &[u8]) -> Result<()> {
         self.device
-            .try_borrow_mut()?
+            .lock()?
             .write(data)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(())
@@ -542,7 +533,7 @@ impl Driver for HidApiDriver {
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
         self.device
-            .try_borrow_mut()?
+            .lock()?
             .read_timeout(buf, i32::try_from(DEFAULT_TIMEOUT_SECONDS * 1_000)?)
             .map_err(|e| PrinterError::Io(e.to_string()))
     }
@@ -559,7 +550,7 @@ impl Driver for HidApiDriver {
 #[derive(Clone)]
 pub struct SerialPortDriver {
     path: String,
-    port: Rc<RefCell<Box<dyn SerialPort>>>,
+    port: Arc<Mutex<Box<dyn SerialPort>>>,
 }
 
 #[cfg(feature = "serial_port")]
@@ -586,7 +577,7 @@ impl SerialPortDriver {
 
         Ok(Self {
             path: path.to_string(),
-            port: Rc::new(RefCell::new(port)),
+            port: Arc::new(Mutex::new(port)),
         })
     }
 }
@@ -598,19 +589,19 @@ impl Driver for SerialPortDriver {
     }
 
     fn write(&self, data: &[u8]) -> Result<()> {
-        self.port.try_borrow_mut()?.write_all(data)?;
+        self.port.lock()?.write_all(data)?;
 
         Ok(())
     }
 
     fn read(&self, buf: &mut [u8]) -> Result<usize> {
-        let mut port = self.port.try_borrow_mut()?;
+        let mut port = self.port.lock()?;
         port.set_timeout(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS))
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         Ok(port.read(buf)?)
     }
 
     fn flush(&self) -> Result<()> {
-        Ok(self.port.try_borrow_mut()?.flush()?)
+        Ok(self.port.lock()?.flush()?)
     }
 }
