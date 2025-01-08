@@ -10,7 +10,7 @@ name = "escpos"
 readme = "README.md"
 repository = "https://github.com/fabienbellanger/escpos-rs"
 rust-version = "1.80"
-version = "0.13.1"
+version = "0.14.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

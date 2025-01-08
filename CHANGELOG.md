@@ -18,13 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## [Unreleased]
+## `0.14.0` (2025-01-08) [CURRENT]
 
 ### Added
 
 - Add a new UI `Line` component
 - Add a state for printer styles
 - Add a new example for using pictures (`examples/pictures.rs`)
+- Add a new Tauri example ([#36](https://github.com/fabienbellanger/escpos-rs/issues/36))
 - Set `rust_version` to `1.80` in `Cargo.toml`
 - Bump `serialport` to `4.6.1`
 - Bump `encoding_rs` to `0.8.35`
@@ -39,8 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update examples
 - [BREAKING] Remove `debug()` in `Printer` and `debug.rs` example
 - Update `CI.yml` to use MSRV Rust toolchain
+- Replace `Rc<RefCell<T>>` by `Arc<Mutex<T>>` in drivers ([#36](https://github.com/fabienbellanger/escpos-rs/issues/36))
 
-## `0.13.1` (2024-10-14) [CURRENT]
+## `0.13.1` (2024-10-14)
 
 ### Changed
 
