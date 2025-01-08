@@ -54,4 +54,7 @@ RUST_LOG=debug cargo run --example status --all-features
 ## Tauri example
 
 ```shell
+cd examples/tauri-app
+npm i
+npm run tauri dev
 ```
