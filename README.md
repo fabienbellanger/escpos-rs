@@ -21,14 +21,14 @@ For standard functionalities (e.g. printing text), no additional dependencies ar
 
 ```toml
 [dependencies]
-escpos = "0.14.0"
+escpos = "0.15.0"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.14.0", features = ["full"] }
+escpos = { version = "0.15.0", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
@@ -53,7 +53,7 @@ cargo tarpaulin --all-features --tests
 
 _Results:_
 
-- [2025-01-08] `59.43% coverage, 1216/2046 lines covered`
+- [2025-01-16] `59.37% coverage, 1217/2050 lines covered`
 
 ## MSRV
 

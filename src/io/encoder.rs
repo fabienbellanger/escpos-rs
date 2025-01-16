@@ -28,7 +28,7 @@ impl Encoder {
         }
     }
 
-    /// Allow this encoder to succeed if the unicode text that it's encoding
+    /// Allow this encoder to succeed if the Unicode text that it's encoding
     /// can't be fully mapped to the output encoding.
     ///
     /// Defaults to `false`.
