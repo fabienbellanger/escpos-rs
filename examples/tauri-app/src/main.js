@@ -19,27 +19,27 @@ async function print_test() {
 }
 
 // Check printer status
-setInterval(() => {
-    invoke('printer_status', {})
-        .then((connected) => {
-            if (!!connected) {
-                isPrinterConnected = true;
+setInterval(async () => {
+    try {
+        const connected = await invoke('printer_status', {});
 
-                document.getElementById('printerStatusValue').innerText = 'Connected';
-                document.getElementById('printerStatusValue').style.color = 'green';
-            } else {
-                isPrinterConnected = false;
+        if (!!connected) {
+            isPrinterConnected = true;
 
-                document.getElementById('printerStatusValue').innerText = 'Disconnected';
-                document.getElementById('printerStatusValue').style.color = 'red';
-            }
-        })
-        .catch((error) => {
+            document.getElementById('printerStatusValue').innerText = 'Connected';
+            document.getElementById('printerStatusValue').style.color = 'green';
+        } else {
             isPrinterConnected = false;
 
-            document.getElementById('printerStatusValue').innerText = error.message;
+            document.getElementById('printerStatusValue').innerText = 'Disconnected';
             document.getElementById('printerStatusValue').style.color = 'red';
-        });
+        }
+    } catch (error) {
+        isPrinterConnected = false;
+
+        document.getElementById('printerStatusValue').innerText = error.message;
+        document.getElementById('printerStatusValue').style.color = 'red';
+    }
 }, 5000);
 
 window.addEventListener("DOMContentLoaded", () => {
