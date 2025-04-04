@@ -226,7 +226,7 @@ impl Graphic {
 
     /// Get image width in bytes
     pub fn width_bytes(&self) -> u32 {
-        (self.width() + 7) / 8
+        self.width().div_ceil(8)
     }
 
     /// Get path
