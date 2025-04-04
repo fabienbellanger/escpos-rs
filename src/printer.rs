@@ -629,7 +629,7 @@ impl<D: Driver> Printer<D> {
     }
 
     #[cfg(feature = "ui")]
-    /// Print image
+    /// Print line
     pub fn draw_line(&mut self, line: Line) -> Result<&mut Self> {
         let commands = self
             .protocol
