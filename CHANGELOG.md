@@ -18,7 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## `0.15.1` (2025-04-04) [CURRENT]
+## `0.15.2` (2025-04-11) [CURRENT]
+
+### Fixed
+
+- Push remaining bits when breaking from bitmap creation ([#42](https://github.com/fabienbellanger/escpos-rs/pull/42))
+
+## `0.15.1` (2025-04-04)
 
 ### Changed
 
@@ -133,28 +139,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add table for page codes:
-  - `Katakana`
-  - `PC850`
-  - `PC851`
-  - `PC853`
-  - `PC857`
-  - `PC737`
-  - `PC863`
-  - `PC866`
-  - `WPC775`
-  - `PC855`
-  - `PC861`
-  - `PC862`
-  - `PC869`
-  - `PC1118`
-  - `PC1119`
-  - `PC1125`
-  - `WPC1250`
-  - `WPC1251`
-  - `WPC1253`
-  - `WPC1254`
-  - `WPC1257`
-  - `KZ1048`
+    - `Katakana`
+    - `PC850`
+    - `PC851`
+    - `PC853`
+    - `PC857`
+    - `PC737`
+    - `PC863`
+    - `PC866`
+    - `WPC775`
+    - `PC855`
+    - `PC861`
+    - `PC862`
+    - `PC869`
+    - `PC1118`
+    - `PC1119`
+    - `PC1125`
+    - `WPC1250`
+    - `WPC1251`
+    - `WPC1253`
+    - `WPC1254`
+    - `WPC1257`
+    - `KZ1048`
 
 ### Changed
 
