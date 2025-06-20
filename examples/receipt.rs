@@ -9,6 +9,7 @@ const NUM: &[u8] = &[0xF8]; // °
 
 fn main() -> Result<()> {
     env_logger::init();
+    let repo_root_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap_or(".".to_string());
 
     let items = vec![
         Item::new("Macbook Pro", Some(1), 2500.00, false),
@@ -36,7 +37,7 @@ fn main() -> Result<()> {
 
     // Logo
     #[cfg(feature = "graphics")]
-    printer.bit_image("./resources/images/rust-logo-small.png")?;
+    printer.bit_image(&(repo_root_dir + "/resources/images/rust-logo-small.png"))?;
 
     // Line
     let simple_line = LineBuilder::new().style(LineStyle::Simple).build();
