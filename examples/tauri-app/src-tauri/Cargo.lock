@@ -1027,7 +1027,7 @@ dependencies = [
 
 [[package]]
 name = "escpos"
-version = "0.15.2"
+version = "0.15.3"
 dependencies = [
  "encoding_rs",
  "futures-lite",
@@ -2589,9 +2589,9 @@ dependencies = [
 
 [[package]]
 name = "nusb"
-version = "0.1.13"
+version = "0.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99a726776e551f3ee9b467fe47202f26e64b9bbf715df5443b0904df6f2dcc41"
+checksum = "2f861541f15de120eae5982923d073bfc0c1a65466561988c82d6e197734c19e"
 dependencies = [
  "atomic-waker",
  "core-foundation 0.9.4",
@@ -3961,9 +3961,9 @@ dependencies = [
 
 [[package]]
 name = "serialport"
-version = "4.7.1"
+version = "4.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2daa7abb9b965493e3c8f4184c6f46435484ff2538a332b886788cf6768b927b"
+checksum = "cdb0bc984f6af6ef8bab54e6cf2071579ee75b9286aa9f2319a0d220c28b0a2b"
 dependencies = [
  "bitflags 2.9.0",
  "cfg-if",

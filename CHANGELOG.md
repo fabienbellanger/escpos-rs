@@ -23,11 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bump `nusb` to `0.1.14`
+- Bump `reqwest` to `0.12.20`
 - Bump `serialport` to `4.7.2`
 
 ### Fixed
 
 - Update MSRV to `1.82.0` because a `reqwest` dependency needs this version (Tests in CI failed)
+- Fix CI
+- Fix examples failing when cd'd into the examples
+  directory ([#43](https://github.com/fabienbellanger/escpos-rs/pull/43))
 
 ## `0.15.2` (2025-04-11) [CURRENT]
 
@@ -150,28 +154,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add table for page codes:
-  - `Katakana`
-  - `PC850`
-  - `PC851`
-  - `PC853`
-  - `PC857`
-  - `PC737`
-  - `PC863`
-  - `PC866`
-  - `WPC775`
-  - `PC855`
-  - `PC861`
-  - `PC862`
-  - `PC869`
-  - `PC1118`
-  - `PC1119`
-  - `PC1125`
-  - `WPC1250`
-  - `WPC1251`
-  - `WPC1253`
-  - `WPC1254`
-  - `WPC1257`
-  - `KZ1048`
+    - `Katakana`
+    - `PC850`
+    - `PC851`
+    - `PC853`
+    - `PC857`
+    - `PC737`
+    - `PC863`
+    - `PC866`
+    - `WPC775`
+    - `PC855`
+    - `PC861`
+    - `PC862`
+    - `PC869`
+    - `PC1118`
+    - `PC1119`
+    - `PC1125`
+    - `WPC1250`
+    - `WPC1251`
+    - `WPC1253`
+    - `WPC1254`
+    - `WPC1257`
+    - `KZ1048`
 
 ### Changed
 

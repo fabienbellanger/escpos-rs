@@ -10,7 +10,7 @@ name = "escpos"
 readme = "README.md"
 repository = "https://github.com/fabienbellanger/escpos-rs"
 rust-version = "1.82"
-version = "0.15.2"
+version = "0.15.3"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -48,7 +48,7 @@ serialport = { version = "4.7.2", optional = true }
 
 [dev-dependencies]
 env_logger = "0.11.8"
-reqwest = { version = "0.12.15", features = ["blocking"] }
+reqwest = { version = "0.12.20", features = ["blocking"] }
 
 [package.metadata.docs.rs]
 all-features = true

@@ -21,14 +21,14 @@ For standard functionalities (e.g. printing text), no additional dependencies ar
 
 ```toml
 [dependencies]
-escpos = "0.15.2"
+escpos = "0.15.3"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.15.2", features = ["full"] }
+escpos = { version = "0.15.3", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
