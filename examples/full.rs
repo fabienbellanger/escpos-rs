@@ -5,6 +5,7 @@ use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
     env_logger::init();
+    let repo_root_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap_or(".".to_string());
 
     // let driver = NetworkDriver::open("192.168.1.248", 9100, None)?;
     let driver = ConsoleDriver::open(true);
@@ -60,7 +61,7 @@ fn main() -> Result<()> {
         .aztec("test1245789658745")?
         .feed()?
         .bit_image_option(
-            "./resources/images/rust-logo-small.png",
+            &(repo_root_dir + "/resources/images/rust-logo-small.png"),
             BitImageOption::new(Some(128), None, BitImageSize::Normal)?,
         )?
         .feed()?

@@ -4,6 +4,7 @@ use escpos::{driver::*, errors::Result};
 
 fn main() -> Result<()> {
     env_logger::init();
+    let repo_root_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap_or(".".to_string());
 
     // Picture from URL
     let picture_bytes = reqwest::blocking::get(
@@ -19,7 +20,7 @@ fn main() -> Result<()> {
     printer
         .init()?
         .justify(JustifyMode::CENTER)?
-        .bit_image("./resources/images/rust-logo-small.png")?
+        .bit_image(&(repo_root_dir + "/resources/images/rust-logo-small.png"))?
         .feed()?
         .bit_image_from_bytes_option(
             &picture_bytes,
