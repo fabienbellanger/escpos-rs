@@ -8,7 +8,7 @@ use hidapi::{HidApi, HidDevice};
 #[cfg(feature = "native_usb")]
 use nusb::transfer::RequestBuffer;
 #[cfg(feature = "usb")]
-use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext};
+use rusb::{Context, DeviceHandle, Direction, TransferType, UsbContext, UsbOption};
 #[cfg(feature = "serial_port")]
 use serialport::SerialPort;
 use std::sync::{Arc, Mutex};
@@ -238,8 +238,17 @@ impl UsbDriver {
     /// let driver = UsbDriver::open(0x0525, 0xa700, None).unwrap();
     /// let mut printer = Printer::new(driver, Protocol::default(), None);
     /// ```
-    pub fn open(vendor_id: u16, product_id: u16, timeout: Option<Duration>) -> Result<Self> {
-        let context = Context::new().map_err(|e| PrinterError::Io(e.to_string()))?;
+    pub fn open(
+        vendor_id: u16,
+        product_id: u16,
+        timeout: Option<Duration>,
+        options: Option<&[UsbOption]>,
+    ) -> Result<Self> {
+        let context = if let Some(options) = options {
+            Context::with_options(options).map_err(|e| PrinterError::Io(e.to_string()))?
+        } else {
+            Context::new().map_err(|e| PrinterError::Io(e.to_string()))?
+        };
         let devices = context.devices().map_err(|e| PrinterError::Io(e.to_string()))?;
 
         for device in devices.iter() {

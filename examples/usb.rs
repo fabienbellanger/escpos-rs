@@ -19,7 +19,7 @@ fn main() -> Result<()> {
         );
     }
 
-    let driver = UsbDriver::open(0x0525, 0xa700, None)?;
+    let driver = UsbDriver::open(0x0525, 0xa700, None, None)?;
     Printer::new(driver, Protocol::default(), None)
         .debug_mode(Some(DebugMode::Dec))
         .init()?
