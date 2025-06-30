@@ -93,7 +93,7 @@ impl RealTimeStatusResponse {
 
     /// Parse the response
     pub fn parse(request: RealTimeStatusRequest, response: u8) -> Result<HashMap<Self, bool>, PrinterError> {
-        let binary = format!("{:08b}", response)
+        let binary = format!("{response:08b}")
             .chars()
             .map(|c| c.to_digit(2).unwrap_or(0) as u8)
             .rev()
@@ -101,8 +101,7 @@ impl RealTimeStatusResponse {
 
         if !Self::is_pattern_valid(&binary) {
             return Err(PrinterError::InvalidResponse(format!(
-                "invalid response pattern: {:08b} (0xx1xx10 expected)",
-                response
+                "invalid response pattern: {response:08b} (0xx1xx10 expected)"
             )));
         }
 

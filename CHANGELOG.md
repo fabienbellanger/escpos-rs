@@ -18,7 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## [Unreleased]
+## `0.16.0` (2025-06-30) [CURRENT]
+
+### Added
+
+- Add `UsbOption` support for `UsbDriver` ([#44](https://github.com/fabienbellanger/escpos-rs/pull/44))
+
+## `0.15.3` (2025-06-23)
 
 ### Changed
 
@@ -33,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix examples failing when cd'd into the examples
   directory ([#43](https://github.com/fabienbellanger/escpos-rs/pull/43))
 
-## `0.15.2` (2025-04-11) [CURRENT]
+## `0.15.2` (2025-04-11)
 
 ### Fixed
 
@@ -154,28 +160,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add table for page codes:
-    - `Katakana`
-    - `PC850`
-    - `PC851`
-    - `PC853`
-    - `PC857`
-    - `PC737`
-    - `PC863`
-    - `PC866`
-    - `WPC775`
-    - `PC855`
-    - `PC861`
-    - `PC862`
-    - `PC869`
-    - `PC1118`
-    - `PC1119`
-    - `PC1125`
-    - `WPC1250`
-    - `WPC1251`
-    - `WPC1253`
-    - `WPC1254`
-    - `WPC1257`
-    - `KZ1048`
+  - `Katakana`
+  - `PC850`
+  - `PC851`
+  - `PC853`
+  - `PC857`
+  - `PC737`
+  - `PC863`
+  - `PC866`
+  - `WPC775`
+  - `PC855`
+  - `PC861`
+  - `PC862`
+  - `PC869`
+  - `PC1118`
+  - `PC1119`
+  - `PC1125`
+  - `WPC1250`
+  - `WPC1251`
+  - `WPC1253`
+  - `WPC1254`
+  - `WPC1257`
+  - `KZ1048`
 
 ### Changed
 

@@ -382,10 +382,7 @@ impl<D: Driver> Printer<D> {
     /// ```
     pub fn custom_with_page_code(&mut self, cmd: &[u8], page_code: PageCode) -> Result<&mut Self> {
         self.page_code(page_code)?;
-        self.command(
-            &format!("custom command width page code {}", page_code),
-            &[cmd.to_vec()],
-        )
+        self.command(&format!("custom command width page code {page_code}"), &[cmd.to_vec()])
     }
 
     /// Set horizontal and vertical motion units

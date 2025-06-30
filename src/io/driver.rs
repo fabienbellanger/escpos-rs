@@ -235,7 +235,7 @@ impl UsbDriver {
     /// use escpos::utils::*;
     /// use escpos::driver::*;
     ///
-    /// let driver = UsbDriver::open(0x0525, 0xa700, None).unwrap();
+    /// let driver = UsbDriver::open(0x0525, 0xa700, None, None).unwrap();
     /// let mut printer = Printer::new(driver, Protocol::default(), None);
     /// ```
     pub fn open(

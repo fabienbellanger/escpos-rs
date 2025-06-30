@@ -245,7 +245,7 @@ impl BitImage {
                     // Breaking the loop if x_offset exceeds the width
                     if x_offset >= width {
                         // put the bits in the right position before breaking
-                        byte = byte << (8 - bit);
+                        byte <<= 8 - bit;
                         break;
                     }
 
