@@ -1027,7 +1027,7 @@ dependencies = [
 
 [[package]]
 name = "escpos"
-version = "0.15.3"
+version = "0.16.0"
 dependencies = [
  "encoding_rs",
  "futures-lite",
