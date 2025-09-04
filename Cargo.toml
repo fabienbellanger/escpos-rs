@@ -37,7 +37,7 @@ full = [
 
 [dependencies]
 encoding_rs = "0.8.35"
-log = "0.4.27"
+log = "0.4.28"
 
 futures-lite = { version = "2.6.1", optional = true }
 hidapi = { version = "2.6.3", optional = true }

@@ -7,8 +7,8 @@
 //! QR codes and raster images on a compatible printer.
 //!
 //! ## Examples
-//! The `examples` folder contains various examples of how to use `escpos`.  
-//! The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.  
+//! The `examples` folder contains various examples of how to use `escpos`.
+//! The [docs](https://docs.rs/escpos) (will) also provide lots of code snippets and examples.
 //! The list of all the examples can be found [here](examples/EXAMPLES.md).
 //!
 //! ### Simple text formatting
