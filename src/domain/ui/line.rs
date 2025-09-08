@@ -32,7 +32,7 @@
 //! ```
 
 use crate::domain::ui::UIComponent;
-use crate::domain::{chars_number, Command, Font, JustifyMode, PageCode, TextSize};
+use crate::domain::{Command, Font, JustifyMode, PageCode, TextSize, chars_number};
 use crate::errors::Result;
 use crate::printer::PrinterStyleState;
 use crate::printer_options::PrinterOptions;

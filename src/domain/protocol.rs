@@ -2,9 +2,9 @@
 
 #[cfg(feature = "graphics")]
 use super::bit_image::*;
-use super::{character::*, codes::*, common::get_parameters_number_2, constants::*, types::*, RealTimeStatusRequest};
+use super::{RealTimeStatusRequest, character::*, codes::*, common::get_parameters_number_2, constants::*, types::*};
 #[cfg(feature = "ui")]
-use crate::domain::ui::{line::Line, UIComponent};
+use crate::domain::ui::{UIComponent, line::Line};
 #[cfg(feature = "ui")]
 use crate::printer::PrinterStyleState;
 #[cfg(feature = "ui")]
@@ -902,7 +902,9 @@ mod tests {
             protocol
                 .text("My text with ┼ character", Some(PageCode::PC437), Some(19))
                 .unwrap(),
-            vec![77, 121, 32, 116, 101, 120, 116, 32, 119, 105, 116, 104, 32, 197, 32, 99, 104, 97, 114]
+            vec![
+                77, 121, 32, 116, 101, 120, 116, 32, 119, 105, 116, 104, 32, 197, 32, 99, 104, 97, 114
+            ]
         );
         assert_eq!(
             protocol
@@ -1145,15 +1147,21 @@ mod tests {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(
             protocol.barcode_print(BarcodeSystem::UPCA, "12587458745"),
-            vec![29, 107, 0, b'1', b'2', b'5', b'8', b'7', b'4', b'5', b'8', b'7', b'4', b'5', 0]
+            vec![
+                29, 107, 0, b'1', b'2', b'5', b'8', b'7', b'4', b'5', b'8', b'7', b'4', b'5', 0
+            ]
         );
         assert_eq!(
             protocol.barcode_print(BarcodeSystem::UPCE, "02587458745"),
-            vec![29, 107, 1, b'0', b'2', b'5', b'8', b'7', b'4', b'5', b'8', b'7', b'4', b'5', 0]
+            vec![
+                29, 107, 1, b'0', b'2', b'5', b'8', b'7', b'4', b'5', b'8', b'7', b'4', b'5', 0
+            ]
         );
         assert_eq!(
             protocol.barcode_print(BarcodeSystem::EAN13, "025874587456"),
-            vec![29, 107, 2, b'0', b'2', b'5', b'8', b'7', b'4', b'5', b'8', b'7', b'4', b'5', b'6', 0]
+            vec![
+                29, 107, 2, b'0', b'2', b'5', b'8', b'7', b'4', b'5', b'8', b'7', b'4', b'5', b'6', 0
+            ]
         );
         assert_eq!(
             protocol.barcode_print(BarcodeSystem::EAN8, "0587456"),
@@ -1328,7 +1336,9 @@ mod tests {
             protocol
                 .gs1_databar_2d_data("8245789658745", GS1DataBar2DOption::default().code_type())
                 .unwrap(),
-            vec![29, 40, 107, 17, 0, 51, 80, 48, 72, 56, 50, 52, 53, 55, 56, 57, 54, 53, 56, 55, 52, 53]
+            vec![
+                29, 40, 107, 17, 0, 51, 80, 48, 72, 56, 50, 52, 53, 55, 56, 57, 54, 53, 56, 55, 52, 53
+            ]
         );
     }
 
@@ -1350,7 +1360,9 @@ mod tests {
             vec![
                 vec![29, 40, 107, 3, 0, 51, 67, 1],
                 vec![29, 40, 107, 3, 0, 51, 71, 0, 0],
-                vec![29, 40, 107, 17, 0, 51, 80, 48, 72, 56, 50, 52, 53, 55, 56, 57, 54, 53, 56, 55, 52, 53],
+                vec![
+                    29, 40, 107, 17, 0, 51, 80, 48, 72, 56, 50, 52, 53, 55, 56, 57, 54, 53, 56, 55, 52, 53
+                ],
                 vec![29, 40, 107, 3, 0, 51, 81, 48]
             ]
         );
@@ -1720,7 +1732,9 @@ mod tests {
             vec![
                 vec![29, 33, 17],
                 vec![27, 97, 0],
-                vec![32, 32, 32, 32, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45],
+                vec![
+                    32, 32, 32, 32, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45
+                ],
                 vec![27, 100, 1],
                 vec![29, 33, 0],
                 vec![27, 97, 0],

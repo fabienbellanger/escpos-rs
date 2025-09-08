@@ -2,14 +2,14 @@
 authors = ["Fabien Bellanger <valentil@gmail.com>"]
 description = "ESC/POS printer driver"
 documentation = "https://docs.rs/escpos"
-edition = "2021"
+edition = "2024"
 homepage = "https://github.com/fabienbellanger/escpos-rs"
 keywords = ["esc", "printer", "driver", "pos", "usb"]
 license = "MIT"
 name = "escpos"
 readme = "README.md"
 repository = "https://github.com/fabienbellanger/escpos-rs"
-rust-version = "1.82"
+rust-version = "1.85"
 version = "0.16.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -41,7 +41,7 @@ log = "0.4.28"
 
 futures-lite = { version = "2.6.1", optional = true }
 hidapi = { version = "2.6.3", optional = true }
-image = { version = "0.25.6", optional = true }
+image = { version = "0.25.8", optional = true }
 nusb = { version = "0.1.14", optional = true }
 rusb = { version = "0.9.4", optional = true }
 serialport = { version = "4.7.3", optional = true }

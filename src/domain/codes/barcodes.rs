@@ -347,12 +347,14 @@ mod tests {
     #[test]
     fn test_barcode_new() {
         assert!(Barcode::new(BarcodeSystem::UPCA, "12587965874", BarcodeOption::default()).is_ok());
-        assert!(Barcode::new(
-            BarcodeSystem::UPCA,
-            "12587965874",
-            BarcodeOption::new(BarcodeWidth::L, BarcodeHeight::M, BarcodeFont::A, BarcodePosition::None)
-        )
-        .is_ok());
+        assert!(
+            Barcode::new(
+                BarcodeSystem::UPCA,
+                "12587965874",
+                BarcodeOption::new(BarcodeWidth::L, BarcodeHeight::M, BarcodeFont::A, BarcodePosition::None)
+            )
+            .is_ok()
+        );
     }
 
     #[test]

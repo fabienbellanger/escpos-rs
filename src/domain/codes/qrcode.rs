@@ -149,11 +149,13 @@ mod tests {
     fn test_qrcode_new() {
         let data = "azerty123456789QTG,{";
         assert!(QRCode::new(data, None).is_ok());
-        assert!(QRCode::new(
-            data,
-            Some(QRCodeOption::new(QRCodeModel::Model1, 4, QRCodeCorrectionLevel::L))
-        )
-        .is_ok());
+        assert!(
+            QRCode::new(
+                data,
+                Some(QRCodeOption::new(QRCodeModel::Model1, 4, QRCodeCorrectionLevel::L))
+            )
+            .is_ok()
+        );
     }
 
     #[test]
