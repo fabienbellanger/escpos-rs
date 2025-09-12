@@ -41,7 +41,7 @@
 //!         .underline(UnderlineMode::None)?
 //!         .size(2, 3)?
 //!         .writeln("Hello world - Normal")?
-//!         .print_cut()?;
+//!         .print_cut()?;  // print() or print_cut() is mandatory to send the data to the printer
 //!
 //!     Ok(())
 //! }
@@ -72,7 +72,7 @@
 //!             )
 //!         )?
 //!         .feed()?
-//!         .print_cut()?;
+//!         .print()?;  // print() or print_cut() is mandatory to send the data to the printer
 //!
 //!     Ok(())
 //! }
@@ -98,7 +98,7 @@
 //!             QRCodeOption::new(QRCodeModel::Model1, 6, QRCodeCorrectionLevel::M),
 //!         )?
 //!         .feed()?
-//!         .print_cut()?;
+//!         .print_cut()?;  // print() or print_cut() is mandatory to send the data to the printer
 //!
 //!     Ok(())
 //! }
@@ -124,7 +124,7 @@
 //!             BitImageOption::new(Some(128), None, BitImageSize::Normal)?,
 //!         )?
 //!         .feed()?
-//!         .print_cut()?;
+//!         .print_cut()?;  // print() or print_cut() is mandatory to send the data to the printer
 //!
 //!     Ok(())
 //! }
