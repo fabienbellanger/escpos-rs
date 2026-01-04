@@ -45,6 +45,12 @@ RUST_LOG=debug cargo run --example serial_port --features serial_port
 RUST_LOG=debug cargo run --example ui --features ui
 ```
 
+## Bidirectional text example (Arabic, Hebrew)
+
+```shell
+RUST_LOG=debug cargo run --example bidi --features bidi
+```
+
 ## Printer status example
 
 ```shell
