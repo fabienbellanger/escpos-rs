@@ -1,0 +1,18 @@
+{
+    "makefile.configureOnOpen": false,
+    "rust-analyzer.check.features": "all",
+    "gitlens.plusFeatures.enabled": false,
+    "rust-analyzer.cargo.features": [
+        "barcodes",
+        "codes_2d",
+        "graphics",
+        "usb",
+        "native_usb",
+        "hidapi",
+        "serial_port",
+        "ui",
+        "bidi",
+        "full"
+    ],
+    "editor.formatOnSave": true
+}

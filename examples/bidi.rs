@@ -24,19 +24,19 @@ fn main() -> Result<()> {
         .writeln("=== Arabic Text Demo ===")?
         .feed()?
         // Arabic text with automatic BiDi reordering
-        .writeln_bidi("مرحبا بالعالم")?  // "Hello World" in Arabic
+        .writeln_bidi("مرحبا بالعالم")? // "Hello World" in Arabic
         .feed()?
-        .writeln_bidi("السلام عليكم")?   // "Peace be upon you"
+        .writeln_bidi("السلام عليكم")? // "Peace be upon you"
         .feed()?
         // Mixed LTR and RTL text
-        .writeln_bidi("Price: 123 ريال")?  // Mixed numbers and Arabic
+        .writeln_bidi("Price: 123 ريال")? // Mixed numbers and Arabic
         .feed()?
         .feeds(2)?
         // Hebrew example (using PC862)
         .page_code(PageCode::PC862)?
         .writeln("=== Hebrew Text Demo ===")?
         .feed()?
-        .writeln_bidi("שלום עולם")?  // "Hello World" in Hebrew
+        .writeln_bidi("שלום עולם")? // "Hello World" in Hebrew
         .feed()?
         .print_cut()?;
 
