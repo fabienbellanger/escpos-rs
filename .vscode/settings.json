@@ -14,5 +14,6 @@
         "bidi",
         "full"
     ],
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.inlayHints.enabled": "offUnlessPressed"
 }
