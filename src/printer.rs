@@ -334,6 +334,62 @@ impl<D: Driver> Printer<D> {
         self.write(text)?.feed()
     }
 
+    /// Write text with automatic bidirectional reordering
+    ///
+    /// Use this method for RTL languages (Arabic, Hebrew) to ensure
+    /// correct visual display on the printer. The text is reordered
+    /// using the Unicode Bidirectional Algorithm (UAX #9).
+    ///
+    /// # Example
+    ///
+    /// ```rust,ignore
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    ///
+    /// let driver = ConsoleDriver::open(true);
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    ///
+    /// printer
+    ///     .init()?
+    ///     .page_code(PageCode::PC864)?
+    ///     .write_bidi("مرحبا")?  // Arabic text
+    ///     .print()?;
+    /// ```
+    #[cfg(feature = "bidi")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "bidi")))]
+    pub fn write_bidi(&mut self, text: &str) -> Result<&mut Self> {
+        let reordered = crate::domain::bidi::reorder_for_display(text);
+        self.write(&reordered)
+    }
+
+    /// Write text with automatic bidirectional reordering + Line feed
+    ///
+    /// Use this method for RTL languages (Arabic, Hebrew) to ensure
+    /// correct visual display on the printer.
+    ///
+    /// # Example
+    ///
+    /// ```rust,ignore
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    ///
+    /// let driver = ConsoleDriver::open(true);
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    ///
+    /// printer
+    ///     .init()?
+    ///     .page_code(PageCode::PC864)?
+    ///     .writeln_bidi("مرحبا بالعالم")?  // "Hello World" in Arabic
+    ///     .print_cut()?;
+    /// ```
+    #[cfg(feature = "bidi")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "bidi")))]
+    pub fn writeln_bidi(&mut self, text: &str) -> Result<&mut Self> {
+        self.write_bidi(text)?.feed()
+    }
+
     /// Custom command
     ///
     /// ```rust

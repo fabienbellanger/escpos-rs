@@ -23,6 +23,7 @@ serial_port = ["dep:serialport"]
 usb = ["dep:rusb"]
 native_usb = ["dep:nusb"]
 ui = []
+bidi = ["dep:unicode-bidi"]
 default = ["barcodes", "codes_2d"]
 full = [
     "barcodes",
@@ -33,6 +34,7 @@ full = [
     "hidapi",
     "serial_port",
     "ui",
+    "bidi",
 ]
 
 [dependencies]
@@ -44,6 +46,7 @@ image = { version = "0.25.8", optional = true }
 nusb = { version = "0.2.0", optional = true }
 rusb = { version = "0.9.4", optional = true }
 serialport = { version = "4.7.3", optional = true }
+unicode-bidi = { version = "0.3", optional = true }
 
 [dev-dependencies]
 env_logger = "0.11.8"

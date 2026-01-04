@@ -80,6 +80,7 @@ cargo msrv verify
 | `hidapi`      | Enable HidApi feature                                                  |   ❌    |
 | `serial_port` | Enable Serial port feature                                             |   ❌    |
 | `ui`          | Enable ui feature (UI components)                                      |   ❌    |
+| `bidi`        | Bidirectional text support for RTL languages (Arabic, Hebrew)          |   ❌    |
 | `full`        | Enable all features                                                    |   ❌    |
 
 ## Examples
@@ -335,7 +336,7 @@ fn main() -> Result<()> {
 | PC855      |      ✅      |
 | PC861      |      ✅      |
 | PC862      |      ✅      |
-| PC864      |      ❌      |
+| PC864      |      ✅      |
 | PC869      |      ✅      |
 | ISO8859_2  |      ✅      |
 | ISO8859_15 |      ✅      |

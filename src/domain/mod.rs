@@ -12,6 +12,9 @@ mod types;
 #[cfg(feature = "ui")]
 pub(crate) mod ui;
 
+#[cfg(feature = "bidi")]
+pub(crate) mod bidi;
+
 pub use character::*;
 pub use codes::*;
 pub use common::chars_number;
@@ -24,3 +27,6 @@ pub use types::*;
 pub use bit_image::*;
 #[cfg(feature = "graphics")]
 pub use graphics::*;
+
+#[cfg(feature = "bidi")]
+pub use bidi::*;

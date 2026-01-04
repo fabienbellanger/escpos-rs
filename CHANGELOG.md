@@ -20,9 +20,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `CLAUDE.md`
+- Add PC864 page code support for Arabic text
+- Add `bidi` feature for bidirectional text support (Arabic, Hebrew)
+- Add `write_bidi()` and `writeln_bidi()` methods to `Printer` for automatic RTL text reordering
+- Add `reorder_for_display()` function for manual BiDi text processing
+- Add `examples/bidi.rs` example demonstrating Arabic and Hebrew text printing
+
 ### Fixed
 
-- Fix type in the commands list in `README.md` ([#46](https://github.com/fabienbellanger/escpos-rs/pull/46))
+- Fix typo in the commands list in `README.md` ([#46](https://github.com/fabienbellanger/escpos-rs/pull/46))
 
 ## `0.17.0` (2025-09-15) [CURRENT]
 

@@ -199,8 +199,37 @@ pub mod utils {
 
 /// UI components like lines, tables, etc.
 #[cfg(feature = "ui")]
+#[cfg_attr(docsrs, doc(cfg(feature = "ui")))]
 pub mod ui {
     pub use super::domain::ui::*;
+}
+
+/// Bidirectional text utilities for RTL languages (Arabic, Hebrew)
+///
+/// This module provides utilities for reordering bidirectional text
+/// for correct visual display on ESC/POS thermal printers.
+///
+/// # Example
+///
+/// ```rust,ignore
+/// use escpos::bidi::reorder_for_display;
+/// use escpos::printer::Printer;
+/// use escpos::utils::*;
+/// use escpos::driver::*;
+///
+/// let driver = ConsoleDriver::open(true);
+/// let mut printer = Printer::new(driver, Protocol::default(), None);
+///
+/// printer
+///     .init()?
+///     .page_code(PageCode::PC864)?
+///     .writeln_bidi("مرحبا")?  // Arabic text
+///     .print()?;
+/// ```
+#[cfg(feature = "bidi")]
+#[cfg_attr(docsrs, doc(cfg(feature = "bidi")))]
+pub mod bidi {
+    pub use super::domain::bidi::*;
 }
 
 /// Drivers used to send data to the printer (Network or USB)
