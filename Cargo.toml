@@ -10,7 +10,7 @@ name = "escpos"
 readme = "README.md"
 repository = "https://github.com/fabienbellanger/escpos-rs"
 rust-version = "1.85"
-version = "0.17.0"
+version = "0.17.1"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -39,13 +39,13 @@ full = [
 
 [dependencies]
 encoding_rs = "0.8.35"
-log = "0.4.28"
+log = "0.4.29"
 
-hidapi = { version = "2.6.3", optional = true }
-image = { version = "0.25.8", optional = true }
-nusb = { version = "0.2.0", optional = true }
+hidapi = { version = "2.6.6", optional = true }
+image = { version = "0.25.9", optional = true }
+nusb = { version = "0.2.3", optional = true }
 rusb = { version = "0.9.4", optional = true }
-serialport = { version = "4.7.3", optional = true }
+serialport = { version = "4.9.0", optional = true }
 windows-sys = { version = "0.60", optional = true, features = [
     "Win32_Foundation",
     "Win32_Security",
@@ -55,8 +55,8 @@ windows-sys = { version = "0.60", optional = true, features = [
 ] }
 
 [dev-dependencies]
-env_logger = "0.11.8"
-reqwest = { version = "0.12.23", features = ["blocking"] }
+env_logger = "0.11.10"
+reqwest = { version = "0.12.28", features = ["blocking"] }
 
 [package.metadata.docs.rs]
 all-features = true

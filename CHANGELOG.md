@@ -2,8 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
+to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!--
 ## [Unreleased]
@@ -18,13 +18,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 -->
 
-## [Unreleased]
+## `0.17.1` (2026-05-21) [CURRENT]
+
+### Added
+
+- Add `open_with_options` method to `FileDriver` to allow passing custom `OpenOptions`
+  ([#51](https://github.com/fabienbellanger/escpos-rs/pull/51))
+
+### Changed
+
+- Bump `log` to `0.4.29`
+- Bump `hidapi` to `2.6.6`
+- Bump `image` to `0.25.9`
+- Bump `nusb` to `0.2.3`
+- Bump `serialport` to `4.9.0`
+- Bump `env_logger` to `0.11.10`
+- Bump `reqwest` to `0.12.28`
 
 ### Fixed
 
-- Fix type in the commands list in `README.md` ([#46](https://github.com/fabienbellanger/escpos-rs/pull/46))
+- Fix type in the command list in `README.md` ([#46](https://github.com/fabienbellanger/escpos-rs/pull/46))
 
-## `0.17.0` (2025-09-15) [CURRENT]
+## `0.17.0` (2025-09-15)
 
 ### Changed
 
@@ -53,8 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update MSRV to `1.82.0` because a `reqwest` dependency needs this version (Tests in CI failed)
 - Fix CI
-- Fix examples failing when cd'd into the examples
-  directory ([#43](https://github.com/fabienbellanger/escpos-rs/pull/43))
+- Fix examples failing when cd'd into the examples directory
+  ([#43](https://github.com/fabienbellanger/escpos-rs/pull/43))
 
 ## `0.15.2` (2025-04-11)
 
@@ -177,28 +192,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add table for page codes:
-  - `Katakana`
-  - `PC850`
-  - `PC851`
-  - `PC853`
-  - `PC857`
-  - `PC737`
-  - `PC863`
-  - `PC866`
-  - `WPC775`
-  - `PC855`
-  - `PC861`
-  - `PC862`
-  - `PC869`
-  - `PC1118`
-  - `PC1119`
-  - `PC1125`
-  - `WPC1250`
-  - `WPC1251`
-  - `WPC1253`
-  - `WPC1254`
-  - `WPC1257`
-  - `KZ1048`
+    - `Katakana`
+    - `PC850`
+    - `PC851`
+    - `PC853`
+    - `PC857`
+    - `PC737`
+    - `PC863`
+    - `PC866`
+    - `WPC775`
+    - `PC855`
+    - `PC861`
+    - `PC862`
+    - `PC869`
+    - `PC1118`
+    - `PC1119`
+    - `PC1125`
+    - `WPC1250`
+    - `WPC1251`
+    - `WPC1253`
+    - `WPC1254`
+    - `WPC1257`
+    - `KZ1048`
 
 ### Changed
 

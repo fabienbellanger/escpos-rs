@@ -14,6 +14,7 @@ use std::sync::{Arc, Mutex};
 use std::{ffi::OsString, mem, os::windows::ffi::OsStringExt, ptr};
 use std::{
     fs::File,
+    fs::OpenOptions,
     io::{self, Read, Write},
     net::{IpAddr, SocketAddr, TcpStream},
     path::Path,
@@ -184,6 +185,31 @@ impl FileDriver {
     /// ```
     pub fn open(path: &Path) -> Result<Self> {
         let file = File::options().read(true).append(true).open(path)?;
+        Ok(Self {
+            path: path.to_string_lossy().to_string(),
+            file: Arc::new(Mutex::new(file)),
+        })
+    }
+
+    /// Open the file driver using custom options
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::driver::*;
+    /// use std::fs::OpenOptions;
+    /// use std::path::Path;
+    ///
+    /// let path = Path::new("./foo/bar.txt");
+    /// let mut options = OpenOptions::new();
+    /// options.write(true).create(true).truncate(true);
+    /// let driver = FileDriver::open_with_options(&path, &options).unwrap();
+    /// let mut printer = Printer::new(driver, Protocol::default(), None);
+    /// ```
+    pub fn open_with_options(path: &Path, options: &OpenOptions) -> Result<Self> {
+        let file = options.open(path)?;
         Ok(Self {
             path: path.to_string_lossy().to_string(),
             file: Arc::new(Mutex::new(file)),
