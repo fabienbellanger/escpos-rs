@@ -1016,7 +1016,8 @@ impl Driver for WindowsUsbPrintDriver {
 }
 
 /// Parse `VID_XXXX` and `PID_XXXX` (case insensitive) from a Windows device interface path.
-#[cfg(all(feature = "usbprint", target_os = "windows"))]
+#[cfg(feature = "usbprint")]
+#[cfg_attr(not(target_os = "windows"), allow(dead_code))]
 fn parse_vid_pid(path: &str) -> (Option<u16>, Option<u16>) {
     fn parse_hex_after(haystack: &str, needle: &str) -> Option<u16> {
         let lower = haystack.to_ascii_lowercase();
@@ -1035,4 +1036,63 @@ fn parse_vid_pid(path: &str) -> (Option<u16>, Option<u16>) {
     }
 
     (parse_hex_after(path, "vid_"), parse_hex_after(path, "pid_"))
+}
+
+#[cfg(all(test, feature = "usbprint"))]
+mod tests {
+    use super::parse_vid_pid;
+
+    #[test]
+    fn parse_vid_pid_lowercase_path() {
+        let path = r"\\?\usb#vid_04b8&pid_0e15#583234564f303330323042#{28d78fad-5a12-11d1-ae5b-0000f803a8c2}";
+        assert_eq!(parse_vid_pid(path), (Some(0x04b8), Some(0x0e15)));
+    }
+
+    #[test]
+    fn parse_vid_pid_uppercase_path() {
+        let path = r"\\?\USB#VID_0525&PID_A700#1234#{28D78FAD-5A12-11D1-AE5B-0000F803A8C2}";
+        assert_eq!(parse_vid_pid(path), (Some(0x0525), Some(0xa700)));
+    }
+
+    #[test]
+    fn parse_vid_pid_mixed_case_path() {
+        let path = r"\\?\Usb#Vid_04B8&Pid_0E15#serial#{guid}";
+        assert_eq!(parse_vid_pid(path), (Some(0x04b8), Some(0x0e15)));
+    }
+
+    #[test]
+    fn parse_vid_pid_missing_pid() {
+        let path = r"\\?\usb#vid_04b8#serial#{guid}";
+        assert_eq!(parse_vid_pid(path), (Some(0x04b8), None));
+    }
+
+    #[test]
+    fn parse_vid_pid_missing_both() {
+        let path = r"\\?\usb#serial#{guid}";
+        assert_eq!(parse_vid_pid(path), (None, None));
+    }
+
+    #[test]
+    fn parse_vid_pid_takes_only_four_hex_digits() {
+        let path = "vid_12345&pid_abcde";
+        assert_eq!(parse_vid_pid(path), (Some(0x1234), Some(0xabcd)));
+    }
+
+    #[test]
+    fn parse_vid_pid_stops_at_non_hex() {
+        let path = "vid_04b8z&pid_0e15-extra";
+        assert_eq!(parse_vid_pid(path), (Some(0x04b8), Some(0x0e15)));
+    }
+
+    #[test]
+    fn parse_vid_pid_empty_hex_after_marker() {
+        let path = "vid_&pid_";
+        assert_eq!(parse_vid_pid(path), (None, None));
+    }
+
+    #[test]
+    fn parse_vid_pid_short_hex() {
+        let path = "vid_5&pid_a";
+        assert_eq!(parse_vid_pid(path), (Some(0x5), Some(0xa)));
+    }
 }

@@ -21,14 +21,14 @@ For standard functionalities (e.g., printing text), no additional dependencies a
 
 ```toml
 [dependencies]
-escpos = "0.17.1"
+escpos = "0.18.0"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.17.1", features = ["full"] }
+escpos = { version = "0.18.0", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
@@ -71,17 +71,17 @@ cargo msrv verify
 ## Features list
 
 | Name          | Description                                                            | Default |
-| ------------- | ---------------------------------------------------------------------- | :-----: |
-| `barcodes`    | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |   ✅    |
-| `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |   ✅    |
-| `graphics`    | Print raster images                                                    |   ❌    |
-| `usb`         | Enable USB feature                                                     |   ❌    |
-| `native_usb`  | Enable native USB feature                                              |   ❌    |
-| `hidapi`      | Enable HidApi feature                                                  |   ❌    |
-| `serial_port` | Enable Serial port feature                                             |   ❌    |
-| `usbprint`    | Enable Windows USB print driver (`usbprint.sys` via Win32 API)         |   ❌    |
-| `ui`          | Enable ui feature (UI components)                                      |   ❌    |
-| `full`        | Enable all features                                                    |   ❌    |
+|---------------|------------------------------------------------------------------------|:-------:|
+| `barcodes`    | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |    ✅    |
+| `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |    ✅    |
+| `graphics`    | Print raster images                                                    |    ❌    |
+| `usb`         | Enable USB feature                                                     |    ❌    |
+| `native_usb`  | Enable native USB feature                                              |    ❌    |
+| `hidapi`      | Enable HidApi feature                                                  |    ❌    |
+| `serial_port` | Enable Serial port feature                                             |    ❌    |
+| `usbprint`    | Enable Windows USB print driver (`usbprint.sys` via Win32 API)         |    ❌    |
+| `ui`          | Enable ui feature (UI components)                                      |    ❌    |
+| `full`        | Enable all features                                                    |    ❌    |
 
 ## Examples
 
@@ -212,9 +212,9 @@ fn main() -> Result<()> {
 
 ### Windows USB print driver (with `usbprint` feature enabled, Windows only)
 
-Drives a POS printer through the standard Windows `usbprint.sys` kernel driver using the Win32
-API (`CreateFile` / `ReadFile` / `WriteFile`). No Zadig / WinUSB / libusb swap required — the
-device keeps working with the regular Windows print spooler at the same time.
+Drives a POS printer through the standard Windows `usbprint.sys` kernel driver using the Win32 API (`CreateFile` /
+`ReadFile` / `WriteFile`). No Zadig / WinUSB / libusb swap required — the device keeps working with the regular Windows
+print spooler at the same time.
 
 ```rust,ignore
 use escpos::printer::Printer;
