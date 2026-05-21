@@ -644,16 +644,24 @@ static KZ1048_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC864 Page code table
-/// Uses '\0' as placeholder for empty spots
+///
+/// Maps Arabic glyphs from the Unicode Arabic Presentation Forms blocks
+/// (U+FE70–U+FEFF) to PC864 byte values. ESC/POS printers do not perform
+/// contextual shaping, so callers must provide pre-shaped text — see
+/// `crate::domain::bidi` for the reordering step.
+///
+/// `'\0'` is used as a placeholder for the few positions whose Unicode
+/// mapping is not standardized across IBM / Microsoft variants of CP864
+/// (e.g. 0xA6).
 static PC864_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
     [
         '°', '·', '∙', '√', '▒', '─', '│', '┼', '┤', '┬', '├', '┴', '┐', '┌', '└', '┘', 'β', '∞', 'φ', '±', '½', '¼',
-        '≈', '«', '»', 'ﻷ', 'ﻸ', '\0', '\0', 'ﻻ', 'ﻼ', 'ﹳ', '\u{00A0}', '\u{00AD}', 'ﺂ', '£', '¤', 'ﺄ', '\0', '€', 'ﺎ',
+        '≈', '«', '»', 'ﻷ', 'ﻸ', 'ﻹ', 'ﻺ', 'ﻻ', 'ﻼ', 'ﹳ', '\u{00A0}', '\u{00AD}', 'ﺂ', '£', '¤', 'ﺄ', '\0', '€', 'ﺎ',
         'ﺏ', 'ﺕ', 'ﺙ', '،', 'ﺝ', 'ﺡ', 'ﺥ', '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', 'ﻑ', '؛', 'ﺱ', 'ﺵ', 'ﺹ',
         '؟', '¢', 'ﺀ', 'ﺁ', 'ﺃ', 'ﺅ', 'ﻊ', 'ﺋ', 'ﺍ', 'ﺑ', 'ﺓ', 'ﺗ', 'ﺛ', 'ﺟ', 'ﺣ', 'ﺧ', 'ﺩ', 'ﺫ', 'ﺭ', 'ﺯ', 'ﺳ', 'ﺷ',
         'ﺻ', 'ﺿ', 'ﻁ', 'ﻅ', 'ﻋ', 'ﻏ', '¦', '¬', '÷', '×', 'ﻉ', 'ـ', 'ﻓ', 'ﻗ', 'ﻛ', 'ﻟ', 'ﻣ', 'ﻧ', 'ﻫ', 'ﻭ', 'ﻯ', 'ﻳ',
         'ﺽ', 'ﻌ', 'ﻎ', 'ﻍ', 'ﻡ', 'ﹽ', '\u{0651}', 'ﻥ', 'ﻩ', 'ﻬ', 'ﻰ', 'ﻲ', 'ﻐ', 'ﻕ', 'ﻵ', 'ﻶ', 'ﻝ', 'ﻙ', 'ﻱ', '■',
-        '\u{00A0}',
+        // 0xFF is left unmapped: NBSP already lives at its canonical 0xA0 slot.
     ]
     .into_iter()
     .enumerate()
@@ -661,3 +669,47 @@ static PC864_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
     .map(|(i, c)| (c, (i + 0x80) as u8))
     .collect()
 });
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn pc864_resolves_from_page_code() {
+        let table: PageCodeTable = PageCode::PC864.try_into().expect("PC864 should resolve to a table");
+        assert!(matches!(table, PageCodeTable::PC864));
+    }
+
+    #[test]
+    fn pc864_maps_anchor_characters() {
+        let table = PC864_TABLE.clone();
+
+        // First entry: the table starts at byte 0x80.
+        assert_eq!(table.get(&'°'), Some(&0x80));
+        // Latin punctuation anchors aligned to PC864 spec positions.
+        assert_eq!(table.get(&'«'), Some(&0x97));
+        assert_eq!(table.get(&'»'), Some(&0x98));
+        assert_eq!(table.get(&'\u{00A0}'), Some(&0xA0));
+        assert_eq!(table.get(&'£'), Some(&0xA3));
+        assert_eq!(table.get(&'¤'), Some(&0xA4));
+        // Arabic-Indic digit block must be contiguous.
+        assert_eq!(table.get(&'٠'), Some(&0xB0));
+        assert_eq!(table.get(&'٩'), Some(&0xB9));
+    }
+
+    #[test]
+    fn pc864_completed_lam_hamza_below_ligatures() {
+        // Regression: positions 0x9B/0x9C used to be '\0' placeholders.
+        // FEF9/FEFA complete the LAM+HAMZA-below pair, between LAM+HAMZA-above (FEF7/FEF8)
+        // and LAM+ALEF (FEFB/FEFC).
+        let table = PC864_TABLE.clone();
+        assert_eq!(table.get(&'ﻹ'), Some(&0x9B));
+        assert_eq!(table.get(&'ﻺ'), Some(&0x9C));
+    }
+
+    #[test]
+    fn pc864_does_not_contain_placeholder_char() {
+        // The '\0' filter must hold — no null character should ever leak into the map.
+        assert!(!PC864_TABLE.contains_key(&'\0'));
+    }
+}

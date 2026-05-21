@@ -1,4 +1,4 @@
-# ESC/POS Rust implementation - Examples
+# ESC/POS Rust implementation – Examples
 
 ## Full example
 
@@ -24,13 +24,13 @@ RUST_LOG=debug cargo run --example codes
 RUST_LOG=debug cargo run --example pictures --features graphics
 ```
 
-## Page codes examples
+## Page code examples
 
 ```shell
 RUST_LOG=debug cargo run --example page_codes
 ```
 
-## Drivers examples
+## Drivers’ examples
 
 ```shell
 RUST_LOG=debug cargo run --example usb --features usb

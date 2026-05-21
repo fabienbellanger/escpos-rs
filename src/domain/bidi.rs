@@ -44,16 +44,20 @@ use unicode_bidi::BidiInfo;
 /// assert_eq!(visual, "Hello");
 /// ```
 pub fn reorder_for_display(text: &str) -> String {
-    let bidi_info = BidiInfo::new(text, None);
-    let mut result = String::new();
-
-    for para in &bidi_info.paragraphs {
-        let line = para.range.clone();
-        let reordered = bidi_info.reorder_line(para, line);
-        result.push_str(&reordered);
-    }
-
-    result
+    // Reorder line-by-line so that '\n' separators (and empty lines)
+    // are preserved exactly in the output.
+    text.split('\n')
+        .map(|line| {
+            let bidi_info = BidiInfo::new(line, None);
+            let mut reordered = String::with_capacity(line.len());
+            for para in &bidi_info.paragraphs {
+                let range = para.range.clone();
+                reordered.push_str(&bidi_info.reorder_line(para, range));
+            }
+            reordered
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 #[cfg(test)]
@@ -109,5 +113,26 @@ mod tests {
         let output = reorder_for_display(input);
         // Numbers should stay in logical order within RTL context
         assert!(output.contains("123"));
+    }
+
+    #[test]
+    fn test_preserves_newlines() {
+        // Multi-line input must keep its '\n' separators (regression: previously stripped).
+        let input = "abc\ndef";
+        assert_eq!(reorder_for_display(input), "abc\ndef");
+    }
+
+    #[test]
+    fn test_preserves_empty_lines() {
+        let input = "abc\n\ndef\n";
+        assert_eq!(reorder_for_display(input), "abc\n\ndef\n");
+    }
+
+    #[test]
+    fn test_reorders_each_line_independently() {
+        // Each line is reordered on its own (mirrors writeln_bidi line-by-line printing).
+        let input = "Hello\nאבג";
+        let output = reorder_for_display(input);
+        assert_eq!(output, "Hello\nגבא");
     }
 }
