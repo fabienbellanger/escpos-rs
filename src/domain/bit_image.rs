@@ -62,19 +62,19 @@ impl Default for BitImageOption {
 impl BitImageOption {
     /// Create new `BitImageOption`
     pub fn new(max_width: Option<u32>, max_height: Option<u32>, size: BitImageSize) -> Result<Self> {
-        if let Some(max_width) = max_width {
-            if max_width % 8 != 0 {
-                return Err(PrinterError::Input(
-                    "bit image max width must be a multiple of 8".to_owned(),
-                ));
-            }
+        if let Some(max_width) = max_width
+            && max_width % 8 != 0
+        {
+            return Err(PrinterError::Input(
+                "bit image max width must be a multiple of 8".to_owned(),
+            ));
         }
-        if let Some(max_height) = max_height {
-            if max_height % 8 != 0 {
-                return Err(PrinterError::Input(
-                    "bit image max height must be a multiple of 8".to_owned(),
-                ));
-            }
+        if let Some(max_height) = max_height
+            && max_height % 8 != 0
+        {
+            return Err(PrinterError::Input(
+                "bit image max height must be a multiple of 8".to_owned(),
+            ));
         }
 
         Ok(Self {

@@ -321,10 +321,8 @@ impl UsbDriver {
                         #[cfg(not(target_os = "windows"))]
                         match device_handle.kernel_driver_active(interface_number) {
                             Ok(active) => {
-                                if active {
-                                    if let Err(e) = device_handle.detach_kernel_driver(interface_number) {
-                                        return Err(PrinterError::Io(e.to_string()));
-                                    }
+                                if active && let Err(e) = device_handle.detach_kernel_driver(interface_number) {
+                                    return Err(PrinterError::Io(e.to_string()));
                                 }
                             }
                             Err(e) => return Err(PrinterError::Io(e.to_string())),
