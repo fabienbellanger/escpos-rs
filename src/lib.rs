@@ -172,6 +172,7 @@
 //! | `native_usb`  | Enable native USB feature                                              |   ❌    |
 //! | `hidapi`      | Enable HidApi feature                                                  |   ❌    |
 //! | `serial_port` | Enable Serial port feature                                             |   ❌    |
+//! | `usbprint`    | Enable Windows USB print driver (`usbprint.sys` via Win32 API)         |   ❌    |
 //! | `ui`          | Enable ui feature (UI components)                                      |   ❌    |
 //! | `full`        | Enable all features                                                    |   ❌    |
 //!

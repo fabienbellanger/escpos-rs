@@ -71,16 +71,17 @@ cargo msrv verify
 ## Features list
 
 | Name          | Description                                                            | Default |
-|---------------|------------------------------------------------------------------------|:-------:|
-| `barcodes`    | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |    ✅    |
-| `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |    ✅    |
-| `graphics`    | Print raster images                                                    |    ❌    |
-| `usb`         | Enable USB feature                                                     |    ❌    |
-| `native_usb`  | Enable native USB feature                                              |    ❌    |
-| `hidapi`      | Enable HidApi feature                                                  |    ❌    |
-| `serial_port` | Enable Serial port feature                                             |    ❌    |
-| `ui`          | Enable ui feature (UI components)                                      |    ❌    |
-| `full`        | Enable all features                                                    |    ❌    |
+| ------------- | ---------------------------------------------------------------------- | :-----: |
+| `barcodes`    | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |   ✅    |
+| `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |   ✅    |
+| `graphics`    | Print raster images                                                    |   ❌    |
+| `usb`         | Enable USB feature                                                     |   ❌    |
+| `native_usb`  | Enable native USB feature                                              |   ❌    |
+| `hidapi`      | Enable HidApi feature                                                  |   ❌    |
+| `serial_port` | Enable Serial port feature                                             |   ❌    |
+| `usbprint`    | Enable Windows USB print driver (`usbprint.sys` via Win32 API)         |   ❌    |
+| `ui`          | Enable ui feature (UI components)                                      |   ❌    |
+| `full`        | Enable all features                                                    |   ❌    |
 
 ## Examples
 
@@ -204,6 +205,40 @@ fn main() -> Result<()> {
         )?
         .feed()?
         .print_cut()?; // print() or print_cut() is mandatory to send the data to the printer
+
+    Ok(())
+}
+```
+
+### Windows USB print driver (with `usbprint` feature enabled, Windows only)
+
+Drives a POS printer through the standard Windows `usbprint.sys` kernel driver using the Win32
+API (`CreateFile` / `ReadFile` / `WriteFile`). No Zadig / WinUSB / libusb swap required — the
+device keeps working with the regular Windows print spooler at the same time.
+
+```rust,ignore
+use escpos::printer::Printer;
+use escpos::utils::*;
+use escpos::{driver::*, errors::Result};
+
+fn main() -> Result<()> {
+    env_logger::init();
+
+    // List USB printers exposed by usbprint.sys
+    for info in WindowsUsbPrintDriver::list()? {
+        println!("{} (VID={:?} PID={:?})", info.device_path, info.vendor_id, info.product_id);
+    }
+
+    // Option 1: open by USB vendor/product id
+    let driver = WindowsUsbPrintDriver::open_by_vid_pid(0x0525, 0xa700)?;
+
+    // Option 2: open by full device interface path
+    // let driver = WindowsUsbPrintDriver::open(r"\\?\USB#VID_0525&PID_A700#...")?;
+
+    Printer::new(driver, Protocol::default(), None)
+        .init()?
+        .writeln("Hello from Windows usbprint!")?
+        .print_cut()?;
 
     Ok(())
 }
