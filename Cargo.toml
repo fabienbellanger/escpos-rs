@@ -43,8 +43,8 @@ full = [
 [dependencies]
 encoding_rs = "0.8.35"
 log = "0.4.29"
-spin = "0.10.0"
-hashbrown = "0.16"
+spin = { version = "0.10.0", default-features = false, features = ["lazy", "once"] }
+hashbrown = { version = "0.16", default-features = false, features = ["default-hasher"] }
 hidapi = { version = "2.6.6", optional = true }
 image = { version = "0.25.10", optional = true }
 nusb = { version = "0.2.3", optional = true }
@@ -62,6 +62,9 @@ windows-sys = { version = "0.61", optional = true, features = [
 env_logger = "0.11.10"
 reqwest = { version = "0.13.3", features = ["blocking"] }
 
+[[example]]
+name = "no_std_codes"
+required-features = ["barcodes", "codes_2d"]
 
 [package.metadata.docs.rs]
 all-features = true

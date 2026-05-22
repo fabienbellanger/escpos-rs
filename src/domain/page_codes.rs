@@ -4,7 +4,14 @@ use crate::domain::PageCode;
 use crate::errors::PrinterError;
 use alloc::format;
 use core::iter::{IntoIterator, Iterator};
+#[cfg(feature = "std")]
+use std::collections::HashMap;
+#[cfg(feature = "std")]
+use std::sync::LazyLock as Lazy;
+
+#[cfg(not(feature = "std"))]
 use hashbrown::HashMap;
+#[cfg(not(feature = "std"))]
 use spin::Lazy;
 
 /// Page codes table list

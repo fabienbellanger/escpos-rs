@@ -18,6 +18,22 @@ RUST_LOG=debug cargo run --example receipt -F full
 RUST_LOG=debug cargo run --example codes
 ```
 
+## `no_std`-compatible codes example
+
+Demonstrates a custom `Driver` (in-memory) and the use of barcodes/2D codes with
+APIs that work in `no_std`. The example itself runs on a standard target.
+
+```shell
+cargo run --example no_std_codes
+```
+
+To verify the crate builds for a real `no_std` target (library only, this
+example needs `std` to run as a binary):
+
+```shell
+cargo build --no-default-features --features barcodes,codes_2d
+```
+
 ## Picture example
 
 ```shell

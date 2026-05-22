@@ -4,6 +4,7 @@ use crate::errors::{PrinterError, Result};
 use alloc::format;
 
 /// Get parameters pL and pH
+#[cfg(feature = "codes_2d")]
 pub(crate) fn get_parameters_number_2(data: &str, padding: u8) -> Result<(u8, u8)> {
     let bytes = data.as_bytes();
     let data_len = bytes.len() + (padding as usize);
@@ -37,7 +38,7 @@ pub fn chars_number(width: u8, size: u8) -> Result<u8> {
     Ok(width / size)
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "codes_2d"))]
 mod tests {
     use super::*;
 

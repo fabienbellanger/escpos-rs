@@ -46,3 +46,9 @@ jobs:
 
       - name: Build
         run: cargo build --all-features --verbose
+
+      - name: Build (no_std)
+        run: cargo build --no-default-features --verbose
+
+      - name: Build (no_std + barcodes + codes_2d)
+        run: cargo build --no-default-features --features barcodes,codes_2d --verbose

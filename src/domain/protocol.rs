@@ -2,9 +2,11 @@
 
 #[cfg(feature = "graphics")]
 use super::bit_image::*;
+#[cfg(any(feature = "barcodes", feature = "codes_2d"))]
+use super::codes::*;
+#[cfg(feature = "codes_2d")]
+use super::common::get_parameters_number_2;
 use super::{RealTimeStatusRequest, character::*, constants::*, types::*};
-#[cfg(feature = "std")]
-use super::{codes::*, common::get_parameters_number_2};
 #[cfg(feature = "ui")]
 use crate::domain::ui::{UIComponent, line::Line};
 #[cfg(feature = "ui")]
@@ -16,6 +18,8 @@ use crate::{
     errors::{PrinterError, Result},
     io::encoder::Encoder,
 };
+#[cfg(feature = "barcodes")]
+use alloc::borrow::ToOwned;
 use alloc::string::ToString;
 use alloc::vec::Vec;
 use alloc::{format, vec};

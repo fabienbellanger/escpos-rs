@@ -72,16 +72,38 @@ cargo msrv verify
 
 | Name          | Description                                                            | Default |
 |---------------|------------------------------------------------------------------------|:-------:|
+| `std`         | Enable `std` support (disable for `no_std` + `alloc` environments)     |    ✅    |
 | `barcodes`    | Print barcodes (UPC-A, UPC-E, EAN8, EAN13, CODE39, ITF or CODABAR)     |    ✅    |
 | `codes_2d`    | Print 2D codes (QR Code, PDF417, GS1 DataBar, DataMatrix, Aztec, etc.) |    ✅    |
-| `graphics`    | Print raster images                                                    |    ❌    |
-| `usb`         | Enable USB feature                                                     |    ❌    |
-| `native_usb`  | Enable native USB feature                                              |    ❌    |
-| `hidapi`      | Enable HidApi feature                                                  |    ❌    |
-| `serial_port` | Enable Serial port feature                                             |    ❌    |
+| `graphics`    | Print raster images (requires `std`)                                   |    ❌    |
+| `usb`         | Enable USB feature (requires `std`)                                    |    ❌    |
+| `native_usb`  | Enable native USB feature (requires `std`)                             |    ❌    |
+| `hidapi`      | Enable HidApi feature (requires `std`)                                 |    ❌    |
+| `serial_port` | Enable Serial port feature (requires `std`)                            |    ❌    |
 | `usbprint`    | Enable Windows USB print driver (`usbprint.sys` via Win32 API)         |    ❌    |
 | `ui`          | Enable ui feature (UI components)                                      |    ❌    |
 | `full`        | Enable all features                                                    |    ❌    |
+
+## `no_std` support
+
+The crate can be used on bare-metal targets (microcontrollers, kernels…) by disabling default
+features. Only `alloc` is required:
+
+```toml
+[dependencies]
+escpos = { version = "0.18", default-features = false, features = ["barcodes", "codes_2d"] }
+```
+
+The built-in `Console`, `Network` and `File` drivers as well as the `graphics` feature require
+`std`. In `no_std` mode you implement the `Driver` trait for your peripheral (UART, SPI, USB
+endpoint, …) and pass it to `Printer::new`. The `Printer::driver` accessor lets you recover the
+driver from a `Printer`.
+
+See [`examples/no_std_codes.rs`](examples/no_std_codes.rs) for a minimal example with a custom
+in-memory driver and barcodes / 2D codes — all the protocol-level APIs (barcodes, QR Code,
+PDF417, DataMatrix, Aztec, MaxiCode, page codes, status…) work in `no_std`. The codes themselves
+are rendered by the printer's firmware: the crate only serializes the ESC/POS commands, so the
+embedded-side cost is minimal.
 
 ## Examples
 

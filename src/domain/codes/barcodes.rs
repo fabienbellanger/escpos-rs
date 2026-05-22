@@ -4,7 +4,8 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 use crate::errors::{PrinterError, Result};
-use alloc::string::ToString;
+use alloc::format;
+use alloc::string::{String, ToString};
 use core::fmt;
 
 const CODE39_VALID_CHARS: [char; 44] = [

@@ -5,6 +5,10 @@
 use crate::errors::PrinterError;
 use alloc::format;
 use alloc::vec::Vec;
+#[cfg(feature = "std")]
+use std::collections::HashMap;
+
+#[cfg(not(feature = "std"))]
 use hashbrown::HashMap;
 
 /// Printer real-time status

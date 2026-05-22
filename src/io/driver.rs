@@ -29,6 +29,7 @@ use std::{
 };
 
 /// Default timeout in seconds for read/write operations
+#[cfg(feature = "std")]
 const DEFAULT_TIMEOUT_SECONDS: u64 = 5;
 
 /// Printer driver trait

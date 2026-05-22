@@ -18,6 +18,23 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Security
 -->
 
+## [Unreleased]
+
+### Added
+
+- Add `no_std` support behind a new `std` feature (enabled by default), allowing the crate to be used on embedded
+  platforms with `alloc` ([#49](https://github.com/fabienbellanger/escpos-rs/pull/49))
+- Add `Printer::driver` to release ownership of the underlying driver (useful in `no_std` environments)
+- CI now builds the crate with `--no-default-features` to prevent silent `no_std` regressions
+
+### Changed
+
+- `spin` and `hashbrown` are pulled in with `default-features = false` and minimal features to keep the dependency
+  footprint small
+- When the `std` feature is enabled, `std::sync::LazyLock` and `std::collections::HashMap` are used instead of
+  `spin::Lazy` and `hashbrown::HashMap`
+- Barcodes and 2D codes are now exposed in `no_std` mode (previously gated on `std`)
+
 ## `0.18.0` (2026-05-22) [CURRENT]
 
 ### Added
