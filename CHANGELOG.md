@@ -34,6 +34,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - When the `std` feature is enabled, `std::sync::LazyLock` and `std::collections::HashMap` are used instead of
   `spin::Lazy` and `hashbrown::HashMap`
 - Barcodes and 2D codes are now exposed in `no_std` mode (previously gated on `std`)
+- Update Tauri example: bump `tauri` to `2.11`, `tauri-build` to `2.6`, `tauri-plugin-opener` to `2.5`,
+  `@tauri-apps/cli` to `2.11`, switch to Rust edition `2024`, and align `UsbDriver::open` call with the new
+  `UsbOption` argument
 
 ## `0.18.0` (2026-05-22) [CURRENT]
 
