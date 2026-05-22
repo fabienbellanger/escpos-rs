@@ -1,5 +1,6 @@
 .PHONY: help \
 	upgrade \
+	upgrade-force \
 	lint \
 	lint-audit \
 	audit-fix \
@@ -33,6 +34,11 @@ help: Makefile
 ## upgrade: Upgrade crates
 upgrade:
 	$(CARGO) upgrade
+	$(CARGO) update
+
+## upgrade-force: Upgrade workspace packages and update the dependency versions recorded in the local lock file
+upgrade-force:
+	$(CARGO) upgrade --incompatible
 	$(CARGO) update
 
 ## lint: Run clippy and rustfmt

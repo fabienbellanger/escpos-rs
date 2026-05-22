@@ -1,4 +1,4 @@
-# ESC/POS Rust implementation - Examples
+# ESC/POS Rust implementation – Examples
 
 ## Full example
 
@@ -24,19 +24,20 @@ RUST_LOG=debug cargo run --example codes
 RUST_LOG=debug cargo run --example pictures --features graphics
 ```
 
-## Page codes examples
+## Page code examples
 
 ```shell
 RUST_LOG=debug cargo run --example page_codes
 ```
 
-## Drivers examples
+## Drivers’ examples
 
 ```shell
 RUST_LOG=debug cargo run --example usb --features usb
 RUST_LOG=debug cargo run --example native_usb --features native_usb
 RUST_LOG=debug cargo run --example hidapi --features hidapi
 RUST_LOG=debug cargo run --example serial_port --features serial_port
+RUST_LOG=debug cargo run --example usbprint --features "usbprint,graphics"  # Windows only (usbprint.sys + sample image)
 ```
 
 ## UI examples

@@ -196,10 +196,10 @@ impl Protocol {
 
                 let mut i = 0;
                 for c in text.chars() {
-                    if let Some(max_length) = max_length {
-                        if i >= max_length {
-                            break;
-                        }
+                    if let Some(max_length) = max_length
+                        && i >= max_length
+                    {
+                        break;
                     }
 
                     if let Some(&n) = table.get(&c) {
