@@ -110,9 +110,7 @@ fn main() -> escpos::errors::Result<()> {
     if !got_escpos {
         println!("  No usable ESC/POS status bytes; trying USBPRINT IOCTL…");
         match driver.lpt_status() {
-            Ok(dw) => println!(
-                "  USBPRINT GET_LPT_STATUS: 0x{dw:08x} (IEEE-1284-style; see printer USB/status docs)"
-            ),
+            Ok(dw) => println!("  USBPRINT GET_LPT_STATUS: 0x{dw:08x} (IEEE-1284-style; see printer USB/status docs)"),
             Err(e) => eprintln!("  GET_LPT_STATUS: {e}"),
         }
     }

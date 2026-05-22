@@ -18,13 +18,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Security
 -->
 
-## [Unreleased]
+## `0.18.0` (2026-05-22) [CURRENT]
 
 ### Added
 
-- Add `WindowsUsbPrintDriver` for printing on Windows through the built-in `usbprint.sys` class
-  driver (no Zadig/WinUSB needed), behind the `usbprint` feature
-  ([#50](https://github.com/fabienbellanger/escpos-rs/pull/50))
+- Add `WindowsUsbPrintDriver` for printing on Windows through the built-in `usbprint.sys` class driver (no Zadig/WinUSB
+  needed), behind the `usbprint` feature ([#50](https://github.com/fabienbellanger/escpos-rs/pull/50))
 - Add `upgrade-force` target to `Makefile` for incompatible dependency upgrades
 
 ### Changed
@@ -35,7 +34,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump `image` to `0.25.10`
 - Bump `reqwest` to `0.13.3`
 
-## `0.17.1` (2026-05-21) [CURRENT]
+## `0.17.1` (2026-05-21)
 
 ### Added
 
