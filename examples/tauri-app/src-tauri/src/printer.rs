@@ -16,7 +16,7 @@ pub struct UsbPrinter {
 
 impl UsbPrinter {
     pub fn build(vid: u16, pid: u16) -> Result<Self, PrinterError> {
-        let driver = UsbDriver::open(vid, pid, Some(Duration::from_secs(2)))?;
+        let driver = UsbDriver::open(vid, pid, Some(Duration::from_secs(2)), None)?;
         let printer = Printer::new(driver, Protocol::default(), None);
 
         Ok(Self { port: printer })
