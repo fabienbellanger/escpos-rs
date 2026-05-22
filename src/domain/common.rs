@@ -1,6 +1,7 @@
 //! Common functions
 
 use crate::errors::{PrinterError, Result};
+use alloc::format;
 
 /// Get parameters pL and pH
 pub(crate) fn get_parameters_number_2(data: &str, padding: u8) -> Result<(u8, u8)> {

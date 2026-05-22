@@ -2,7 +2,9 @@
 
 #[cfg(feature = "graphics")]
 use super::bit_image::*;
-use super::{RealTimeStatusRequest, character::*, codes::*, common::get_parameters_number_2, constants::*, types::*};
+use super::{RealTimeStatusRequest, character::*, constants::*, types::*};
+#[cfg(feature = "std")]
+use super::{codes::*, common::get_parameters_number_2};
 #[cfg(feature = "ui")]
 use crate::domain::ui::{UIComponent, line::Line};
 #[cfg(feature = "ui")]
@@ -14,6 +16,9 @@ use crate::{
     errors::{PrinterError, Result},
     io::encoder::Encoder,
 };
+use alloc::string::ToString;
+use alloc::vec::Vec;
+use alloc::{format, vec};
 
 /// Protocol used to communicate with the printer
 #[derive(Default, Clone)]
@@ -734,6 +739,7 @@ mod tests {
     use super::*;
     #[cfg(feature = "ui")]
     use crate::domain::ui::line::{LineBuilder, LineStyle};
+    use alloc::vec::Vec;
 
     #[test]
     fn test_init() {

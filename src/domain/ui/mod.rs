@@ -5,6 +5,8 @@ use crate::errors::Result;
 use crate::printer::PrinterStyleState;
 use crate::printer_options::PrinterOptions;
 use crate::utils::Protocol;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 
 pub mod line;
 

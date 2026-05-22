@@ -1,6 +1,8 @@
 //! Types
 
-use std::fmt;
+use alloc::string::{String, ToString};
+use alloc::vec::Vec;
+use core::fmt;
 
 /// Default characters per line
 pub const DEFAULT_CHARACTERS_PER_LINE: u8 = 42;
@@ -90,6 +92,7 @@ impl fmt::Debug for Instruction {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec;
 
     #[test]
     fn test_instruction_flatten_commands() {

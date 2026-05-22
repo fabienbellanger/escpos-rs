@@ -2,9 +2,10 @@
 
 use crate::domain::PageCode;
 use crate::errors::PrinterError;
-use std::collections::HashMap;
-use std::iter::{IntoIterator, Iterator};
-use std::sync::LazyLock;
+use alloc::format;
+use core::iter::{IntoIterator, Iterator};
+use hashbrown::HashMap;
+use spin::Lazy;
 
 /// Page codes table list
 #[derive(Debug, Clone, Copy)]
@@ -123,7 +124,7 @@ impl TryFrom<PageCode> for PageCodeTable {
 }
 
 /// PC437 Page code table
-static PC437_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC437_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'à', 'å', 'ç', 'ê', 'ë', 'è', 'ï', 'î', 'ì', 'Ä', 'Å', 'É', 'æ', 'Æ', 'ô', 'ö', 'ò',
         'û', 'ù', 'ÿ', 'Ö', 'Ü', '¢', '£', '¥', '₧', 'ƒ', 'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'ª', 'º', '¿', '⌐', '¬', '½',
@@ -139,7 +140,7 @@ static PC437_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// Katakana Page code table (CP932 or IBM-932)
-static KATAKANA_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static KATAKANA_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         '｡', '｢', '｣', '､', '･', 'ｦ', 'ｧ', 'ｨ', 'ｩ', 'ｪ', 'ｫ', 'ｬ', 'ｭ', 'ｮ', 'ｯ', 'ｰ', 'ｱ', 'ｲ', 'ｳ', 'ｴ', 'ｵ', 'ｶ',
         'ｷ', 'ｸ', 'ｹ', 'ｺ', 'ｻ', 'ｼ', 'ｽ', 'ｾ', 'ｿ', 'ﾀ', 'ﾁ', 'ﾂ', 'ﾃ', 'ﾄ', 'ﾅ', 'ﾆ', 'ﾇ', 'ﾈ', 'ﾉ', 'ﾊ', 'ﾋ', 'ﾌ',
@@ -152,7 +153,7 @@ static KATAKANA_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC850 Page code table
-static PC850_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC850_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'à', 'å', 'ç', 'ê', 'ë', 'è', 'ï', 'î', 'ì', 'Ä', 'Å', 'É', 'æ', 'Æ', 'ô', 'ö', 'ò',
         'û', 'ù', 'ÿ', 'Ö', 'Ü', 'ø', '£', 'Ø', '×', 'ƒ', 'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'ª', 'º', '¿', '®', '¬', '½',
@@ -168,7 +169,7 @@ static PC850_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC863 Page code table
-static PC863_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC863_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'Â', 'à', '¶', 'ç', 'ê', 'ë', 'è', 'ï', 'î', '‗', 'À', '§', 'É', 'È', 'Ê', 'ô', 'Ë', 'Ï',
         'û', 'ù', '¤', 'Ô', 'Ü', '¢', '£', 'Ù', 'Û', 'ƒ', '¦', '´', 'ó', 'ú', '¨', '¸', '³', '¯', 'Î', '⌐', '¬', '½',
@@ -184,7 +185,7 @@ static PC863_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC852 Page code table
-static PC852_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC852_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'ů', 'ć', 'ç', 'ł', 'ë', 'Ő', 'ő', 'î', 'Ź', 'Ä', 'Ć', 'É', 'Ĺ', 'ĺ', 'ô', 'ö', 'Ľ',
         'ľ', 'Ś', 'ś', 'Ö', 'Ü', 'Ť', 'ť', 'Ł', '×', 'č', 'á', 'í', 'ó', 'ú', 'Ą', 'ą', 'Ž', 'ž', 'Ę', 'ę', '¬', 'ź',
@@ -200,7 +201,7 @@ static PC852_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC858 Page code table
-static PC858_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC858_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'à', 'å', 'ç', 'ê', 'ë', 'è', 'ï', 'î', 'ì', 'Ä', 'Å', 'É', 'æ', 'Æ', 'ô', 'ö', 'ò',
         'û', 'ù', 'ÿ', 'Ö', 'Ü', 'ø', '£', 'Ø', '×', 'ƒ', 'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'ª', 'º', '®', '⌐', '¬', '½',
@@ -216,7 +217,7 @@ static PC858_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC860 Page code table
-static PC860_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC860_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ã', 'à', 'Á', 'ç', 'ê', 'Ê', 'è', 'Í', 'Ô', 'ì', 'Ã', 'Â', 'É', 'À', 'È', 'ô', 'õ', 'ò',
         'Ú', 'ù', 'Ì', 'Õ', 'Ü', '¢', '£', 'Ù', '₧', 'Ó', 'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'ª', 'º', '¿', 'Ò', '¬', '½',
@@ -232,7 +233,7 @@ static PC860_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC865 Page code table
-static PC865_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC865_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'à', 'å', 'ç', 'ê', 'ë', 'è', 'ï', 'î', 'ì', 'Ä', 'Å', 'É', 'æ', 'Æ', 'ô', 'ö', 'ò',
         'û', 'ù', 'ÿ', 'Ö', 'Ü', 'ø', '£', 'Ø', '₧', 'ƒ', 'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'ª', 'º', '¿', '⌐', '¬', '½',
@@ -249,7 +250,7 @@ static PC865_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// PC851 Page code table
 /// Uses '\0' as placeholder for empty spots
-static PC851_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC851_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'à', 'Ά', 'ç', 'ê', 'ë', 'è', 'ï', 'î', 'Έ', 'Ä', 'Ή', 'Ί', '\0', 'Ό', 'ô', 'ö', 'Ύ',
         'û', 'ù', 'Ώ', 'Ö', 'Ü', 'ά', '£', 'έ', 'ή', 'ί', 'ϊ', 'ΐ', 'ό', 'ύ', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', '½',
@@ -267,7 +268,7 @@ static PC851_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// PC853 Page code table
 /// Uses '\0' as placeholder for empty spots
-static PC853_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC853_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'à', 'ĉ', 'ç', 'ê', 'ë', 'è', 'ï', 'î', 'ì', 'Ä', 'Ĉ', 'É', 'ċ', 'Ċ', 'ô', 'ö', 'ò',
         'û', 'ù', 'İ', 'Ö', 'Ü', 'ĝ', '£', 'Ĝ', '×', 'ĵ', 'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'Ğ', 'ğ', 'Ĥ', 'ĥ', '\0', '½',
@@ -285,7 +286,7 @@ static PC853_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// PC857 Page code table
 /// Uses '\0' as placeholder for empty spots
-static PC857_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC857_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'à', 'å', 'ç', 'ê', 'ë', 'è', 'ï', 'î', 'ı', 'Ä', 'Å', 'É', 'æ', 'Æ', 'ô', 'ö', 'ò',
         'û', 'ù', 'İ', 'Ö', 'Ü', 'ø', '£', 'Ø', 'Ş', 'ş', 'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'Ğ', 'ğ', '¿', '®', '¬', '½',
@@ -302,7 +303,7 @@ static PC857_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC737 Page code table
-static PC737_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC737_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ',
         'Ψ', 'Ω', 'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'ς', 'τ',
@@ -318,7 +319,7 @@ static PC737_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// ISO8859_2 Page code table
-static ISO8859_2_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static ISO8859_2_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         '\u{00A0}', // NO-BREAK SPACE
         'Ą', '˘', 'Ł', '¤', 'Ľ', 'Ś', '§', '¨', 'Š', 'Ş', 'Ť', 'Ź', '\u{00AD}', // SOFT HYPHEN
@@ -335,7 +336,7 @@ static ISO8859_2_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// ISO8859_7 Page code table
 /// Uses '\0' as placeholder for empty spots
-static ISO8859_7_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static ISO8859_7_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         '\u{00A0}', // NO-BREAK SPACE
         '‘', '’', '£', '€', '₯', '¦', '§', '¨', '©', 'ͺ', '«', '¬', '\u{00AD}', // SOFT HYPHEN
@@ -352,7 +353,7 @@ static ISO8859_7_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// ISO8859_15 Page code table
-static ISO8859_15_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static ISO8859_15_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         '\u{00A0}', // NO-BREAK SPACE
         '¡', '¢', '£', '€', '¥', 'Š', '§', 'š', '©', 'ª', '«', '¬', '\u{00AD}', // SOFT HYPHEN
@@ -369,7 +370,7 @@ static ISO8859_15_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// WPC1252 Page code table
 /// Uses '\0' as placeholder for empty spots
-static WPC1252_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static WPC1252_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         '€', '\0', '‚', 'ƒ', '„', '…', '†', '‡', 'ˆ', '‰', 'Š', '‹', 'Œ', '\0', 'Ž', '\0', '\0', '‘', '’', '“', '”',
         '•', '–', '—', '˜', '™', 'š', '›', 'œ', '\0', 'ž', 'Ÿ', '\u{00A0}', '¡', '¢', '£', '¤', '¥', '¦', '§', '¨',
@@ -386,7 +387,7 @@ static WPC1252_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC866 Page code table
-static PC866_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC866_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х',
         'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'й', 'к', 'л',
@@ -402,7 +403,7 @@ static PC866_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// WPC775 Page code table
-static WPC775_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static WPC775_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ć', 'ü', 'é', 'ā', 'ä', 'ģ', 'å', 'ć', 'ł', 'ē', 'Ŗ', 'ŗ', 'ī', 'Ź', 'Ä', 'Å', 'É', 'æ', 'Æ', 'ō', 'ö', 'Ģ',
         '¢', 'Ś', 'ś', 'Ö', 'Ü', 'ø', '£', 'Ø', '×', '¤', 'Ā', 'Ī', 'ó', 'Ż', 'ż', 'ź', '”', '¦', '©', '®', '¬', '½',
@@ -418,7 +419,7 @@ static WPC775_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC855 Page code table
-static PC855_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC855_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'ђ', 'Ђ', 'ѓ', 'Ѓ', 'ё', 'Ё', 'є', 'Є', 'ѕ', 'Ѕ', 'і', 'І', 'ї', 'Ї', 'ј', 'Ј', 'љ', 'Љ', 'њ', 'Њ', 'ћ', 'Ћ',
         'ќ', 'Ќ', 'ў', 'Ў', 'џ', 'Џ', 'ю', 'Ю', 'ъ', 'Ъ', 'а', 'А', 'б', 'Б', 'ц', 'Ц', 'д', 'Д', 'е', 'Е', 'ф', 'Ф',
@@ -434,7 +435,7 @@ static PC855_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC861 Page code table
-static PC861_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC861_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'à', 'å', 'ç', 'ê', 'ë', 'è', 'Ð', 'ð', 'Þ', 'Ä', 'Å', 'É', 'æ', 'Æ', 'ô', 'ö', 'þ',
         'û', 'Ý', 'ý', 'Ö', 'Ü', 'ø', '£', 'Ø', '₧', 'ƒ', 'á', 'í', 'ó', 'ú', 'Á', 'Í', 'Ó', 'Ú', '¿', '⌐', '¬', '½',
@@ -450,7 +451,7 @@ static PC861_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC862 Page code table
-static PC862_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC862_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'ך', 'כ', 'ל', 'ם', 'מ', 'ן', 'נ', 'ס', 'ע', 'ף', 'פ', 'ץ',
         'צ', 'ק', 'ר', 'ש', 'ת', '¢', '£', '¥', '₧', 'ƒ', 'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'ª', 'º', '¿', '⌐', '¬', '½',
@@ -467,7 +468,7 @@ static PC862_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// PC869 Page code table
 /// Uses '\0' as placeholder for empty spots
-static PC869_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC869_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ά', '€', '·', '¬', '¦', '‘', '’', 'Έ', '―', 'Ή', 'Ί', 'Ϊ', 'Ό', '\0', '\0', 'Ύ', 'Ϋ', '©', 'Ώ', '²', '³', 'ά',
         '£', 'έ', 'ή', 'ί', 'ϊ', 'ΐ', 'ό', 'ύ', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', '½', 'Θ', 'Ι', '«', '»', '░', '▒',
@@ -484,7 +485,7 @@ static PC869_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC1118 Page code table
-static PC1118_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC1118_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ç', 'ü', 'é', 'â', 'ä', 'à', 'å', 'ç', 'ê', 'ë', 'è', 'ï', 'î', 'ì', 'Ä', 'Å', 'É', 'æ', 'Æ', 'ô', 'ö', 'ò',
         'û', 'ù', 'ÿ', 'Ö', 'Ü', '¢', '£', '¥', '₧', 'ƒ', 'á', 'í', 'ó', 'ú', 'ñ', 'Ñ', 'ª', 'º', '¿', '⌐', '¬', '½',
@@ -500,7 +501,7 @@ static PC1118_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC1119 Page code table
-static PC1119_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC1119_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х',
         'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'й', 'к', 'л',
@@ -516,7 +517,7 @@ static PC1119_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 });
 
 /// PC1125 Page code table
-static PC1125_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static PC1125_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х',
         'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'й', 'к', 'л',
@@ -533,7 +534,7 @@ static PC1125_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// WPC1250 Page code table
 /// Uses '\0' as placeholder for empty spots
-static WPC1250_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static WPC1250_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         '€', '\0', '‚', '\0', '„', '…', '†', '‡', '\0', '‰', 'Š', '‹', 'Ś', 'Ť', 'Ž', 'Ź', '\0', '‘', '’', '“', '”',
         '•', '–', '—', '\0', '™', 'š', '›', 'ś', 'ť', 'ž', 'ź', '\u{00A0}', 'ˇ', '˘', 'Ł', '¤', 'Ą', '¦', '§', '¨',
@@ -551,7 +552,7 @@ static WPC1250_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// WPC1251 Page code table
 /// Uses '\0' as placeholder for empty spots
-static WPC1251_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static WPC1251_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ђ', 'Ѓ', '‚', 'ѓ', '„', '…', '†', '‡', '€', '‰', 'Љ', '‹', 'Њ', 'Ќ', 'Ћ', 'Џ', 'ђ', '‘', '’', '“', '”', '•',
         '–', '—', '\0', '™', 'љ', '›', 'њ', 'ќ', 'ћ', 'џ', '\u{00A0}', 'Ў', 'ў', 'Ј', '¤', 'Ґ', '¦', '§', 'Ё', '©',
@@ -569,7 +570,7 @@ static WPC1251_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// WPC1253 Page code table
 /// Uses '\0' as placeholder for empty spots
-static WPC1253_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static WPC1253_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         '€', '\0', '‚', 'ƒ', '„', '…', '†', '‡', '\0', '‰', '\0', '‹', '\0', '\0', '\0', '\0', '\0', '‘', '’', '“',
         '”', '•', '–', '—', '\0', '™', '\0', '›', '\0', '\0', '\0', '\0', '\u{00A0}', '΅', 'Ά', '£', '¤', '¥', '¦',
@@ -588,7 +589,7 @@ static WPC1253_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// WPC1254 Page code table
 /// Uses '\0' as placeholder for empty spots
-static WPC1254_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static WPC1254_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         '€', '\0', '‚', 'ƒ', '„', '…', '†', '‡', 'ˆ', '‰', 'Š', '‹', 'Œ', '\0', '\0', '\0', '\0', '‘', '’', '“', '”',
         '•', '–', '—', '˜', '™', 'š', '›', 'œ', '\0', '\0', 'Ÿ', '\u{00A0}', '¡', '¢', '£', '¤', '¥', '¦', '§', '¨',
@@ -606,7 +607,7 @@ static WPC1254_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// WPC1257 Page code table
 /// Uses '\0' as placeholder for empty spots
-static WPC1257_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static WPC1257_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         '€', '\0', '‚', '\0', '„', '…', '†', '‡', '\0', '‰', '\0', '‹', '\0', '¨', 'ˇ', '¸', '\0', '‘', '’', '“', '”',
         '•', '–', '—', '\0', '™', '\0', '›', '\0', '¯', '˛', '\0', '\u{00A0}', '\0', '¢', '£', '¤', '\0', '¦', '§',
@@ -624,7 +625,7 @@ static WPC1257_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
 
 /// KZ1048 Page code table
 /// Uses '\0' as placeholder for empty spots
-static KZ1048_TABLE: LazyLock<HashMap<char, u8>> = LazyLock::new(|| {
+static KZ1048_TABLE: Lazy<HashMap<char, u8>> = Lazy::new(|| {
     [
         'Ђ', 'Ѓ', '‚', 'ѓ', '„', '…', '†', '‡', '€', '‰', 'Љ', '‹', 'Њ', 'Қ', 'Һ', 'Џ', 'ђ', '‘', '’', '“', '”', '•',
         '–', '—', '\0', '™', 'љ', '›', 'њ', 'қ', 'һ', 'џ', '\u{00A0}', 'Ұ', 'ұ', 'Ә', '¤', 'Ө', '¦', '§', 'Ё', '©',

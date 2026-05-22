@@ -3,7 +3,9 @@
 #![cfg(feature = "codes_2d")]
 
 use crate::errors::Result;
-use std::fmt;
+use alloc::format;
+use alloc::string::{String, ToString};
+use core::fmt;
 
 const QRCODE_MAX_DATA_SIZE: usize = 7089;
 

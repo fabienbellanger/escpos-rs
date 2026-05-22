@@ -1,7 +1,9 @@
 //! 2D GS1 DataBar
 
 use crate::errors::{PrinterError, Result};
-use std::fmt;
+use alloc::format;
+use alloc::string::{String, ToString};
+use core::fmt;
 
 const EXPANDED_STACKED_VALID_CHARS: [char; 36] = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', ' ', '!', '"', '%', '$', '\'', '(', ')', '*',

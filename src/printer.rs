@@ -5,6 +5,8 @@ use super::errors::Result;
 use crate::domain::ui::line::Line;
 use crate::printer_options::PrinterOptions;
 use crate::{domain::*, driver::Driver, utils::Protocol};
+use alloc::vec::Vec;
+use alloc::{format, vec};
 use log::debug;
 
 /// Printer
@@ -65,6 +67,11 @@ impl<D: Driver> Printer<D> {
             instructions: vec![],
             style_state: PrinterStyleState::default(),
         }
+    }
+
+    /// Release the driver used by this printer
+    pub fn driver(self) -> D {
+        self.driver
     }
 
     /// Get the printer protocol
@@ -154,7 +161,7 @@ impl<D: Driver> Printer<D> {
     }
 
     /// Add command to instructions, write data and display debug information
-    fn command(&mut self, label: &str, cmd: &[Command]) -> Result<&mut Self> {
+    pub fn command(&mut self, label: &str, cmd: &[Command]) -> Result<&mut Self> {
         let instruction = Instruction::new(label, cmd, self.options.get_debug_mode());
 
         if !label.is_empty() && self.options.get_debug_mode().is_some() {

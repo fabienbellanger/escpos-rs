@@ -1,7 +1,9 @@
 //! Aztec code
 
 use crate::errors::{PrinterError, Result};
-use std::fmt;
+use alloc::format;
+use alloc::string::{String, ToString};
+use core::fmt;
 
 /// Aztec code mode
 #[derive(Debug, Clone, Copy)]

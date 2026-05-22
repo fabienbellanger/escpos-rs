@@ -1,5 +1,5 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
-
+#![cfg_attr(not(feature = "std"), no_std)]
 //! # escpos - A ESCPOS implementation in Rust
 //!
 //! This crate implements a subset of Epson's ESC/POS protocol for thermal receipt printers.
@@ -179,6 +179,8 @@
 //! ## External resources
 //!
 //! - [Epson documentation](https://download4.epson.biz/sec_pubs/pos/reference_en/escpos)
+
+extern crate alloc;
 
 mod domain;
 

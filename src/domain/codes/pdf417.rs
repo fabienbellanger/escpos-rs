@@ -1,7 +1,9 @@
 //! PDF417
 
 use crate::errors::{PrinterError, Result};
-use std::fmt;
+use alloc::format;
+use alloc::string::{String, ToString};
+use core::fmt;
 
 /// PDF417 correction level
 #[derive(Debug, Clone, Copy)]

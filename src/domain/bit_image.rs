@@ -3,8 +3,10 @@
 #![cfg(feature = "graphics")]
 
 use crate::errors::{PrinterError, Result};
+#[cfg(not(feature = "std"))]
+use alloc::{borrow::ToOwned, string::String, string::ToString, vec, vec::Vec};
+use core::fmt;
 use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
-use std::fmt;
 
 /// BitImage size
 #[derive(Debug, Default, Clone, Copy)]

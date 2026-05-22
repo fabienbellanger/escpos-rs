@@ -4,7 +4,10 @@
 
 use crate::errors::{PrinterError, Result};
 use image::{DynamicImage, GenericImageView, Rgba};
-use std::fmt;
+
+#[cfg(not(feature = "std"))]
+use alloc::{borrow::ToOwned, string::String, string::ToString, vec, vec::Vec};
+use core::fmt;
 
 /// Graphic density
 #[derive(Debug, Clone, Copy)]

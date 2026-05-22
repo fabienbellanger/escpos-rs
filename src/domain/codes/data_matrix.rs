@@ -1,7 +1,9 @@
 //! DataMatrix
 
 use crate::errors::{PrinterError, Result};
-use std::fmt;
+use alloc::format;
+use alloc::string::{String, ToString};
+use core::fmt;
 
 /// DataMatrix type
 #[derive(Debug, Clone, Copy)]

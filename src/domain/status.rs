@@ -3,7 +3,9 @@
 //! [Epson Documentation](https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/dle_eot.html)
 
 use crate::errors::PrinterError;
-use std::collections::HashMap;
+use alloc::format;
+use alloc::vec::Vec;
+use hashbrown::HashMap;
 
 /// Printer real-time status
 #[derive(Debug, Copy, Clone)]

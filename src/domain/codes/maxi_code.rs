@@ -1,6 +1,7 @@
 //! MaxiCode
 
-use std::fmt;
+use alloc::string::{String, ToString};
+use core::fmt;
 
 /// PDF417 correction level
 #[derive(Debug, Default, Clone, Copy)]

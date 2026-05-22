@@ -1,6 +1,6 @@
 //! Character
 
-use std::fmt;
+use core::fmt;
 
 /// Underline mode
 #[derive(Debug, Clone, Copy, PartialEq, Default)]

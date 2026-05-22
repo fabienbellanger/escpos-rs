@@ -13,6 +13,7 @@ mod types;
 pub(crate) mod ui;
 
 pub use character::*;
+#[cfg(feature = "std")]
 pub use codes::*;
 pub use common::chars_number;
 pub use constants::*;

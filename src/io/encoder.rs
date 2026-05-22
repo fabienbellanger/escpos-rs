@@ -1,6 +1,8 @@
 //! Encoder used to encode text
 
 use crate::errors::Result;
+use alloc::format;
+use alloc::vec::Vec;
 use encoding_rs::{Encoding, UTF_8};
 
 /// Encoder
