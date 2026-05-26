@@ -18,7 +18,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Security
 -->
 
-## [Unreleased]
+## `0.19.0` (2026-05-26) [CURRENT]
 
 ### Added
 
@@ -38,7 +38,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `@tauri-apps/cli` to `2.11`, switch to Rust edition `2024`, and align `UsbDriver::open` call with the new
   `UsbOption` argument
 
-## `0.18.0` (2026-05-22) [CURRENT]
+## `0.18.0` (2026-05-22)
 
 ### Added
 

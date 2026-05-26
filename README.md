@@ -21,14 +21,14 @@ For standard functionalities (e.g., printing text), no additional dependencies a
 
 ```toml
 [dependencies]
-escpos = "0.18.0"
+escpos = "0.19.0"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.18.0", features = ["full"] }
+escpos = { version = "0.19.0", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
@@ -86,8 +86,8 @@ cargo msrv verify
 
 ## `no_std` support
 
-The crate can be used on bare-metal targets (microcontrollers, kernels…) by disabling default
-features. Only `alloc` is required:
+The crate can be used on bare-metal targets (microcontrollers, kernels…) by disabling default features. Only `alloc` is
+required:
 
 ```toml
 [dependencies]
@@ -95,15 +95,13 @@ escpos = { version = "0.18", default-features = false, features = ["barcodes", "
 ```
 
 The built-in `Console`, `Network` and `File` drivers as well as the `graphics` feature require
-`std`. In `no_std` mode you implement the `Driver` trait for your peripheral (UART, SPI, USB
-endpoint, …) and pass it to `Printer::new`. The `Printer::driver` accessor lets you recover the
-driver from a `Printer`.
+`std`. In `no_std` mode you implement the `Driver` trait for your peripheral (UART, SPI, USB endpoint, …) and pass it to
+`Printer::new`. The `Printer::driver` accessor lets you recover the driver from a `Printer`.
 
-See [`examples/no_std_codes.rs`](examples/no_std_codes.rs) for a minimal example with a custom
-in-memory driver and barcodes / 2D codes — all the protocol-level APIs (barcodes, QR Code,
-PDF417, DataMatrix, Aztec, MaxiCode, page codes, status…) work in `no_std`. The codes themselves
-are rendered by the printer's firmware: the crate only serializes the ESC/POS commands, so the
-embedded-side cost is minimal.
+See [`examples/no_std_codes.rs`](examples/no_std_codes.rs) for a minimal example with a custom in-memory driver and
+barcodes / 2D codes — all the protocol-level APIs (barcodes, QR Code, PDF417, DataMatrix, Aztec, MaxiCode, page codes,
+status…) work in `no_std`. The codes themselves are rendered by the printer's firmware: the crate only serializes the
+ESC/POS commands, so the embedded-side cost is minimal.
 
 ## Examples
 
