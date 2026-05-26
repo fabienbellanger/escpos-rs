@@ -44,13 +44,13 @@ full = [
 encoding_rs = "0.8.35"
 log = "0.4.29"
 spin = { version = "0.10.0", default-features = false, features = ["lazy", "once"] }
-hashbrown = { version = "0.16", default-features = false, features = ["default-hasher"] }
+hashbrown = { version = "0.16.1", default-features = false, features = ["default-hasher"] }
 hidapi = { version = "2.6.6", optional = true }
 image = { version = "0.25.10", optional = true }
 nusb = { version = "0.2.3", optional = true }
 rusb = { version = "0.9.4", optional = true }
 serialport = { version = "4.9.0", optional = true }
-windows-sys = { version = "0.61", optional = true, features = [
+windows-sys = { version = "0.61.2", optional = true, features = [
     "Win32_Foundation",
     "Win32_Security",
     "Win32_Storage_FileSystem",
