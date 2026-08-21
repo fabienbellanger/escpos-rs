@@ -528,12 +528,15 @@ impl Driver for NativeUsbDriver {
             .with_read_timeout(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS));
 
         let mut pkt_reader = reader.until_short_packet();
+        let mut data = Vec::new();
         let size = pkt_reader
-            .read_to_end(&mut buf.to_vec())
+            .read_to_end(&mut data)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         pkt_reader.consume_end().map_err(|e| PrinterError::Io(e.to_string()))?;
 
-        Ok(size)
+        let n = size.min(buf.len());
+        buf[..n].copy_from_slice(&data[..n]);
+        Ok(n)
     }
 
     fn flush(&self) -> Result<()> {
