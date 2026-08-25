@@ -12,7 +12,7 @@ use std::sync::LazyLock as Lazy;
 #[cfg(not(feature = "std"))]
 use hashbrown::HashMap;
 #[cfg(not(feature = "std"))]
-use spin::Lazy;
+use spin::LazyLock as Lazy;
 
 /// Page codes table list
 #[derive(Debug, Clone, Copy)]

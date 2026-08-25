@@ -82,8 +82,8 @@ impl Instruction {
 impl fmt::Debug for Instruction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.debug_mode {
-            Some(DebugMode::Dec) => write!(f, "{} {:?}", &self.name, &self.commands),
-            Some(DebugMode::Hex) => write!(f, "{} {:02X?}", &self.name, &self.commands),
+            Some(DebugMode::Dec) => write!(f, "{} {:?}", self.name, self.commands),
+            Some(DebugMode::Hex) => write!(f, "{} {:02X?}", self.name, self.commands),
             None => Ok(()),
         }
     }
