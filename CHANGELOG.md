@@ -18,7 +18,25 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Security
 -->
 
-## `0.19.0` (2026-05-26) [CURRENT]
+## `0.19.1` (2026-08-25) [CURRENT]
+
+### Changed
+
+- Use `spin::LazyLock` instead of the deprecated `spin::Lazy` for page codes in `no_std` mode (required by `spin` 0.12)
+- Bump `log` to `0.4.34`
+- Bump `spin` to `0.12.3`
+- Bump `hashbrown` to `0.17.1`
+- Bump `nusb` to `0.2.7`
+- Bump `env_logger` to `0.11.11`
+- Bump `reqwest` to `0.13.4`
+
+### Fixed
+
+- Fix `NativeUsbDriver::read` which read the printer response into a temporary copy of the buffer instead of the
+  caller's buffer, breaking real-time status queries
+  ([#53](https://github.com/fabienbellanger/escpos-rs/pull/53))
+
+## `0.19.0` (2026-05-26)
 
 ### Added
 
