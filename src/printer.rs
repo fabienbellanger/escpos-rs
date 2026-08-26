@@ -146,6 +146,20 @@ impl<D: Driver> Printer<D> {
         self
     }
 
+    /// Change the print target between slip and roll for supported printers
+    pub fn set_target(&mut self, target: PrintTarget) -> Result<&mut Self> {
+        let cmd = self.protocol.target(target);
+        self.command("Change print target", &[cmd])?;
+        Ok(self)
+    }
+
+    /// Eject the loaded paper from slip for supported printers
+    pub fn slip_eject(&mut self) -> Result<&mut Self> {
+        let cmd = self.protocol.slip_eject();
+        self.command("Eject slip paper", &[cmd])?;
+        Ok(self)
+    }
+
     /// Print the data
     ///
     /// All the instructions are sent at the same time to avoid printing partial data

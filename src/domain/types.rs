@@ -7,6 +7,23 @@ use core::fmt;
 /// Default characters per line
 pub const DEFAULT_CHARACTERS_PER_LINE: u8 = 42;
 
+/// Print target
+#[derive(Debug, Clone, Copy, Default)]
+pub enum PrintTarget {
+    #[default]
+    Roll,
+    Slip,
+}
+
+impl fmt::Display for PrintTarget {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            PrintTarget::Roll => write!(f, "roll printer"),
+            PrintTarget::Slip => write!(f, "slip printer"),
+        }
+    }
+}
+
 /// Cash drawer pin
 #[derive(Debug, Clone, Copy)]
 pub enum CashDrawer {

@@ -46,6 +46,19 @@ impl Protocol {
         ESC_HARDWARE_RESET.to_vec()
     }
 
+    /// Change print target
+    pub(crate) fn target(&self, target: PrintTarget) -> Command {
+        match target {
+            PrintTarget::Roll => ESC_TARGET_ROLL.to_vec(),
+            PrintTarget::Slip => ESC_TARGET_SLIP.to_vec(),
+        }
+    }
+
+    /// Eject paper from slip
+    pub(crate) fn slip_eject(&self) -> Command {
+        ESC_SLIP_EJECT.to_vec()
+    }
+
     #[allow(dead_code)]
     /// Cancel
     pub(crate) fn cancel(&self) -> Command {
