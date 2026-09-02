@@ -16,6 +16,13 @@ pub const ESC_HARDWARE_INIT: &[u8] = &[ESC, b'@'];
 pub const ESC_HARDWARE_RESET: &[u8] = &[ESC, b'?', LF, 0];
 pub const _ESC_HARDWARE_SELECT: &[u8] = &[ESC, b'=', 1]; // Unused
 
+// Print target
+pub const ESC_TARGET_ROLL: &[u8] = &[ESC, 0x63, 0x30, 0x01]; // Switch to roll printer
+pub const ESC_TARGET_SLIP: &[u8] = &[ESC, 0x63, 0x30, 0x04]; // Switch to matrix printer
+
+// Slip printer
+pub const ESC_SLIP_EJECT: &[u8] = &[0x0C];
+
 // Cash drawer
 pub const ESC_CASH_DRAWER_2: &[u8] = &[ESC, b'p', 0]; // Sends a pulse to pin 2
 pub const ESC_CASH_DRAWER_5: &[u8] = &[ESC, b'p', 1]; // Sends a pulse to pin 5
