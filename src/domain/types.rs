@@ -8,10 +8,13 @@ use core::fmt;
 pub const DEFAULT_CHARACTERS_PER_LINE: u8 = 42;
 
 /// Print target
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub enum PrintTarget {
+    /// Paper roll (receipt), the default target
     #[default]
     Roll,
+    /// Slip station of multi-station printers (TM-H6000, TM-U675, ...) used to print cheques and
+    /// validation slips
     Slip,
 }
 

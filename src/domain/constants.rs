@@ -5,6 +5,7 @@ pub const NUL: u8 = 0x00; // Null
 pub const EOT: u8 = 0x04; // End of transmission
 pub const LF: u8 = 0x0A; // Line feed
 pub const _VT: u8 = 0x0B; // Vertical tab
+pub const FF: u8 = 0x0C; // Form feed
 pub const _CR: u8 = 0x0D; // Carriage return
 pub const DLE: u8 = 0x10; // Data link escape
 pub const ESC: u8 = 0x1B;
@@ -17,11 +18,11 @@ pub const ESC_HARDWARE_RESET: &[u8] = &[ESC, b'?', LF, 0];
 pub const _ESC_HARDWARE_SELECT: &[u8] = &[ESC, b'=', 1]; // Unused
 
 // Print target
-pub const ESC_TARGET_ROLL: &[u8] = &[ESC, 0x63, 0x30, 0x01]; // Switch to roll printer
-pub const ESC_TARGET_SLIP: &[u8] = &[ESC, 0x63, 0x30, 0x04]; // Switch to matrix printer
+pub const ESC_TARGET_ROLL: &[u8] = &[ESC, b'c', b'0', 1]; // Switch to roll printer
+pub const ESC_TARGET_SLIP: &[u8] = &[ESC, b'c', b'0', 4]; // Switch to slip printer
 
 // Slip printer
-pub const ESC_SLIP_EJECT: &[u8] = &[0x0C];
+pub const ESC_SLIP_EJECT: &[u8] = &[FF]; // Print and eject the slip
 
 // Cash drawer
 pub const ESC_CASH_DRAWER_2: &[u8] = &[ESC, b'p', 0]; // Sends a pulse to pin 2

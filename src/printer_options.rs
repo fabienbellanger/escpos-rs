@@ -1,6 +1,6 @@
 //! Printer options
 
-use crate::domain::{DebugMode, PageCode};
+use crate::domain::{DebugMode, PageCode, PrintTarget};
 
 /// Printer options
 #[derive(Debug, Clone)]
@@ -13,6 +13,9 @@ pub struct PrinterOptions {
 
     /// Number of characters per line (default: 42)
     characters_per_line: u8,
+
+    /// Number of characters per line on the slip station (default: same as the paper roll)
+    slip_characters_per_line: Option<u8>,
 }
 
 impl Default for PrinterOptions {
@@ -33,6 +36,7 @@ impl Default for PrinterOptions {
             page_code: None,
             debug_mode: None,
             characters_per_line: 42,
+            slip_characters_per_line: None,
         }
     }
 }
@@ -54,6 +58,7 @@ impl PrinterOptions {
         Self {
             page_code,
             characters_per_line,
+            slip_characters_per_line: None,
             debug_mode,
         }
     }
@@ -95,6 +100,41 @@ impl PrinterOptions {
     /// ```
     pub fn characters_per_line(&mut self, characters_per_line: u8) {
         self.characters_per_line = characters_per_line;
+    }
+
+    /// Set the number of characters per line on the [slip station](PrintTarget::Slip)
+    ///
+    /// The slip station of multi-station printers is usually not as wide as the paper roll.
+    /// If it is not set, the number of characters per line of the paper roll is used for both
+    /// [targets](PrintTarget).
+    ///
+    /// ```
+    /// use escpos::printer_options::PrinterOptions;
+    /// use escpos::utils::PrintTarget;
+    ///
+    /// let mut printer_options = PrinterOptions::default();
+    ///
+    /// // Without a specific value, both targets share the same width
+    /// assert_eq!(printer_options.get_characters_per_line_for(PrintTarget::Slip), 42);
+    ///
+    /// printer_options.slip_characters_per_line(45);
+    ///
+    /// assert_eq!(printer_options.get_characters_per_line_for(PrintTarget::Roll), 42);
+    /// assert_eq!(printer_options.get_characters_per_line_for(PrintTarget::Slip), 45);
+    /// ```
+    pub fn slip_characters_per_line(&mut self, characters_per_line: u8) {
+        self.slip_characters_per_line = Some(characters_per_line);
+    }
+
+    /// Get the number of characters per line for the given [print target](PrintTarget)
+    ///
+    /// This is the width used by the `ui` components, based on the
+    /// [current target](crate::printer::Printer::target) of the printer.
+    pub fn get_characters_per_line_for(&self, target: PrintTarget) -> u8 {
+        match target {
+            PrintTarget::Roll => self.characters_per_line,
+            PrintTarget::Slip => self.slip_characters_per_line.unwrap_or(self.characters_per_line),
+        }
     }
 
     /// Get the [debug mode](DebugMode)

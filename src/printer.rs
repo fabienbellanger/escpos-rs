@@ -38,6 +38,7 @@ pub struct Printer<D: Driver> {
     options: PrinterOptions,
     instructions: Vec<Instruction>,
     style_state: PrinterStyleState,
+    target: PrintTarget,
 }
 
 impl<D: Driver> Printer<D> {
@@ -66,6 +67,7 @@ impl<D: Driver> Printer<D> {
             options: options.unwrap_or_default(),
             instructions: vec![],
             style_state: PrinterStyleState::default(),
+            target: PrintTarget::default(),
         }
     }
 
@@ -82,6 +84,16 @@ impl<D: Driver> Printer<D> {
     /// Get the printer options
     pub fn options(&self) -> &PrinterOptions {
         &self.options
+    }
+
+    /// Get the printer options with the number of characters per line resolved for the current
+    /// [print target](Printer::target)
+    #[cfg(feature = "ui")]
+    fn target_options(&self) -> PrinterOptions {
+        let mut options = self.options.clone();
+        options.characters_per_line(self.options.get_characters_per_line_for(self.target));
+
+        options
     }
 
     /// Get the printer style state
@@ -128,6 +140,40 @@ impl<D: Driver> Printer<D> {
         self
     }
 
+    /// Get the current [print target](PrintTarget)
+    ///
+    /// Unlike the [style state](Printer::style_state), the print target is not reset when the
+    /// buffer is flushed: it is kept by the printer until it is changed again, or until the
+    /// printer is initialized ([`init`](Printer::init)) or reset ([`reset`](Printer::reset)).
+    ///
+    /// # Examples
+    /// ```
+    /// use escpos::printer::Printer;
+    /// use escpos::utils::*;
+    /// use escpos::{driver::*, errors::Result};
+    ///
+    /// fn main() -> Result<()> {
+    ///     let driver = ConsoleDriver::open(false);
+    ///     let mut printer = Printer::new(driver, Protocol::default(), None);
+    ///
+    ///     assert_eq!(printer.target(), PrintTarget::Roll);
+    ///
+    ///     printer.set_target(PrintTarget::Slip)?.writeln("Cheque")?.print()?;
+    ///
+    ///     // The print target is kept after flushing the buffer
+    ///     assert_eq!(printer.target(), PrintTarget::Slip);
+    ///
+    ///     // ... but the printer initialization resets it
+    ///     printer.init()?;
+    ///     assert_eq!(printer.target(), PrintTarget::Roll);
+    ///
+    ///     Ok(())
+    /// }
+    /// ```
+    pub fn target(&self) -> PrintTarget {
+        self.target
+    }
+
     /// Flush the buffer, reset the style state and clean the instructions
     fn flush(&mut self) -> Result<&mut Self> {
         for instruction in self.instructions.iter() {
@@ -147,17 +193,55 @@ impl<D: Driver> Printer<D> {
     }
 
     /// Change the print target between slip and roll for supported printers
+    ///
+    /// Only multi-station printers (TM-H6000, TM-U675, ...) have a slip station. The other
+    /// printers ignore this command or misinterpret it.
+    ///
+    /// # Note
+    ///
+    /// The slip station is a dot matrix unit: it does not support barcodes, 2D codes, images and
+    /// paper cutting, and it is usually not as wide as the paper roll. The `ui` components (lines and
+    /// tables) are rendered with the number of characters per line of the current target, which
+    /// is set with [`PrinterOptions::slip_characters_per_line`]. If it is not set, both targets
+    /// share the width of the paper roll.
+    ///
+    /// # Examples
+    /// ```
+    /// use escpos::printer::Printer;
+    /// use escpos::printer_options::PrinterOptions;
+    /// use escpos::utils::*;
+    /// use escpos::{driver::*, errors::Result};
+    ///
+    /// fn main() -> Result<()> {
+    ///     let driver = ConsoleDriver::open(false);
+    ///
+    ///     // 42 characters per line on the paper roll, 45 on the slip station
+    ///     let mut options = PrinterOptions::new(None, None, 42);
+    ///     options.slip_characters_per_line(45);
+    ///     let mut printer = Printer::new(driver, Protocol::default(), Some(options));
+    ///
+    ///     printer.set_target(PrintTarget::Roll)?.writeln("Receipt")?.print_cut()?;
+    ///
+    ///     printer.set_target(PrintTarget::Slip)?.writeln("Cheque")?.print()?;
+    ///     printer.slip_eject()?.print()?;
+    ///
+    ///     Ok(())
+    /// }
+    /// ```
     pub fn set_target(&mut self, target: PrintTarget) -> Result<&mut Self> {
         let cmd = self.protocol.target(target);
-        self.command("Change print target", &[cmd])?;
-        Ok(self)
+        self.target = target;
+        self.command("print target", &[cmd])
     }
 
     /// Eject the loaded paper from slip for supported printers
+    ///
+    /// Only multi-station printers (TM-H6000, TM-U675, ...) have a slip station. The slip is
+    /// ejected when the buffer is flushed, so this command must be followed by
+    /// [`print`](Printer::print).
     pub fn slip_eject(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.slip_eject();
-        self.command("Eject slip paper", &[cmd])?;
-        Ok(self)
+        self.command("slip eject", &[cmd])
     }
 
     /// Print the data
@@ -192,6 +276,9 @@ impl<D: Driver> Printer<D> {
         let cmd = self.protocol.init();
         self.command("initialization", &[cmd])?;
 
+        // The printer is back to its default print target
+        self.target = PrintTarget::default();
+
         // Set page code
         if let Some(page_code) = self.options.get_page_code() {
             let cmd = self.protocol.page_code(page_code);
@@ -204,6 +291,7 @@ impl<D: Driver> Printer<D> {
     /// Hardware reset
     pub fn reset(&mut self) -> Result<&mut Self> {
         let cmd = self.protocol.reset();
+        self.target = PrintTarget::default();
         self.command("reset", &[cmd])
     }
 
@@ -651,7 +739,7 @@ impl<D: Driver> Printer<D> {
     pub fn draw_line(&mut self, line: Line) -> Result<&mut Self> {
         let commands = self
             .protocol
-            .draw_line(line, self.options.clone(), self.style_state.clone())?;
+            .draw_line(line, self.target_options(), self.style_state.clone())?;
         self.command("draw line", commands.as_slice())
     }
 
@@ -719,5 +807,56 @@ mod tests {
         ];
 
         assert_eq!(printer.instructions, expected);
+    }
+
+    #[test]
+    fn test_target_is_kept_after_print() {
+        let driver = ConsoleDriver::open(false);
+        let mut printer = Printer::new(driver, Protocol::default(), None);
+
+        assert_eq!(printer.target(), PrintTarget::Roll);
+
+        printer.set_target(PrintTarget::Slip).unwrap().print().unwrap();
+
+        // Unlike the style state, the print target is not reset when the buffer is flushed
+        assert_eq!(printer.style_state(), PrinterStyleState::default());
+        assert_eq!(printer.target(), PrintTarget::Slip);
+    }
+
+    #[cfg(feature = "ui")]
+    #[test]
+    fn test_draw_line_uses_the_width_of_the_current_target() {
+        use crate::domain::ui::line::{LineBuilder, LineStyle};
+
+        let mut options = PrinterOptions::new(None, None, 42);
+        options.slip_characters_per_line(20);
+        let line = || LineBuilder::new().style(LineStyle::Simple).build();
+
+        let driver = ConsoleDriver::open(false);
+        let mut printer = Printer::new(driver, Protocol::default(), Some(options));
+
+        // The paper roll is 42 characters wide
+        printer.draw_line(line()).unwrap();
+        assert_eq!(printer.instructions[0].commands[0], "-".repeat(42).as_bytes());
+
+        // ... and the slip station only 20
+        printer
+            .set_target(PrintTarget::Slip)
+            .unwrap()
+            .draw_line(line())
+            .unwrap();
+        assert_eq!(printer.instructions[2].commands[0], "-".repeat(20).as_bytes());
+    }
+
+    #[test]
+    fn test_target_is_reset_by_init_and_reset() {
+        let driver = ConsoleDriver::open(false);
+        let mut printer = Printer::new(driver, Protocol::default(), None);
+
+        printer.set_target(PrintTarget::Slip).unwrap().init().unwrap();
+        assert_eq!(printer.target(), PrintTarget::Roll);
+
+        printer.set_target(PrintTarget::Slip).unwrap().reset().unwrap();
+        assert_eq!(printer.target(), PrintTarget::Roll);
     }
 }

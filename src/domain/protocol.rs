@@ -771,6 +771,19 @@ mod tests {
     }
 
     #[test]
+    fn test_target() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.target(PrintTarget::Roll), vec![27, 99, 48, 1]);
+        assert_eq!(protocol.target(PrintTarget::Slip), vec![27, 99, 48, 4]);
+    }
+
+    #[test]
+    fn test_slip_eject() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(protocol.slip_eject(), vec![12]);
+    }
+
+    #[test]
     fn test_cancel() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(protocol.cancel(), vec![24]);

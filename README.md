@@ -21,14 +21,14 @@ For standard functionalities (e.g., printing text), no additional dependencies a
 
 ```toml
 [dependencies]
-escpos = "0.19.1"
+escpos = "0.20.0"
 ```
 
 If you need all [features](#Features-list), you can use the `full` feature:
 
 ```toml
 [dependencies]
-escpos = { version = "0.19.1", features = ["full"] }
+escpos = { version = "0.20.0", features = ["full"] }
 ```
 
 Or you can use `cargo add` command:
@@ -305,6 +305,8 @@ fn main() -> Result<()> {
 |   ✅    | `partial_cut()`                 | Partial paper cut (`GS V A 1`)                        |            |
 |   ✅    | `print_cut()`                   | Print and paper cut                                   |            |
 |   ✅    | `page_code()`                   | Select character code table (`ESC t`)                 |            |
+|   ✅    | `set_target()`                  | Select the print target (`ESC c 0`)                   |            |
+|   ✅    | `slip_eject()`                  | Eject the loaded slip (`FF`)                          |            |
 |   ✅    | `character_set()`               | Select an international character set (`ESC R`)       |            |
 |   ✅    | `bold()`                        | Text bold (`ESC E`)                                   |            |
 |   ✅    | `underline()`                   | Text underline (`ESC -`)                              |            |

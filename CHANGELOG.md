@@ -18,7 +18,25 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Security
 -->
 
-## `0.19.1` (2026-08-25) [CURRENT]
+## `0.20.0` (2026-09-02) [CURRENT]
+
+### Added
+
+- Add support for slip printing on multi-station printers (TM-H6000, TM-U675, ...): `Printer::set_target` selects the
+  paper roll or the slip station (`ESC c 0`) and `Printer::slip_eject` ejects the loaded slip (`FF`)
+  ([#54](https://github.com/fabienbellanger/escpos-rs/pull/54))
+- Add `Printer::target` to get the current print target, which is kept when the buffer is flushed, and reset by
+  `Printer::init` and `Printer::reset`
+- Add `PrinterOptions::slip_characters_per_line` and `PrinterOptions::get_characters_per_line_for` to set the width of
+  the slip station: the `ui` components are now rendered with the width of the current print target (by default, both
+  targets share the width of the paper roll)
+
+### Changed
+
+- Bump `hidapi` to `2.6.7`
+- Bump `serialport` to `4.10.0`
+
+## `0.19.1` (2026-08-25)
 
 ### Changed
 
