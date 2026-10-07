@@ -521,7 +521,7 @@ impl Driver for NativeUsbDriver {
             .endpoint::<nusb::transfer::Bulk, nusb::transfer::In>(self.input_endpoint)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
 
-        let max_size = endpoint.max_packet_size();
+        let max_size = endpoint.max_packet_size().min(buf.len());
 
         let mut reader = endpoint
             .reader(max_size)
@@ -529,7 +529,7 @@ impl Driver for NativeUsbDriver {
 
         let mut pkt_reader = reader.until_short_packet();
         let size = pkt_reader
-            .read_to_end(&mut buf.to_vec())
+            .read(buf)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         pkt_reader.consume_end().map_err(|e| PrinterError::Io(e.to_string()))?;
 
