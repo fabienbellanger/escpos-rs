@@ -24,7 +24,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - `NativeUsbDriver::read` now writes the response into the caller's buffer instead of a dropped temporary copy
   ([#52](https://github.com/fabienbellanger/escpos-rs/issues/52),
-  [#55](https://github.com/fabienbellanger/escpos-rs/pull/55))
+  [#55](https://github.com/fabienbellanger/escpos-rs/pull/55),
+  [#56](https://github.com/fabienbellanger/escpos-rs/pull/56))
 
 ### Changed
 
