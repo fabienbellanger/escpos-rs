@@ -18,7 +18,22 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Security
 -->
 
-## `0.20.0` (2026-09-02) [CURRENT]
+## `0.20.1` (2026-10-07) [CURRENT]
+
+### Fixed
+
+- `NativeUsbDriver::read` now writes the response into the caller's buffer instead of a dropped temporary copy
+  ([#52](https://github.com/fabienbellanger/escpos-rs/issues/52),
+  [#55](https://github.com/fabienbellanger/escpos-rs/pull/55),
+  [#56](https://github.com/fabienbellanger/escpos-rs/pull/56))
+
+### Changed
+
+- Bump `encoding_rs` to `0.8.42`
+- Bump `serialport` to `4.10.1`
+- Bump `reqwest` to `0.13.5`
+
+## `0.20.0` (2026-09-02)
 
 ### Added
 
@@ -211,20 +226,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- [BREAKING] Add `PrinterOptions` to `Printer` instead of `PageCode`  
+- [BREAKING] Add `PrinterOptions` to `Printer` instead of `PageCode`
   Before:
-  ```rust
-  let mut printer = Printer::new(driver, Protocol::default(), Some(PageCode::PC858));
-  ```
-  Now:
-  ```rust
-  let printer_options = PrinterOptions::new(Some(PageCode::PC858), None, 42);
-  let mut printer = Printer::new(driver, Protocol::default(), Some(printer_options));
-  ```
-  Or with default options values:
-  ```rust
-  let mut printer = Printer::new(driver, Protocol::default(), None);
-  ```
+    ```rust
+    let mut printer = Printer::new(driver, Protocol::default(), Some(PageCode::PC858));
+    ```
+    Now:
+    ```rust
+    let printer_options = PrinterOptions::new(Some(PageCode::PC858), None, 42);
+    let mut printer = Printer::new(driver, Protocol::default(), Some(printer_options));
+    ```
+    Or with default options values:
+    ```rust
+    let mut printer = Printer::new(driver, Protocol::default(), None);
+    ```
 - Remove `lazy_static` and use standard library `LazyLock` instead
 - Bump `image` to `0.25.2`
 - Bump `nusb` to `0.1.10`
@@ -377,17 +392,17 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - [BREAKING] Manage special characters by using Page Code tables (only `PC437`, `PC865` and `PC858` are currently
-  implemented).  
-  The `new` method for `Printer` has a third parameter to specify the Page Code to use.  
+  implemented).
+  The `new` method for `Printer` has a third parameter to specify the Page Code to use.
   Before:
-  ```rust
-  Printer::new(driver, Protocol::default())
-  ```
-  Now:
-  ```rust
-  Printer::new(driver, Protocol::default(), None)
-  Printer::new(driver, Protocol::default(), Some(PageCode::PC858))
-  ```
+    ```rust
+    Printer::new(driver, Protocol::default())
+    ```
+    Now:
+    ```rust
+    Printer::new(driver, Protocol::default(), None)
+    Printer::new(driver, Protocol::default(), Some(PageCode::PC858))
+    ```
 - Bump `env_logger` to `0.11.2`
 
 ### Fixed
