@@ -521,17 +521,22 @@ impl Driver for NativeUsbDriver {
             .endpoint::<nusb::transfer::Bulk, nusb::transfer::In>(self.input_endpoint)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
 
-        let max_size = endpoint.max_packet_size().min(buf.len());
+        let max_size = endpoint.max_packet_size();
 
         let mut reader = endpoint
             .reader(max_size)
             .with_read_timeout(Duration::from_secs(DEFAULT_TIMEOUT_SECONDS));
 
+        // Read the whole response (up to the short packet) then copy what fits into `buf`
+        let mut data = Vec::new();
         let mut pkt_reader = reader.until_short_packet();
-        let size = pkt_reader
-            .read(buf)
+        pkt_reader
+            .read_to_end(&mut data)
             .map_err(|e| PrinterError::Io(e.to_string()))?;
         pkt_reader.consume_end().map_err(|e| PrinterError::Io(e.to_string()))?;
+
+        let size = data.len().min(buf.len());
+        buf[..size].copy_from_slice(&data[..size]);
 
         Ok(size)
     }

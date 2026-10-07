@@ -41,7 +41,7 @@ full = [
 ]
 
 [dependencies]
-encoding_rs = "0.8.35"
+encoding_rs = "0.8.42"
 log = "0.4.34"
 spin = { version = "0.12.3", default-features = false, features = ["lazy", "once"] }
 hashbrown = { version = "0.17.1", default-features = false, features = ["default-hasher"] }
@@ -49,7 +49,7 @@ hidapi = { version = "2.6.7", optional = true }
 image = { version = "0.25.10", optional = true }
 nusb = { version = "0.2.7", optional = true }
 rusb = { version = "0.9.4", optional = true }
-serialport = { version = "4.10.0", optional = true }
+serialport = { version = "4.10.1", optional = true }
 windows-sys = { version = "0.61.2", optional = true, features = [
     "Win32_Foundation",
     "Win32_Security",
@@ -60,7 +60,7 @@ windows-sys = { version = "0.61.2", optional = true, features = [
 
 [dev-dependencies]
 env_logger = "0.11.11"
-reqwest = { version = "0.13.4", features = ["blocking"] }
+reqwest = { version = "0.13.5", features = ["blocking"] }
 
 [[example]]
 name = "no_std_codes"
