@@ -208,6 +208,12 @@
 
 extern crate alloc;
 
+// `hashbrown` and `spin` are only used without the `std` feature (`std` types are used instead)
+#[cfg(feature = "std")]
+use hashbrown as _;
+#[cfg(feature = "std")]
+use spin as _;
+
 mod domain;
 
 /// Error module

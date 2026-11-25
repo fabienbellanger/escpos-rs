@@ -18,6 +18,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Security
 -->
 
+## [Unreleased]
+
+### Changed
+
+- Remove `package.homepage` from `Cargo.toml` (redundant with `package.repository`)
+- Declare `windows-sys` as a Windows-only dependency, so it is no longer reported as unused on other platforms
+- Mark `hashbrown` and `spin` as used with the `std` feature (they are only needed in `no_std` mode), to silence the
+  `cargo::unused_dependencies` lint
+
 ## `0.20.2` (2026-11-25) [CURRENT]
 
 ### Fixed
