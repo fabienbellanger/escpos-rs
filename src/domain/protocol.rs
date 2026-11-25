@@ -961,6 +961,19 @@ mod tests {
     }
 
     #[test]
+    fn test_text_with_page_code_pc858() {
+        let protocol = Protocol::new(Encoder::default());
+        assert_eq!(
+            protocol.text("a-b ¿®Ô Ò €", Some(PageCode::PC858), None).unwrap(),
+            vec![b'a', b'-', b'b', b' ', 0xA8, 0xA9, 0xE2, b' ', 0xE3, b' ', 0xD5]
+        );
+        assert_eq!(
+            protocol.text("a-b", Some(PageCode::PC850), None).unwrap(),
+            vec![b'a', b'-', b'b']
+        );
+    }
+
+    #[test]
     fn test_text_with_page_code() {
         let protocol = Protocol::new(Encoder::default());
         assert_eq!(

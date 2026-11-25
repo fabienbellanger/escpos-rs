@@ -41,13 +41,13 @@ full = [
 ]
 
 [dependencies]
-encoding_rs = "0.8.42"
-log = "0.4.34"
+encoding_rs = "0.8.44"
+log = "0.4.35"
 spin = { version = "0.12.3", default-features = false, features = ["lazy", "once"] }
-hashbrown = { version = "0.17.1", default-features = false, features = ["default-hasher"] }
+hashbrown = { version = "0.17.2", default-features = false, features = ["default-hasher"] }
 hidapi = { version = "2.6.7", optional = true }
 image = { version = "0.25.10", optional = true }
-nusb = { version = "0.2.7", optional = true }
+nusb = { version = "0.2.9", optional = true }
 rusb = { version = "0.9.4", optional = true }
 serialport = { version = "4.10.1", optional = true }
 windows-sys = { version = "0.61.2", optional = true, features = [
@@ -59,7 +59,7 @@ windows-sys = { version = "0.61.2", optional = true, features = [
 ] }
 
 [dev-dependencies]
-env_logger = "0.11.11"
+env_logger = "0.11.12"
 reqwest = { version = "0.13.5", features = ["blocking"] }
 
 [[example]]
