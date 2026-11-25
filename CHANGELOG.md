@@ -18,6 +18,24 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Security
 -->
 
+## [Unreleased]
+
+### Fixed
+
+- Fix wrong characters in the `PC858` page code table (`¿`, `®`, `Ò`) and send the ASCII `-` as `0x2D` instead of
+  the soft hyphen position in `PC850`, `PC851`, `PC853`, `PC855`, `PC857`, `PC858`, `PC869`, `WPC775`, `WPC1250`,
+  `WPC1251`, `WPC1253`, `WPC1254`, `WPC1257` and `KZ1048` tables, and the ASCII `.` as `0x2E` instead of `0xE7`
+  in the `PC857` table
+  ([#57](https://github.com/fabienbellanger/escpos-rs/issues/57))
+
+### Changed
+
+- Bump `encoding_rs` to `0.8.44`
+- Bump `log` to `0.4.35`
+- Bump `hashbrown` to `0.17.2`
+- Bump `nusb` to `0.2.9`
+- Bump `env_logger` to `0.11.12`
+
 ## `0.20.1` (2026-10-07) [CURRENT]
 
 ### Fixed
